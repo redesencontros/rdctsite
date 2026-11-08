@@ -1,0 +1,425 @@
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#171816">
+  <meta name="description" content="rdct">
+  <title>rdct</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --ink: #171816;
+      --paper: #f1f0eb;
+      --acid: #d7ff3f;
+      --sans: "Manrope", Arial, sans-serif;
+      --mono: "DM Mono", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: #171816;
+      color: white;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .stage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 420px;
+  overflow: hidden;
+  isolation: isolate;
+  background: #000;
+}
+
+    .visual,
+    .slide,
+    .visual-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.50);
+  pointer-events: none;
+}
+
+    .visual {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+    .slide {
+      background-image: var(--image);
+      background-position: center;
+      background-size: cover;
+      opacity: 0;
+      transform: scale(1.025);
+      transition: opacity 1.2s ease, transform 7s ease;
+    }
+
+    .slide.is-active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .visual-shade {
+  background: rgba(0, 0, 0, 0.42);
+}
+
+    .overlay-header {
+      position: absolute;
+      z-index: 5;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 34px 5.2vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-shadow: 0 1px 12px #0003;
+    }
+
+    .brand-symbol {
+      font-size: 43px;
+      font-weight: 800;
+      letter-spacing: -.13em;
+      line-height: .8;
+    }
+
+    .brand-symbol span {
+      color: var(--acid);
+    }
+
+    .brand-name {
+      font-size: 10px;
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: .07em;
+    }
+
+    .header-location,
+    .eyebrow,
+    .menu-top,
+    .menu-links small {
+      font: 10px/1.55 var(--mono);
+      letter-spacing: .055em;
+    }
+
+    .header-location {
+      margin-left: auto;
+      margin-right: 7vw;
+      color: #ffffffc7;
+    }
+
+    .menu-toggle {
+      border: 0;
+      background: none;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 17px;
+      cursor: pointer;
+      font: 10px var(--mono);
+      letter-spacing: .08em;
+      padding: 8px 0;
+      text-shadow: 0 1px 12px #0005;
+    }
+
+    .menu-lines {
+      width: 29px;
+      height: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .menu-lines i {
+      height: 1px;
+      width: 100%;
+      background: white;
+      display: block;
+      transition: transform .25s;
+    }
+
+    .menu-toggle[aria-expanded=true] .menu-lines i:first-child {
+      transform: translateY(3.5px) rotate(45deg);
+    }
+
+    .menu-toggle[aria-expanded=true] .menu-lines i:last-child {
+      transform: translateY(-3.5px) rotate(-45deg);
+    }
+
+    .hero-copy {
+      position: absolute;
+      left: 10.4vw;
+      top: 50%;
+      transform: translateY(-43%);
+      max-width: min(700px, 75vw);
+      text-shadow: 0 2px 22px #0003;
+    }
+
+    .eyebrow {
+      margin: 0 0 24px;
+      color: #ffffffd6;
+    }
+
+    h1 {
+      font-size: clamp(66px, 10.5vw, 150px);
+      line-height: .84;
+      letter-spacing: -.095em;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    h1 em {
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 400;
+      letter-spacing: -.08em;
+    }
+
+    .intro {
+      font-size: clamp(13px, 1.25vw, 17px);
+      line-height: 1.6;
+      max-width: 390px;
+      margin: 32px 0 0;
+      color: #ffffffdf;
+    }
+
+    .site-menu {
+      position: fixed;
+      z-index: 10;
+      top: 0;
+      right: 0;
+      width: min(570px, 100%);
+      height: 100%;
+      height: 100dvh;
+      background: var(--ink);
+      color: var(--paper);
+      padding: 34px 5vw 28px;
+      transform: translateX(102%);
+      transition: transform .45s cubic-bezier(.7,0,.2,1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .site-menu.open {
+      transform: translateX(0);
+    }
+
+    .menu-top {
+      display: flex;
+      justify-content: flex-end;
+      color: #a7a99f;
+    }
+
+    .menu-close {
+      border: 0;
+      background: none;
+      color: var(--paper);
+      font-size: 36px;
+      line-height: 1;
+      font-weight: 300;
+      cursor: pointer;
+    }
+
+    .menu-links {
+      display: flex;
+      flex-direction: column;
+      margin: auto 0;
+    }
+
+    .menu-links a {
+      display: grid;
+      grid-template-columns: 40px 1fr auto;
+      align-items: baseline;
+      border-bottom: 1px solid #ffffff28;
+      padding: 18px 0;
+      font-size: clamp(28px, 4vw, 46px);
+      letter-spacing: -.065em;
+      transition: color .2s;
+    }
+
+    .menu-links a:hover {
+      color: var(--acid);
+    }
+
+    .menu-links small {
+      color: #999b92;
+      visibility: hidden;
+    }
+
+    .menu-backdrop {
+      position: fixed;
+      z-index: 8;
+      inset: 0;
+      border: 0;
+      background: #0008;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s;
+    }
+
+    .menu-backdrop.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    @media (max-width: 700px) {
+      .overlay-header {
+        padding: 24px 6vw;
+      }
+
+      .header-location {
+        display: none;
+      }
+
+      .brand-symbol {
+        font-size: 37px;
+      }
+
+      .hero-copy {
+        left: 7vw;
+        top: 49%;
+        max-width: 86vw;
+      }
+
+      h1 {
+        font-size: clamp(64px, 16vw, 112px);
+      }
+
+      .intro {
+        max-width: 310px;
+        margin-top: 24px;
+      }
+
+      .site-menu {
+        padding: 27px 7vw 23px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .eyebrow {
+        font-size: 9px;
+      }
+
+      h1 {
+        font-size: 16vw;
+      }
+
+      .intro {
+        font-size: 12px;
+        max-width: 270px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .slide,
+      .site-menu,
+      .menu-backdrop,
+      .menu-lines i {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body class="home">
+
+  <main class="stage" aria-label="apresentação">
+
+    <div class="visual" aria-hidden="true">
+      <div class="slide is-active" style="--image:url('https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=2400&q=85')"></div>
+      <div class="slide" style="--image:url('https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=2400&q=85')"></div>
+      <div class="slide" style="--image:url('https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=2400&q=85')"></div>
+      <div class="visual-shade"></div>
+    </div>
+
+    <header class="overlay-header">
+
+      <a class="brand" href="index.html" aria-label="rdct — início">
+        <span class="brand-symbol">M<span>.</span></span>
+        <span class="brand-name">NÚCLEO<br>MARGEM</span>
+      </a>
+
+      <div class="header-location">
+        ASSOCIAÇÃO CULTURAL<br>
+        CURITIBA · BRASIL
+      </div>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+        <span>MENU</span>
+        <span class="menu-lines" aria-hidden="true">
+          <i></i>
+          <i></i>
+        </span>
+      </button>
+
+    </header>
+
+    <div class="hero-copy">
+      <p class="eyebrow">ARTE · CULTURA · EDUCAÇÃO INFORMAL</p>
+      <h1>Um campo<br>em <em>movimento.</em></h1>
+      <p class="intro">
+        Associação cultural independente dedicada à criação,
+        à pesquisa e à circulação de práticas artísticas.
+      </p>
+    </div>
+
+    <nav class="site-menu" id="site-menu" aria-hidden="true">
+
+      <div class="menu-top">
+        <span></span>
+        <button class="menu-close" type="button" aria-label="Fechar menu">×</button>
+      </div>
+
+      <div class="menu-links">
+        <a href="associacao.html"><small>01</small> Associação</a>
+        <a href="projetos.html"><small>02</small> Projetos e ações</a>
+        <a href="integrantes.html"><small>03</small> Integrantes</a>
+        <a href="contato.html"><small>04</small> Contato</a>
+      </div>
+
+    </nav>
+
+    <button class="menu-backdrop" aria-label="Fechar menu" tabindex="-1"></button>
+
+  </main>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
