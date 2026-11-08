@@ -33,11 +33,13 @@
     }
 
     body {
-      font-family: var(--sans);
-      background: #171816;
-      color: white;
-      -webkit-font-smoothing: antialiased;
-    }
+  font-family: var(--sans);
+  background: #171816;
+  color: white;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  -webkit-user-select: none;
+}
 
     a {
       color: inherit;
@@ -48,6 +50,13 @@
       font: inherit;
     }
 
+.brand img {
+  display: block;
+  width: auto;
+  height: 38px;
+  max-width: 180px;
+  object-fit: contain;
+}
     .stage {
   position: relative;
   width: 100%;
@@ -59,14 +68,25 @@
   background: #000;
 }
 
-    .visual,
-    .slide,
-    .visual-shade {
+.visual,
+.slide,
+.visual-shade {
   position: absolute;
   inset: 0;
+  pointer-events: none;
+}
+
+.visual {
+  z-index: 0;
+}
+
+.slide {
+  z-index: 1;
+}
+
+.visual-shade {
   z-index: 2;
   background: rgba(0, 0, 0, 0.50);
-  pointer-events: none;
 }
 
     .visual {
@@ -75,22 +95,39 @@
   z-index: 0;
 }
 
-    .slide {
-      background-image: var(--image);
-      background-position: center;
-      background-size: cover;
-      opacity: 0;
-      transform: scale(1.025);
-      transition: opacity 1.2s ease, transform 7s ease;
-    }
+.slide {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transform: scale(1.01);
+  pointer-events: none;
+  transition: opacity 2s ease-in-out;
+}
 
-    .slide.is-active {
-      opacity: 1;
-      transform: scale(1);
-    }
+.slide.is-active {
+  opacity: 1;
+  animation: slowZoom 6.5s linear forwards;
+}
+
+.slide.no-transition {
+  transition: none !important;
+}
+
+@keyframes slowZoom {
+  from {
+    transform: scale(1.025);
+  }
+  to {
+    transform: scale(1.00);
+  }
+}
 
     .visual-shade {
-  background: rgba(0, 0, 0, 0.42);
+  background: rgba(0, 0, 0, 0.5);
 }
 
     .overlay-header {
@@ -184,32 +221,36 @@
     }
 
     .hero-copy {
-      position: absolute;
-      left: 10.4vw;
-      top: 50%;
-      transform: translateY(-43%);
-      max-width: min(700px, 75vw);
-      text-shadow: 0 2px 22px #0003;
-    }
+  position: absolute;
+  z-index: 5;
+  left: 10.4vw;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 85vw;
+  text-shadow: 0 2px 22px #0003;
+}
 
     .eyebrow {
-      margin: 0 0 24px;
-      color: #ffffffd6;
-    }
+  margin: 0 0 22px;
+  color: #ffffffd6;
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: .05em;
+}
 
-    h1 {
-      font-size: clamp(66px, 10.5vw, 150px);
-      line-height: .84;
-      letter-spacing: -.095em;
-      font-weight: 600;
-      margin: 0;
-    }
+   h1 {
+  font-size: clamp(52px, 7vw, 122px);
+  line-height: 1.2;
+  letter-spacing: -.05em;
+  font-weight: 600;
+  margin: 0;
+}
 
     h1 em {
-      font-family: Georgia, "Times New Roman", serif;
-      font-weight: 400;
-      letter-spacing: -.08em;
-    }
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  letter-spacing: -.065em;
+}
 
     .intro {
       font-size: clamp(13px, 1.25vw, 17px);
@@ -299,6 +340,9 @@
     }
 
     @media (max-width: 700px) {
+     .brand img {
+  height: 35px;
+}
       .overlay-header {
         padding: 24px 6vw;
       }
@@ -312,14 +356,16 @@
       }
 
       .hero-copy {
-        left: 7vw;
-        top: 49%;
-        max-width: 86vw;
-      }
+  left: 7vw;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 86vw;
+}
 
-      h1 {
-        font-size: clamp(64px, 16vw, 112px);
-      }
+h1 {
+  font-size: clamp(44px, 10vw, 88px);
+  line-height: .94;
+}
 
       .intro {
         max-width: 310px;
@@ -334,10 +380,6 @@
     @media (max-width: 380px) {
       .eyebrow {
         font-size: 9px;
-      }
-
-      h1 {
-        font-size: 16vw;
       }
 
       .intro {
@@ -361,26 +403,21 @@
 
   <main class="stage" aria-label="apresentação">
 
-    <div class="visual" aria-hidden="true">
-      <div class="slide is-active" style="--image:url('https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=2400&q=85')"></div>
-      <div class="slide" style="--image:url('https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=2400&q=85')"></div>
-      <div class="slide" style="--image:url('https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=2400&q=85')"></div>
-      <div class="visual-shade"></div>
-    </div>
+  <div class="visual" aria-hidden="true">
+  <div class="slide is-active"
+       data-image="ativos/imagens/conversas1.webp"></div>
+  <div class="slide"
+       data-image="ativos/imagens/comemorata1.webp"></div>
+  <div class="visual-shade"></div>
+</div>
 
     <header class="overlay-header">
 
-      <a class="brand" href="index.html" aria-label="rdct — início">
-        <span class="brand-symbol">M<span>.</span></span>
-        <span class="brand-name">NÚCLEO<br>MARGEM</span>
-      </a>
+ <a class="brand" href="index.html" aria-label="Início">
+  <img src="ativos/logos/rdctbr.png" alt="Logo">
+</a>
 
-      <div class="header-location">
-        ASSOCIAÇÃO CULTURAL<br>
-        CURITIBA · BRASIL
-      </div>
-
-      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+            <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
         <span>MENU</span>
         <span class="menu-lines" aria-hidden="true">
           <i></i>
@@ -392,12 +429,8 @@
 
     <div class="hero-copy">
       <p class="eyebrow">ARTE · CULTURA · EDUCAÇÃO INFORMAL</p>
-      <h1>Um campo<br>em <em>movimento.</em></h1>
-      <p class="intro">
-        Associação cultural independente dedicada à criação,
-        à pesquisa e à circulação de práticas artísticas.
-      </p>
-    </div>
+      <h1>cooperação<br><em>multiplicidade</em></h1>
+          </div>
 
     <nav class="site-menu" id="site-menu" aria-hidden="true">
 
