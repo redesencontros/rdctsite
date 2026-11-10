@@ -1,458 +1,441 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#171816">
-  <meta name="description" content="rdct">
-  <title>rdct</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --ink: #171816;
-      --paper: #f1f0eb;
-      --acid: #d7ff3f;
-      --sans: "Manrope", Arial, sans-serif;
-      --mono: "DM Mono", monospace;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html, body {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      overflow: hidden;
-    }
-
-    body {
-  font-family: var(--sans);
-  background: #171816;
-  color: white;
-  -webkit-font-smoothing: antialiased;
-  user-select: none;
-  -webkit-user-select: none;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>rdct</title>
+<style>
+/* RESET */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    background: #ffffff; font-family: sans-serif;
 }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button {
-      font: inherit;
-    }
-
-.brand img {
-  display: block;
-  width: auto;
-  height: 38px;
-  max-width: 180px;
-  object-fit: contain;
-}
-    .stage {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  height: 100dvh;
-  min-height: 420px;
-  overflow: hidden;
-  isolation: isolate;
-  background: #000;
+/* TYPOGRAPHY */
+@font-face {
+    font-family: "MyFont";
+    src: url("https://redesencontros.github.io/dancaeissoaquio/assets/fonts/jost3.woff2") format("woff2");
+    font-weight: 370; font-style: normal;
 }
 
-.visual,
-.slide,
-.visual-shade {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+/* BOIDS BACKGROUND */
+#background { position: fixed; inset: 0; z-index: 0; background: #ffffff; }
+#canvas {
+    position: absolute; inset: 0; display: block;
+    width: 100%; height: 100%; pointer-events: none;
 }
 
-.visual {
-  z-index: 0;
+/* LOGO */
+#header {
+    position: fixed; top: 3vh; left: 50%; transform: translateX(-50%);
+    z-index: 10; pointer-events: none;
 }
+#header img { display: block; width: clamp(100px, 18vw, 300px); height: auto; }
 
-.slide {
-  z-index: 1;
+/* ROOT MENU */
+#rootMenu {
+    position: fixed; top: 30px; left: 30px; z-index: 100;
+    display: flex; flex-direction: column; align-items: flex-start;
+    font-family: MyFont, sans-serif; font-size: 16px; font-weight: 370;
+    color: #000000;
+
+    /* Fundo translúcido e blur uniforme do que estiver atrás */
+    background: rgba(255, 255, 255, 0.1);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+
+    /* Respiro entre os textos e as bordas */
+    padding: 15px 20px;
+    border-radius: 15px;
 }
-
-.visual-shade {
-  z-index: 2;
-  background: rgba(0, 0, 0, 0.50);
+.menuItem {
+    position: relative; cursor: pointer; padding: 5px 0;
+    color: #000000; transition: opacity 0.2s ease;
 }
+.menuItem:hover { opacity: 0.45; }
 
-    .visual {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
+/* SUBMENU */
+#submenu {
+    display: none; flex-direction: column;
+    margin-top: 5px; margin-left: 12px; font-size: 14px;
 }
-
-.slide {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  opacity: 0;
-  transform: scale(1.01);
-  pointer-events: none;
-  transition: opacity 2s ease-in-out;
+#submenu.open { display: flex; }
+.submenuItem {
+    cursor: pointer; padding: 4px 0; color: #000000;
+    transition: opacity 0.2s ease;
 }
+.submenuItem:hover { opacity: 0.45; }
 
-.slide.is-active {
-  opacity: 1;
-  animation: slowZoom 6.5s linear forwards;
+/* CONTENT WINDOW */
+#contentWindow {
+    position: fixed; inset: 0; z-index: 50;
+    display: none; align-items: center; justify-content: center;
+    padding: 30px; pointer-events: none;
 }
+#contentWindow.open { display: flex; }
+#contentPanel {
+    position: relative;
+    width: min(800px, 100%); max-height: 80vh;
+    overflow-y: auto;
 
-.slide.no-transition {
-  transition: none !important;
+    /* Respiro interno ampliado */
+    padding: clamp(40px, 5vw, 65px);
+
+    /* 10% de branco + blur regular de 8px */
+    background: rgba(255, 255, 255, 0.1);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+
+    border-radius: 15px;
+    font-family: MyFont, sans-serif; font-size: 16px;
+    font-weight: 370; line-height: 1.5; color: #000000;
+    pointer-events: auto;
 }
+#contentPanel h2 { font-size: 18px; font-weight: 370; margin-bottom: 25px; }
+#contentPanel p { margin-bottom: 15px; }
+#contentPanel a { color: #000000; text-decoration: none; }
+#contentPanel a:hover { opacity: 0.5; }
 
-@keyframes slowZoom {
-  from {
-    transform: scale(1.025);
-  }
-  to {
-    transform: scale(1.00);
-  }
+/* CLOSE BUTTON */
+#closeWindow {
+    position: absolute; top: 20px; right: 22px;
+    border: none; background: none; color: #000000;
+    font-family: sans-serif; font-size: 23px; font-weight: 300;
+    cursor: pointer; transition: opacity 0.2s ease;
 }
+#closeWindow:hover { opacity: 0.4; }
 
-    .visual-shade {
-  background: rgba(0, 0, 0, 0.5);
+/* SCROLLBAR */
+#contentPanel::-webkit-scrollbar { display: none; }
+#contentPanel { scrollbar-width: none; }
+
+/* MOBILE */
+@media (max-width: 600px) {
+    #header { top: 20px; left: auto; right: 20px; transform: none; }
+    #header img { width: clamp(80px, 35vw, 150px); }
+    #rootMenu {
+        top: 20px; left: 20px; font-size: 15px;
+        padding: 13px 17px;
+    }
+    #submenu { font-size: 13px; }
+    #contentWindow { padding: 15px; }
+    #contentPanel { max-height: 85vh; padding: 45px 28px 35px; }
 }
-
-    .overlay-header {
-      position: absolute;
-      z-index: 5;
-      top: 0;
-      left: 0;
-      width: 100%;
-      padding: 34px 5.2vw;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-shadow: 0 1px 12px #0003;
-    }
-
-    .brand-symbol {
-      font-size: 43px;
-      font-weight: 800;
-      letter-spacing: -.13em;
-      line-height: .8;
-    }
-
-    .brand-symbol span {
-      color: var(--acid);
-    }
-
-    .brand-name {
-      font-size: 10px;
-      font-weight: 800;
-      line-height: 1.08;
-      letter-spacing: .07em;
-    }
-
-    .header-location,
-    .eyebrow,
-    .menu-top,
-    .menu-links small {
-      font: 10px/1.55 var(--mono);
-      letter-spacing: .055em;
-    }
-
-    .header-location {
-      margin-left: auto;
-      margin-right: 7vw;
-      color: #ffffffc7;
-    }
-
-    .menu-toggle {
-      border: 0;
-      background: none;
-      color: white;
-      display: flex;
-      align-items: center;
-      gap: 17px;
-      cursor: pointer;
-      font: 10px var(--mono);
-      letter-spacing: .08em;
-      padding: 8px 0;
-      text-shadow: 0 1px 12px #0005;
-    }
-
-    .menu-lines {
-      width: 29px;
-      height: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .menu-lines i {
-      height: 1px;
-      width: 100%;
-      background: white;
-      display: block;
-      transition: transform .25s;
-    }
-
-    .menu-toggle[aria-expanded=true] .menu-lines i:first-child {
-      transform: translateY(3.5px) rotate(45deg);
-    }
-
-    .menu-toggle[aria-expanded=true] .menu-lines i:last-child {
-      transform: translateY(-3.5px) rotate(-45deg);
-    }
-
-    .hero-copy {
-  position: absolute;
-  z-index: 5;
-  left: 10.4vw;
-  top: 50%;
-  transform: translateY(-50%);
-  max-width: 85vw;
-  text-shadow: 0 2px 22px #0003;
-}
-
-    .eyebrow {
-  margin: 0 0 22px;
-  color: #ffffffd6;
-  font-size: 12px;
-  line-height: 1.5;
-  letter-spacing: .05em;
-}
-
-   h1 {
-  font-size: clamp(52px, 7vw, 122px);
-  line-height: 1.2;
-  letter-spacing: -.05em;
-  font-weight: 600;
-  margin: 0;
-}
-
-    h1 em {
-  font-family: Georgia, "Times New Roman", serif;
-  font-weight: 400;
-  letter-spacing: -.065em;
-}
-
-    .intro {
-      font-size: clamp(13px, 1.25vw, 17px);
-      line-height: 1.6;
-      max-width: 390px;
-      margin: 32px 0 0;
-      color: #ffffffdf;
-    }
-
-    .site-menu {
-      position: fixed;
-      z-index: 10;
-      top: 0;
-      right: 0;
-      width: min(570px, 100%);
-      height: 100%;
-      height: 100dvh;
-      background: var(--ink);
-      color: var(--paper);
-      padding: 34px 5vw 28px;
-      transform: translateX(102%);
-      transition: transform .45s cubic-bezier(.7,0,.2,1);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .site-menu.open {
-      transform: translateX(0);
-    }
-
-    .menu-top {
-      display: flex;
-      justify-content: flex-end;
-      color: #a7a99f;
-    }
-
-    .menu-close {
-      border: 0;
-      background: none;
-      color: var(--paper);
-      font-size: 36px;
-      line-height: 1;
-      font-weight: 300;
-      cursor: pointer;
-    }
-
-    .menu-links {
-      display: flex;
-      flex-direction: column;
-      margin: auto 0;
-    }
-
-    .menu-links a {
-      display: grid;
-      grid-template-columns: 40px 1fr auto;
-      align-items: baseline;
-      border-bottom: 1px solid #ffffff28;
-      padding: 18px 0;
-      font-size: clamp(28px, 4vw, 46px);
-      letter-spacing: -.065em;
-      transition: color .2s;
-    }
-
-    .menu-links a:hover {
-      color: var(--acid);
-    }
-
-    .menu-links small {
-      color: #999b92;
-      visibility: hidden;
-    }
-
-    .menu-backdrop {
-      position: fixed;
-      z-index: 8;
-      inset: 0;
-      border: 0;
-      background: #0008;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .3s;
-    }
-
-    .menu-backdrop.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    @media (max-width: 700px) {
-     .brand img {
-  height: 35px;
-}
-      .overlay-header {
-        padding: 24px 6vw;
-      }
-
-      .header-location {
-        display: none;
-      }
-
-      .brand-symbol {
-        font-size: 37px;
-      }
-
-      .hero-copy {
-  left: 7vw;
-  top: 50%;
-  transform: translateY(-50%);
-  max-width: 86vw;
-}
-
-h1 {
-  font-size: clamp(44px, 10vw, 88px);
-  line-height: .94;
-}
-
-      .intro {
-        max-width: 310px;
-        margin-top: 24px;
-      }
-
-      .site-menu {
-        padding: 27px 7vw 23px;
-      }
-    }
-
-    @media (max-width: 380px) {
-      .eyebrow {
-        font-size: 9px;
-      }
-
-      .intro {
-        font-size: 12px;
-        max-width: 270px;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .slide,
-      .site-menu,
-      .menu-backdrop,
-      .menu-lines i {
-        transition: none;
-      }
-    }
-  </style>
+</style>
 </head>
+<body>
 
-<body class="home">
+<!-- BOIDS -->
+<div id="background"><canvas id="canvas"></canvas></div>
 
-  <main class="stage" aria-label="apresentação">
+<!-- LOGO -->
+<header id="header">
+    <img id="headerImage"
+         src="file:///C:/Users/bsr/Desktop/Website%20rdct/ativos/logos/rdctbr.png"
+         alt="Logomarca">
+</header>
 
-  <div class="visual" aria-hidden="true">
-  <div class="slide is-active"
-       data-image="ativos/imagens/conversas1.webp"></div>
-  <div class="slide"
-       data-image="ativos/imagens/comemorata1.webp"></div>
-  <div class="visual-shade"></div>
+<!-- ROOT MENU -->
+<nav id="rootMenu">
+    <div class="menuItem" data-page="sobre">SOBRE</div>
+    <div class="menuItem" id="realizacoesToggle">REALIZAÇÕES</div>
+    <div id="submenu">
+        <div class="submenuItem" data-page="historico">HISTÓRICO</div>
+        <div class="submenuItem" data-page="ficha">FICHA TÉCNICA</div>
+    </div>
+    <div class="menuItem" data-page="contato">CONTATO</div>
+</nav>
+
+<!-- CONTENT WINDOW -->
+<div id="contentWindow">
+    <div id="contentPanel">
+        <button id="closeWindow" aria-label="Fechar">×</button>
+        <div id="windowContent"></div>
+    </div>
 </div>
 
-    <header class="overlay-header">
+<script>
+/* BOIDS BACKGROUND */
+const canvas = document.getElementById("canvas");
+const gl = canvas.getContext("webgl", { alpha: false, antialias: true }) ||
+           canvas.getContext("experimental-webgl");
+if (!gl) throw new Error("WebGL não disponível.");
 
- <a class="brand" href="index.html" aria-label="Início">
-  <img src="ativos/logos/rdctbr.png" alt="Logo">
-</a>
+let width, height, pixelRatio = 1;
+function resize() {
+    pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = Math.round(width * pixelRatio);
+    canvas.height = Math.round(height * pixelRatio);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+}
+window.addEventListener("resize", resize);
+resize();
 
-            <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
-        <span>MENU</span>
-        <span class="menu-lines" aria-hidden="true">
-          <i></i>
-          <i></i>
-        </span>
-      </button>
+const vertexShaderSource = `
+attribute vec2 a_position;
+uniform vec2 u_resolution;
+uniform float u_pixelRatio;
+void main() {
+    vec2 zeroToOne = a_position / u_resolution;
+    vec2 zeroToTwo = zeroToOne * 2.0;
+    vec2 clipSpace = zeroToTwo - 1.0;
+    gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+    gl_PointSize = 1.5 * u_pixelRatio;
+}`;
 
-    </header>
+const fragmentShaderSource = `
+precision mediump float;
+void main() {
+    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+}`;
 
-    <div class="hero-copy">
-      <p class="eyebrow">ARTE · CULTURA · EDUCAÇÃO INFORMAL</p>
-      <h1>cooperação<br><em>multiplicidade</em></h1>
-          </div>
+function createShader(type, source) {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        console.error(gl.getShaderInfoLog(shader));
+        throw new Error("Erro ao compilar shader.");
+    }
+    return shader;
+}
+const vertexShader = createShader(gl.VERTEX_SHADER, vertexShaderSource);
+const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
+const program = gl.createProgram();
+gl.attachShader(program, vertexShader);
+gl.attachShader(program, fragmentShader);
+gl.linkProgram(program);
+if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    console.error(gl.getProgramInfoLog(program));
+    throw new Error("Erro ao criar programa WebGL.");
+}
+gl.useProgram(program);
 
-    <nav class="site-menu" id="site-menu" aria-hidden="true">
+const positionLocation = gl.getAttribLocation(program, "a_position");
+const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+const pixelRatioLocation = gl.getUniformLocation(program, "u_pixelRatio");
+const positionBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+gl.enableVertexAttribArray(positionLocation);
+gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
-      <div class="menu-top">
-        <span></span>
-        <button class="menu-close" type="button" aria-label="Fechar menu">×</button>
-      </div>
+/* BOIDS CONFIGURATION */
+const isMobile = window.innerWidth < 768;
+const BOID_COUNT = isMobile ? 200 : 4000;
+const boids = [];
+let frame = 0;
+const perception = 22;
+const cellSize = perception;
+let grid = {};
 
-      <div class="menu-links">
-        <a href="associacao.html"><small>01</small> Associação</a>
-        <a href="projetos.html"><small>02</small> Projetos e ações</a>
-        <a href="integrantes.html"><small>03</small> Integrantes</a>
-        <a href="contato.html"><small>04</small> Contato</a>
-      </div>
+function buildGrid() {
+    grid = {};
+    for (let i = 0; i < boids.length; i++) {
+        const b = boids[i];
+        const cx = Math.floor(b.x / cellSize);
+        const cy = Math.floor(b.y / cellSize);
+        const key = cx + "," + cy;
+        if (!grid[key]) grid[key] = [];
+        grid[key].push(b);
+    }
+}
+function getNearbyBoids(boid) {
+    const cx = Math.floor(boid.x / cellSize);
+    const cy = Math.floor(boid.y / cellSize);
+    let neighbors = [];
+    for (let x = -1; x <= 1; x++) {
+        for (let y = -1; y <= 1; y++) {
+            const key = (cx + x) + "," + (cy + y);
+            if (grid[key]) neighbors = neighbors.concat(grid[key]);
+        }
+    }
+    return neighbors;
+}
 
-    </nav>
+/* GLOBAL FLOW */
+let flowTime = 0;
+const flowScale = 0.003;
+let wavePhase = 0;
+const entrySide = Math.floor(Math.random() * 4);
 
-    <button class="menu-backdrop" aria-label="Fechar menu" tabindex="-1"></button>
+/* BOID CLASS */
+class Boid {
+    constructor() {
+        const clusterRadius = 150;
+        const angle = Math.random() * Math.PI * 2;
+        const r = Math.random() * clusterRadius;
+        const far = 300;
+        if (entrySide === 0) {
+            this.x = -far + Math.cos(angle) * r;
+            this.y = height / 2 + Math.sin(angle) * r;
+            this.vx = 3.5; this.vy = (Math.random() - 0.5) * 0.4;
+        }
+        if (entrySide === 1) {
+            this.x = width + far + Math.cos(angle) * r;
+            this.y = height / 2 + Math.sin(angle) * r;
+            this.vx = -3.5; this.vy = (Math.random() - 0.5) * 0.4;
+        }
+        if (entrySide === 2) {
+            this.x = width / 2 + Math.cos(angle) * r;
+            this.y = -far + Math.sin(angle) * r;
+            this.vx = (Math.random() - 0.5) * 0.4; this.vy = 3.5;
+        }
+        if (entrySide === 3) {
+            this.x = width / 2 + Math.cos(angle) * r;
+            this.y = height + far + Math.sin(angle) * r;
+            this.vx = (Math.random() - 0.5) * 0.4; this.vy = -3.5;
+        }
+    }
+    update() {
+        let alignX = 0, alignY = 0;
+        let cohesionX = 0, cohesionY = 0;
+        let separationX = 0, separationY = 0;
+        let count = 0;
+        const perceptionSq = perception * perception;
+        const neighbors = getNearbyBoids(this);
+        for (let other of neighbors) {
+            if (other === this) continue;
+            const dx = other.x - this.x;
+            const dy = other.y - this.y;
+            const distSq = dx * dx + dy * dy;
+            if (distSq < perceptionSq) {
+                alignX += other.vx; alignY += other.vy;
+                cohesionX += other.x; cohesionY += other.y;
+                if (distSq < 60) {
+                    separationX -= dx; separationY -= dy;
+                }
+                count++;
+            }
+        }
+        if (count > 0) {
+            alignX /= count; alignY /= count;
+            cohesionX /= count; cohesionY /= count;
+            this.vx += (alignX - this.vx) * 0.05;
+            this.vy += (alignY - this.vy) * 0.05;
+            this.vx += (cohesionX - this.x) * 0.001;
+            this.vy += (cohesionY - this.y) * 0.001;
+            this.vx += separationX * 0.02;
+            this.vy += separationY * 0.02;
+        }
 
-  </main>
+        /* GLOBAL PULL */
+        const globalPull = 0.0001;
+        const driftX = width / 2 + Math.sin(flowTime * 0.2) * width * 0.35;
+        const driftY = height / 2 + Math.cos(flowTime * 0.15) * height * 0.35;
+        this.vx += (driftX - this.x) * globalPull;
+        this.vy += (driftY - this.y) * globalPull;
 
-  <script src="script.js"></script>
+        /* VERTICAL BALANCE */
+        this.vy += (height / 2 - this.y) * 0.00001;
+        this.vx += Math.sin(wavePhase + this.x * 0.01) * 0.05;
+        this.vy += Math.cos(wavePhase + this.y * 0.01) * 0.05;
 
+        /* ORGANIC FLOW FIELD */
+        const nx = this.x * flowScale;
+        const ny = this.y * flowScale;
+        const fx = Math.sin(nx + flowTime);
+        const fy = Math.cos(ny + flowTime * 0.8);
+        this.vx += fx * 0.05;
+        this.vy += fy * 0.05;
+
+        /* DIRECTIONAL DRIFT */
+        this.vx += Math.sin(flowTime * 0.2) * 0.01;
+
+        /* TURBULENCE */
+        this.vx += (Math.random() - 0.5) * 0.03;
+        this.vy += (Math.random() - 0.5) * 0.03;
+
+        /* SCREEN EDGE PUSH */
+        const margin = 120;
+        const push = 0.002;
+        if (this.x < margin) this.vx += push;
+        if (this.x > width - margin) this.vx -= push;
+        if (this.y < margin) this.vy += push;
+        if (this.y > height - margin) this.vy -= push;
+
+        /* SPEED LIMIT */
+        const speedSq = this.vx * this.vx + this.vy * this.vy;
+        const maxSpeed = 3.5;
+        if (speedSq > maxSpeed * maxSpeed) {
+            const scale = maxSpeed / Math.sqrt(speedSq);
+            this.vx *= scale; this.vy *= scale;
+        }
+
+        /* POSITION */
+        this.x += this.vx;
+        this.y += this.vy;
+    }
+}
+
+/* INITIALIZE BOIDS */
+for (let i = 0; i < BOID_COUNT; i++) boids.push(new Boid());
+const positions = new Float32Array(BOID_COUNT * 2);
+gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+gl.bufferData(gl.ARRAY_BUFFER, positions.byteLength, gl.DYNAMIC_DRAW);
+
+/* ANIMATION LOOP */
+function animate() {
+    frame++;
+    flowTime += 0.004;
+    wavePhase += 0.015;
+    buildGrid();
+    for (let i = 0; i < boids.length; i++) {
+        if (i % 10 === frame % 10) boids[i].update();
+        positions[i * 2] = boids[i].x;
+        positions[i * 2 + 1] = boids[i].y;
+    }
+    gl.clearColor(1, 1, 1, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.uniform2f(resolutionLocation, width, height);
+    gl.uniform1f(pixelRatioLocation, pixelRatio);
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.bufferSubData(gl.ARRAY_BUFFER, 0, positions);
+    gl.drawArrays(gl.POINTS, 0, BOID_COUNT);
+    requestAnimationFrame(animate);
+}
+animate();
+
+/* MENU SYSTEM */
+const pages = {
+    sobre: `<h2>SOBRE</h2><p>Insira aqui o texto de apresentação.</p>`,
+    historico: `<h2>HISTÓRICO</h2><p>Insira aqui o conteúdo do histórico.</p>`,
+    ficha: `<h2>FICHA TÉCNICA</h2><p>Insira aqui a ficha técnica.</p>`,
+    contato: `<h2>CONTATO</h2><p>Insira aqui as informações de contato.</p>`
+};
+
+const contentWindow = document.getElementById("contentWindow");
+const windowContent = document.getElementById("windowContent");
+const closeWindow = document.getElementById("closeWindow");
+const realizacoesToggle = document.getElementById("realizacoesToggle");
+const submenu = document.getElementById("submenu");
+
+function openPage(page) {
+    if (!pages[page]) return;
+    windowContent.innerHTML = pages[page];
+    contentWindow.classList.add("open");
+}
+function closePage() { contentWindow.classList.remove("open"); }
+
+document.querySelectorAll("#rootMenu .menuItem[data-page]").forEach(item => {
+    item.addEventListener("click", () => openPage(item.dataset.page));
+});
+realizacoesToggle.addEventListener("click", () => submenu.classList.toggle("open"));
+document.querySelectorAll(".submenuItem").forEach(item => {
+    item.addEventListener("click", () => openPage(item.dataset.page));
+});
+closeWindow.addEventListener("click", closePage);
+contentWindow.addEventListener("click", event => {
+    if (event.target === contentWindow) closePage();
+});
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+        closePage();
+        submenu.classList.remove("open");
+    }
+});
+</script>
 </body>
 </html>
