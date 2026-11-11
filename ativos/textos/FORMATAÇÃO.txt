@@ -1,0 +1,9 @@
+<strong>negrito</strong>
+
+<em>itálico</em>
+
+<u>sublinhado</u>
+
+<strong><em>Negrito e itálico</em></strong>
+
+<p>PARÁGRAFO
