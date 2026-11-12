@@ -519,12 +519,34 @@ html, body {
         gap: 4px;
     }
 }
+/* PULL TO REFRESH */
 
+#pullIndicator {
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    transform: translate(-50%, -50px);
+    z-index: 9999;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: #ffffff;
+    color: #000000;
+    font-family: MyFont, sans-serif;
+    font-size: 12px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#pullIndicator.visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
 </style>
 </head>
 
 <body>
-
+<div id="pullIndicator">Puxe para atualizar</div>
 <!-- BOIDS -->
 <div id="background">
     <canvas id="canvas"></canvas>
@@ -1229,7 +1251,98 @@ document.addEventListener("keydown", event => {
         realizationsDropdown.classList.remove("open");
     }
 });
+/* =====================================================
+   PULL TO REFRESH — MOBILE
+===================================================== */
 
+if (window.matchMedia("(max-width: 600px)").matches) {
+
+    const pullIndicator = document.getElementById("pullIndicator");
+
+    let touchStartY = 0;
+    let pullDistance = 0;
+    let pulling = false;
+
+    const pullThreshold = 90;
+    const pullMaximum = 120;
+
+    document.addEventListener("touchstart", event => {
+
+        if (event.touches.length !== 1) return;
+
+        if (
+            event.target.closest(
+                "#mainMenu, #contentWindow, #emailContact, a"
+            )
+        ) {
+            return;
+        }
+
+        touchStartY = event.touches[0].clientY;
+        pullDistance = 0;
+        pulling = true;
+
+    }, { passive: true });
+
+    document.addEventListener("touchmove", event => {
+
+        if (!pulling) return;
+
+        const currentY = event.touches[0].clientY;
+        const distance = currentY - touchStartY;
+
+        if (distance > 0) {
+
+            pullDistance = Math.min(distance, pullMaximum);
+
+            if (pullDistance > 10) {
+                event.preventDefault();
+
+                pullIndicator.classList.add("visible");
+
+                pullIndicator.style.top =
+                    (12 + pullDistance * 0.45) + "px";
+
+                pullIndicator.textContent =
+                    pullDistance >= pullThreshold
+                    ? "Solte para atualizar"
+                    : "Puxe para atualizar";
+            }
+        }
+
+    }, { passive: false });
+
+    document.addEventListener("touchend", () => {
+
+        if (!pulling) return;
+
+        if (pullDistance >= pullThreshold) {
+
+            pullIndicator.textContent = "Atualizando...";
+
+            window.location.reload();
+
+        } else {
+
+            pullIndicator.classList.remove("visible");
+            pullIndicator.style.top = "12px";
+        }
+
+        pulling = false;
+        pullDistance = 0;
+
+    });
+
+    document.addEventListener("touchcancel", () => {
+
+        pulling = false;
+        pullDistance = 0;
+
+        pullIndicator.classList.remove("visible");
+        pullIndicator.style.top = "12px";
+
+    });
+}
 </script>
 
 </body>
