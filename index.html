@@ -21,12 +21,14 @@ html, body {
     overflow: hidden;
     background: #ffffff;
     font-family: sans-serif;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 /* TYPOGRAPHY */
 @font-face {
     font-family: "MyFont";
-    src: url("https://redesencontros.github.io/dancaeissoaquio/assets/fonts/jost3.woff2") format("woff2");
+    src: url("https://redesencontros.github.io/rdctsite/ativos/fontes/jost.woff2") format("woff2");
     font-weight: 370;
     font-style: normal;
 }
@@ -51,7 +53,7 @@ html, body {
 /* LOGO */
 #header {
     position: fixed;
-    top: 3vh;
+    top: 5vh;
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
@@ -60,196 +62,462 @@ html, body {
 
 #header img {
     display: block;
-    width: clamp(100px, 18vw, 300px);
+    width: clamp(30px, 18vw, 70px);
     height: auto;
 }
 
-/* ROOT MENU */
-#rootMenu {
-    position: fixed;
-    top: 30px;
-    left: 30px;
-    z-index: 100;
+/* TYPOGRAPHY SHARED */
+#mainMenu,
+#emailContact,
+#contentWindow {
+    font-family: MyFont, sans-serif;
+    font-weight: 370;
+    color: #000000;
+}
 
+/* MAIN MENU */
+#mainMenu {
+    position: fixed;
+    top: 5vh;
+    left: 30px;
+    transform: none;
+    z-index: 20;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-
-    font-family: MyFont, sans-serif;
+    gap: 5px;
     font-size: 16px;
-    font-weight: 370;
-    color: #000000;
-
-    background: rgba(255, 255, 255, 0.1);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-
-    padding: 15px 20px;
-    border-radius: 15px;
+    line-height: 1.4;
 }
 
 .menuItem {
     position: relative;
-    cursor: pointer;
-    padding: 5px 0;
     color: #000000;
-    transition: opacity 0.2s ease;
+    white-space: nowrap;
+    cursor: pointer;
+    text-transform: none;
+    transition: color 0.2s ease;
 }
 
 .menuItem:hover {
-    opacity: 0.45;
+    color: #888888;
 }
 
-/* SUBMENU */
-#submenu {
+/* REALIZATIONS DROPDOWN */
+#realizationsDropdown {
     display: none;
     flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
     margin-top: 5px;
-    margin-left: 12px;
-    font-size: 14px;
+    margin-left: 15px;
 }
 
-#submenu.open {
+#realizationsDropdown.open {
     display: flex;
 }
 
-.submenuItem {
-    cursor: pointer;
-    padding: 4px 0;
+.realizationItem {
     color: #000000;
-    transition: opacity 0.2s ease;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.2s ease;
 }
 
-.submenuItem:hover {
-    opacity: 0.45;
+.realizationItem:hover {
+    color: #888888;
 }
 
-/* CONTENT WINDOW */
+/* =====================================================
+   CONTENT WINDOW
+===================================================== */
+
 #contentWindow {
     position: fixed;
-    inset: 0;
-    z-index: 50;
-
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 30;
     display: none;
     align-items: center;
     justify-content: center;
-
-    padding: 30px;
-    pointer-events: none;
+    width: min(800px, 65vw);
+    max-height: 70vh;
+    overflow: hidden;
+    padding: 40px;
+    font-size: 16px;
+    line-height: 1.5;
+    text-align: left;
 }
 
 #contentWindow.open {
     display: flex;
 }
 
-#contentPanel {
+/* SOBRE */
+#contentWindow.plain {
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-radius: 0;
+}
+
+/* REALIZAÇÕES */
+#contentWindow.realization {
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-radius: 0;
+}
+
+/* CONTENT TEXT */
+#contentText {
+    width: 100%;
+    min-width: 0;
+    white-space: pre-line;
+}
+
+#contentText p {
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
+/* =====================================================
+   REDE: DUAS COLUNAS SEM ROLAGEM
+===================================================== */
+
+#contentWindow.network {
+    display: none;
+    align-items: stretch;
+    justify-content: center;
+
+    width: min(1000px, 86vw);
+    height: min(82vh, 760px);
+    max-height: 82vh;
+
+    overflow: hidden;
+    padding: 30px 40px;
+}
+
+#contentWindow.network.open {
+    display: flex;
+}
+
+#contentWindow.network #contentText {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    padding: 0;
+    white-space: normal;
+}
+
+/* CONTEÚDO GERAL DA REDE */
+
+#networkContent {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    column-gap: 45px;
+    width: 100%;
+    height: 100%;
+}
+
+/* COLUNAS */
+
+.networkColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+    height: 100%;
+}
+
+/* TÍTULOS */
+
+.networkCategory {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin: 0 0 15px 0;
+    padding-top: 100px;
+    font-size: 1em;
+    line-height: 1.4;
+    font-weight: 700;
+}
+
+/* =====================================================
+   NÚCLEO REGULAR: GRADE 2x2
+===================================================== */
+
+.networkPeople {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, auto);
+    align-content: center;
+    justify-items: center;
+    column-gap: 20px;
+    row-gap: 18px;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+}
+
+/* PESSOA */
+
+.networkPerson {
     position: relative;
-
-    width: min(800px, 100%);
-    max-height: 80vh;
-    overflow-y: auto;
-
-    padding: clamp(40px, 5vw, 65px);
-
-    background: rgba(255, 255, 255, 0.1);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-
-    border-radius: 15px;
-
-    font-family: MyFont, sans-serif;
-    font-size: 16px;
-    font-weight: 370;
-    line-height: 1.5;
-    color: #000000;
-
-    pointer-events: auto;
-}
-
-#contentPanel h2 {
-    font-size: 18px;
-    font-weight: 370;
-    margin-bottom: 25px;
-}
-
-#contentPanel p {
-    margin-bottom: 15px;
-}
-
-#contentPanel a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
     color: #000000;
     text-decoration: none;
+    text-align: center;
+    min-width: 0;
 }
 
-#contentPanel a:hover {
-    opacity: 0.5;
-}
+/* CAMADA BRANCA SOBRE A FOTO */
 
-/* CLOSE BUTTON */
-#closeWindow {
+.networkPerson::before {
+    content: "";
     position: absolute;
-    top: 20px;
-    right: 22px;
-
-    border: none;
-    background: none;
-
-    color: #000000;
-    font-family: sans-serif;
-    font-size: 23px;
-    font-weight: 300;
-
-    cursor: pointer;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(100%, 18vh, 150px);
+    aspect-ratio: 1 / 1;
+    background: rgba(255, 255, 255, 0.55);
+    opacity: 0;
+    pointer-events: none;
     transition: opacity 0.2s ease;
+    z-index: 1;
 }
 
-#closeWindow:hover {
-    opacity: 0.4;
+.networkPerson:hover::before {
+    opacity: 1;
 }
 
-/* SCROLLBAR */
-#contentPanel::-webkit-scrollbar {
-    display: none;
+/* FOTOS QUADRADAS */
+
+.networkPerson img {
+    display: block;
+    width: min(100%, 18vh, 150px);
+    aspect-ratio: 1 / 1;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
+    margin: 0 0 4px 0;
 }
 
-#contentPanel {
-    scrollbar-width: none;
+/* NOMES */
+
+.networkPerson span {
+    display: block;
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+    text-align: center;
+    transition: color 0.2s ease;
 }
 
-/* MOBILE */
+.networkPerson:hover span {
+    color: #888888;
+}
+
+/* =====================================================
+   PARCERIAS
+===================================================== */
+
+.networkPartners {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    gap: 7px;
+    text-align: center;
+}
+
+.networkPartners a {
+    display: block;
+    max-width: 100%;
+    color: #000000;
+    text-decoration: none;
+    text-align: right;
+    line-height: 1.35;
+    transition: color 0.2s ease;
+}
+
+.networkPartners a:hover {
+    color: #888888;
+}
+
+/* PERFIS INDIVIDUAIS */
+
+.networkBack {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #000000;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.networkBack:hover {
+    color: #888888;
+}
+
+/* =====================================================
+   EMAIL
+===================================================== */
+
+#emailContact {
+    position: fixed;
+    bottom: 3vh;
+    right: 30px;
+    z-index: 10;
+    text-align: right;
+    white-space: nowrap;
+    font-size: 16px;
+    -webkit-user-select: text;
+    user-select: text;
+}
+
+#emailContact a {
+    color: #000000;
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-user-select: text;
+    user-select: text;
+    transition: color 0.2s ease;
+}
+
+#emailContact a:hover {
+    color: #888888;
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
 @media (max-width: 600px) {
 
     #header {
-        top: 20px;
-        left: auto;
-        right: 20px;
-        transform: none;
+        top: 35px;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
     }
 
-    #header img {
-        width: clamp(80px, 35vw, 150px);
-    }
+  #header img {
+    width: clamp(40px, 18vw, 70px);
+}
 
-    #rootMenu {
-        top: 20px;
+    #mainMenu {
+        top: 35px;
         left: 20px;
-        font-size: 15px;
-        padding: 13px 17px;
+        transform: none;
+        font-size: 13px;
+        gap: 5px;
     }
 
-    #submenu {
-        font-size: 13px;
+    #realizationsDropdown {
+        margin-left: 12px;
+        gap: 5px;
     }
 
     #contentWindow {
-        padding: 15px;
+        width: calc(100vw - 40px);
+        max-width: none;
+        max-height: 65vh;
+        padding: 25px;
+        font-size: 13px;
+        line-height: 1.4;
+        border-radius: 10px;
     }
 
-    #contentPanel {
-        max-height: 85vh;
-        padding: 45px 28px 35px;
+    /* REDE NO CELULAR */
+
+    #contentWindow.network {
+        width: calc(100vw - 30px);
+        height: 78vh;
+        max-height: 78vh;
+        padding: 18px 12px;
+        font-size: 11px;
+        line-height: 1.3;
     }
 
+    #networkContent {
+        grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+        column-gap: 12px;
+    }
+
+    .networkCategory {
+        margin-bottom: 10px;
+        font-size: 1em;
+    }
+
+    /* GRADE 2x2 NO CELULAR */
+
+    .networkPeople {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: repeat(2, auto);
+        column-gap: 8px;
+        row-gap: 14px;
+    }
+
+    .networkPerson img {
+        width: min(100%, 11vh, 80px);
+        margin-bottom: 3px;
+    }
+
+    .networkPerson::before {
+        width: min(100%, 11vh, 80px);
+    }
+
+    .networkPerson span {
+        font-size: 0.95em;
+    }
+
+    .networkPartners {
+        gap: 6px;
+    }
+
+    .networkPartners a {
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+    }
+
+    #emailContact {
+        bottom: 20px;
+        right: 20px;
+        font-size: 13px;
+    }
+}
+
+/* TELAS COM POUCA ALTURA */
+
+@media (max-height: 600px) and (min-width: 601px) {
+
+    #contentWindow.network {
+        height: 88vh;
+        max-height: 88vh;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .networkPerson img {
+        width: min(100%, 12vh, 95px);
+    }
+
+    .networkPerson::before {
+        width: min(100%, 12vh, 95px);
+    }
+
+    .networkPartners {
+        gap: 4px;
+    }
 }
 
 </style>
@@ -266,58 +534,51 @@ html, body {
 <header id="header">
     <img
         id="headerImage"
-        src="ativos/logos/rdctbr.png"
-        alt="Logomarca"
+        src="https://raw.githubusercontent.com/redesencontros/rdctsite/8cf3ec8ef2db295bfd288276372b4631fe39179f/ativos/logos/rdctpt.png"
+        alt="rdct"
     >
 </header>
 
-<!-- ROOT MENU -->
-<nav id="rootMenu">
+<!-- MAIN MENU -->
+<nav id="mainMenu">
 
-    <div class="menuItem" data-page="sobre">
-        SOBRE
+    <div class="menuItem" data-content="sobre">Sobre</div>
+    <div class="menuItem" data-content="rede">Rede</div>
+
+    <div class="menuItem" id="realizationsToggle">
+        Realizações
     </div>
 
-    <div
-        class="menuItem"
-        id="realizacoesToggle"
-        aria-expanded="false"
-    >
-        REALIZAÇÕES
-    </div>
-
-    <div id="submenu">
-
-        <div class="submenuItem" data-page="historico">
-            HISTÓRICO
-        </div>
-
-        <div class="submenuItem" data-page="ficha">
-            FICHA TÉCNICA
-        </div>
-
-    </div>
-
-    <div class="menuItem" data-page="contato">
-        CONTATO
+    <div id="realizationsDropdown">
+        <div class="realizationItem" data-realization="1">Realização 1</div>
+        <div class="realizationItem" data-realization="2">Realização 2</div>
+        <div class="realizationItem" data-realization="3">Realização 3</div>
+        <div class="realizationItem" data-realization="4">Realização 4</div>
+        <div class="realizationItem" data-realization="5">Realização 5</div>
+        <div class="realizationItem" data-realization="6">Realização 6</div>
+        <div class="realizationItem" data-realization="7">Realização 7</div>
+        <div class="realizationItem" data-realization="8">Realização 8</div>
+        <div class="realizationItem" data-realization="9">Realização 9</div>
+        <div class="realizationItem" data-realization="10">Realização 10</div>
+        <div class="realizationItem" data-realization="11">Realização 11</div>
+        <div class="realizationItem" data-realization="12">Realização 12</div>
+        <div class="realizationItem" data-realization="13">Realização 13</div>
+        <div class="realizationItem" data-realization="14">Realização 14</div>
+        <div class="realizationItem" data-realization="15">Realização 15</div>
     </div>
 
 </nav>
 
-<!-- CONTENT WINDOW -->
-<div
-    id="contentWindow"
-    aria-hidden="true"
->
-    <div id="contentPanel">
+<!-- CONTENT AREA -->
+<div id="contentWindow">
+    <div id="contentText"></div>
+</div>
 
-        <button id="closeWindow" aria-label="Fechar">
-            ×
-        </button>
-
-        <div id="windowContent"></div>
-
-    </div>
+<!-- EMAIL -->
+<div id="emailContact">
+    <a href="mailto:contato.rdct@gmail.com">
+        contato.rdct@gmail.com
+    </a>
 </div>
 
 <script>
@@ -343,8 +604,6 @@ let width;
 let height;
 let pixelRatio = 1;
 
-/* RESIZE */
-
 function resize() {
 
     pixelRatio = Math.min(
@@ -364,7 +623,6 @@ function resize() {
         canvas.width,
         canvas.height
     );
-
 }
 
 window.addEventListener("resize", resize);
@@ -398,10 +656,8 @@ const fragmentShaderSource = `
 precision mediump float;
 
 void main() {
-    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+    gl_FragColor = vec4(0.85, 0.85, 0.85, 1.0);
 }`;
-
-/* CREATE SHADERS */
 
 function createShader(type, source) {
 
@@ -416,7 +672,6 @@ function createShader(type, source) {
     }
 
     return shader;
-
 }
 
 const vertexShader = createShader(
@@ -442,8 +697,6 @@ if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
 
 gl.useProgram(program);
 
-/* ATTRIBUTES / UNIFORMS */
-
 const positionLocation =
     gl.getAttribLocation(program, "a_position");
 
@@ -456,7 +709,6 @@ const pixelRatioLocation =
 const positionBuffer = gl.createBuffer();
 
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-
 gl.enableVertexAttribArray(positionLocation);
 
 gl.vertexAttribPointer(
@@ -498,9 +750,7 @@ function buildGrid() {
         if (!grid[key]) grid[key] = [];
 
         grid[key].push(b);
-
     }
-
 }
 
 function getNearbyBoids(boid) {
@@ -519,21 +769,16 @@ function getNearbyBoids(boid) {
             if (grid[key]) {
                 neighbors = neighbors.concat(grid[key]);
             }
-
         }
-
     }
 
     return neighbors;
-
 }
 
 /* GLOBAL FLOW */
 
 let flowTime = 0;
-
 const flowScale = 0.003;
-
 let wavePhase = 0;
 
 const entrySide = Math.floor(Math.random() * 4);
@@ -545,10 +790,8 @@ class Boid {
     constructor() {
 
         const clusterRadius = 150;
-
         const angle = Math.random() * Math.PI * 2;
         const r = Math.random() * clusterRadius;
-
         const far = 300;
 
         if (entrySide === 0) {
@@ -558,7 +801,6 @@ class Boid {
 
             this.vx = 3.5;
             this.vy = (Math.random() - 0.5) * 0.4;
-
         }
 
         if (entrySide === 1) {
@@ -568,7 +810,6 @@ class Boid {
 
             this.vx = -3.5;
             this.vy = (Math.random() - 0.5) * 0.4;
-
         }
 
         if (entrySide === 2) {
@@ -578,7 +819,6 @@ class Boid {
 
             this.vx = (Math.random() - 0.5) * 0.4;
             this.vy = 3.5;
-
         }
 
         if (entrySide === 3) {
@@ -588,9 +828,7 @@ class Boid {
 
             this.vx = (Math.random() - 0.5) * 0.4;
             this.vy = -3.5;
-
         }
-
     }
 
     update() {
@@ -627,16 +865,12 @@ class Boid {
                 cohesionY += other.y;
 
                 if (distSq < 60) {
-
                     separationX -= dx;
                     separationY -= dy;
-
                 }
 
                 count++;
-
             }
-
         }
 
         if (count > 0) {
@@ -655,10 +889,7 @@ class Boid {
 
             this.vx += separationX * 0.02;
             this.vy += separationY * 0.02;
-
         }
-
-        /* GLOBAL PULL */
 
         const globalPull = 0.0001;
 
@@ -673,14 +904,10 @@ class Boid {
         this.vx += (driftX - this.x) * globalPull;
         this.vy += (driftY - this.y) * globalPull;
 
-        /* VERTICAL BALANCE */
-
         this.vy += (height / 2 - this.y) * 0.00001;
 
         this.vx += Math.sin(wavePhase + this.x * 0.01) * 0.05;
         this.vy += Math.cos(wavePhase + this.y * 0.01) * 0.05;
-
-        /* ORGANIC FLOW FIELD */
 
         const nx = this.x * flowScale;
         const ny = this.y * flowScale;
@@ -691,16 +918,10 @@ class Boid {
         this.vx += fx * 0.05;
         this.vy += fy * 0.05;
 
-        /* DIRECTIONAL DRIFT */
-
         this.vx += Math.sin(flowTime * 0.2) * 0.01;
-
-        /* TURBULENCE */
 
         this.vx += (Math.random() - 0.5) * 0.03;
         this.vy += (Math.random() - 0.5) * 0.03;
-
-        /* SCREEN EDGE PUSH */
 
         const margin = 120;
         const push = 0.002;
@@ -709,8 +930,6 @@ class Boid {
         if (this.x > width - margin) this.vx -= push;
         if (this.y < margin) this.vy += push;
         if (this.y > height - margin) this.vy -= push;
-
-        /* SPEED LIMIT */
 
         const speedSq =
             this.vx * this.vx +
@@ -724,16 +943,11 @@ class Boid {
 
             this.vx *= scale;
             this.vy *= scale;
-
         }
-
-        /* POSITION */
 
         this.x += this.vx;
         this.y += this.vy;
-
     }
-
 }
 
 /* INITIALIZE BOIDS */
@@ -771,7 +985,6 @@ function animate() {
 
         positions[i * 2] = boids[i].x;
         positions[i * 2 + 1] = boids[i].y;
-
     }
 
     gl.clearColor(1, 1, 1, 1);
@@ -803,219 +1016,218 @@ function animate() {
     );
 
     requestAnimationFrame(animate);
-
 }
 
 animate();
 
 
 /* =====================================================
-   MENU SYSTEM
+   TEXT CONTENT
 ===================================================== */
 
-/* CONTENT */
+const contentWindow = document.getElementById("contentWindow");
+const contentText = document.getElementById("contentText");
 
-const pages = {
-
-    sobre: `
-        <h2>SOBRE</h2>
-        <p>Insira aqui o texto de apresentação.</p>
-    `,
-
-    historico: `
-        <h2>HISTÓRICO</h2>
-        <p>Insira aqui o conteúdo do histórico.</p>
-    `,
-
-    ficha: `
-        <h2>FICHA TÉCNICA</h2>
-        <p>Insira aqui a ficha técnica.</p>
-    `,
-
-    contato: `
-        <h2>CONTATO</h2>
-        <p>Insira aqui as informações de contato.</p>
-    `
-
-};
+let contentRequestId = 0;
 
 
-/* ELEMENTS */
+/* =====================================================
+   LOAD TEXT
+===================================================== */
 
-const contentWindow =
-    document.getElementById("contentWindow");
+async function loadText(path, target, requestId) {
 
-const windowContent =
-    document.getElementById("windowContent");
+    try {
 
-const closeWindow =
-    document.getElementById("closeWindow");
+        const response = await fetch(path);
 
-const realizacoesToggle =
-    document.getElementById("realizacoesToggle");
+        if (!response.ok) {
+            throw new Error("Não foi possível carregar " + path);
+        }
 
-const submenu =
-    document.getElementById("submenu");
+        const text = await response.text();
 
+        if (requestId !== contentRequestId) {
+            return;
+        }
 
-/* SUBMENU CONTROL */
+        target.innerHTML = text.trim();
+        target.scrollTop = 0;
 
-function closeSubmenu() {
+    } catch (error) {
 
-    submenu.classList.remove("open");
+        if (requestId !== contentRequestId) {
+            return;
+        }
 
-    realizacoesToggle.setAttribute(
-        "aria-expanded",
-        "false"
-    );
+        console.error(error);
 
-}
-
-function toggleSubmenu() {
-
-    const isOpen = submenu.classList.contains("open");
-
-    closeSubmenu();
-
-    if (!isOpen) {
-
-        submenu.classList.add("open");
-
-        realizacoesToggle.setAttribute(
-            "aria-expanded",
-            "true"
-        );
-
+        target.textContent =
+            "Não foi possível carregar o conteúdo.";
     }
-
 }
 
 
-/* OPEN CONTENT WINDOW */
+/* =====================================================
+   MENU AND CONTENT WINDOWS
+===================================================== */
 
-function openPage(page) {
+const menuItems = document.querySelectorAll(".menuItem[data-content]");
+const realizationsToggle = document.getElementById("realizationsToggle");
+const realizationsDropdown = document.getElementById("realizationsDropdown");
+const realizationItems = document.querySelectorAll(".realizationItem");
 
-    if (!pages[page]) return;
 
-    windowContent.innerHTML = pages[page];
+/* OPEN CONTENT */
 
-    closeSubmenu();
+function openPlainContent(section, path) {
+
+    const requestId = ++contentRequestId;
+
+    contentWindow.classList.remove("realization");
+    contentWindow.classList.add("plain");
+
+    contentWindow.classList.toggle(
+        "network",
+        section === "rede"
+    );
 
     contentWindow.classList.add("open");
 
-    contentWindow.setAttribute(
-        "aria-hidden",
-        "false"
-    );
+    contentWindow.dataset.section = section;
 
+    contentText.scrollTop = 0;
+    contentText.textContent = "Carregando...";
+
+    loadText(path, contentText, requestId);
 }
 
 
-/* CLOSE CONTENT WINDOW */
+/* OPEN REALIZATION WINDOW */
 
-function closePage() {
+function openRealization(number) {
 
-    contentWindow.classList.remove("open");
+    contentRequestId++;
 
-    contentWindow.setAttribute(
-        "aria-hidden",
-        "true"
+    contentWindow.classList.remove(
+        "plain",
+        "network"
     );
 
+    contentWindow.classList.add("realization");
+    contentWindow.classList.add("open");
+
+    contentWindow.dataset.section =
+        "realizacao-" + number;
+
+    contentText.scrollTop = 0;
+
+    contentText.textContent =
+        "Conteúdo da realização " + number + ".";
 }
 
 
-/* ROOT MENU EVENTS */
+/* CLOSE CONTENT */
 
-document.querySelectorAll(
-    "#rootMenu .menuItem[data-page]"
-).forEach(item => {
+function closeContent() {
 
-    item.addEventListener("click", () => {
+    contentRequestId++;
 
-        openPage(item.dataset.page);
+    contentWindow.classList.remove(
+        "open",
+        "plain",
+        "realization",
+        "network"
+    );
 
-    });
+    contentWindow.dataset.section = "";
 
-});
-
-
-/* SUBMENU TOGGLE */
-
-realizacoesToggle.addEventListener(
-    "click",
-    event => {
-
-        event.stopPropagation();
-
-        toggleSubmenu();
-
-    }
-);
+    contentText.textContent = "";
+    contentText.scrollTop = 0;
+}
 
 
-/* SUBMENU EVENTS */
+/* =====================================================
+   ABOUT AND NETWORK
+===================================================== */
 
-document.querySelectorAll(".submenuItem").forEach(item => {
+menuItems.forEach(item => {
 
     item.addEventListener("click", () => {
 
-        openPage(item.dataset.page);
+        const section = item.dataset.content;
 
+        const paths = {
+            sobre: "ativos/textos/sobre.txt",
+            rede: "ativos/rede/rede.html"
+        };
+
+        realizationsDropdown.classList.remove("open");
+
+        openPlainContent(
+            section,
+            paths[section]
+        );
     });
-
 });
 
 
-/* CLOSE BUTTON */
+/* =====================================================
+   REALIZATIONS DROPDOWN
+===================================================== */
 
-closeWindow.addEventListener(
-    "click",
-    closePage
-);
+realizationsToggle.addEventListener("click", () => {
 
+    closeContent();
 
-/* CLICK OUTSIDE CONTENT WINDOW */
-
-contentWindow.addEventListener(
-    "click",
-    event => {
-
-        if (event.target === contentWindow) {
-            closePage();
-        }
-
-    }
-);
-
-
-/* CLICK OUTSIDE SUBMENU */
-
-document.addEventListener("click", event => {
-
-    if (
-        !submenu.contains(event.target) &&
-        !realizacoesToggle.contains(event.target)
-    ) {
-
-        closeSubmenu();
-
-    }
-
+    realizationsDropdown.classList.toggle("open");
 });
 
 
-/* ESC KEY */
+/* =====================================================
+   REALIZATION WINDOWS
+===================================================== */
+
+realizationItems.forEach(item => {
+
+    item.addEventListener("click", () => {
+
+        const number = item.dataset.realization;
+
+        openRealization(number);
+    });
+});
+
+
+/* =====================================================
+   CLOSE WHEN CLICKING OUTSIDE
+===================================================== */
+
+document.addEventListener("pointerdown", event => {
+
+    const isContentOpen =
+        contentWindow.classList.contains("open");
+
+    if (!isContentOpen) return;
+
+    if (contentWindow.contains(event.target)) return;
+
+    closeContent();
+});
+
+
+/* =====================================================
+   CLOSE WITH ESCAPE
+===================================================== */
 
 document.addEventListener("keydown", event => {
 
     if (event.key === "Escape") {
 
-        closePage();
-        closeSubmenu();
+        closeContent();
 
+        realizationsDropdown.classList.remove("open");
     }
-
 });
 
 </script>
