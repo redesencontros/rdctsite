@@ -4,11 +4,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>rdct</title>
+
+<title>bernardo stumpf</title>
 
 <style>
 
-/* RESET */
+/* =====================================================
+   RESET
+===================================================== */
+
 * {
     margin: 0;
     padding: 0;
@@ -25,7 +29,10 @@ html, body {
     user-select: none;
 }
 
-/* TYPOGRAPHY */
+/* =====================================================
+   TYPOGRAPHY
+===================================================== */
+
 @font-face {
     font-family: "MyFont";
     src: url("https://redesencontros.github.io/rdctsite/ativos/fontes/jost.woff2") format("woff2");
@@ -33,15 +40,18 @@ html, body {
     font-style: normal;
 }
 
-/* BOIDS BACKGROUND */
-#background {
+/* =====================================================
+   BACKGROUND GAME
+===================================================== */
+
+#backgroundGame {
     position: fixed;
     inset: 0;
     z-index: 0;
     background: #ffffff;
 }
 
-#canvas {
+#gameCanvas {
     position: absolute;
     inset: 0;
     display: block;
@@ -50,24 +60,12 @@ html, body {
     pointer-events: none;
 }
 
-/* LOGO */
-#header {
-    position: fixed;
-    top: 5vh;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-    pointer-events: none;
-}
+/* =====================================================
+   TYPOGRAPHY SHARED
+===================================================== */
 
-#header img {
-    display: block;
-    width: clamp(30px, 18vw, 70px);
-    height: auto;
-}
-
-/* TYPOGRAPHY SHARED */
 #mainMenu,
+#backHome,
 #emailContact,
 #contentWindow {
     font-family: MyFont, sans-serif;
@@ -75,57 +73,54 @@ html, body {
     color: #000000;
 }
 
-/* MAIN MENU */
+/* =====================================================
+   MAIN MENU
+===================================================== */
+
 #mainMenu {
     position: fixed;
     top: 5vh;
     left: 30px;
-    transform: none;
-    z-index: 40;
+    z-index: 20;
+
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 5px;
+
     font-size: 16px;
     line-height: 1.4;
 }
 
-.menuItem {
+/* NOME */
+
+#menuName {
+    font-weight: 700;
+    margin-bottom: 5px;
+    white-space: nowrap;
+}
+
+/* ITENS DO MENU */
+
+.menuItem,
+.realizationItem {
     position: relative;
     color: #000000;
     white-space: nowrap;
     cursor: pointer;
-    text-transform: none;
+    text-decoration: none;
     transition: color 0.2s ease;
 }
 
-.menuItem:hover {
-    color: #888888;
-}
-
-/* REALIZATIONS DROPDOWN */
-#realizationsDropdown {
-    display: none;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-    margin-top: 5px;
-    margin-left: 15px;
-}
-
-#realizationsDropdown.open {
-    display: flex;
-}
-
-.realizationItem {
-    color: #000000;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-
+.menuItem:hover,
 .realizationItem:hover {
     color: #888888;
+}
+
+/* ESPAÇO ENTRE REALIZAÇÕES E CURRÍCULO */
+
+.menuSection {
+    margin-top: 25px;
 }
 
 /* =====================================================
@@ -137,264 +132,91 @@ html, body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 30;
+    z-index: 10;
+
     display: none;
-    align-items: center;
-    justify-content: center;
-    width: min(800px, 65vw);
-    max-height: 70vh;
+
+    width: min(900px, 72vw);
+    height: 75vh;
+
     overflow: hidden;
-    padding: 40px;
+
     font-size: 16px;
     line-height: 1.5;
     text-align: left;
 }
 
 #contentWindow.open {
-    display: flex;
+    display: block;
 }
 
-/* SOBRE */
-#contentWindow.plain {
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    border-radius: 0;
-}
+/* =====================================================
+   CONTENT TEXT
+===================================================== */
 
-/* REALIZAÇÕES */
-#contentWindow.realization {
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    border-radius: 0;
-}
-
-/* CONTENT TEXT */
 #contentText {
     width: 100%;
-    min-width: 0;
-    white-space: pre-line;
-}
-
-#contentText p {
-    margin-top: 0;
-    margin-bottom: 1em;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 /* =====================================================
-   REDE: DUAS COLUNAS SEM ROLAGEM
+   GOOGLE DOCS EMBEDS
 ===================================================== */
 
-#contentWindow.network {
-    display: none;
-    align-items: stretch;
-    justify-content: center;
-
-    width: min(1000px, 86vw);
-    height: min(82vh, 760px);
-    max-height: 82vh;
-
-    overflow: hidden;
-    padding: 30px 40px;
-}
-
-#contentWindow.network.open {
-    display: flex;
-}
-
-#contentWindow.network #contentText {
+.documentFrame {
+    display: block;
     width: 100%;
     height: 100%;
-    min-height: 0;
-    overflow: hidden;
-    padding: 0;
-    white-space: normal;
-}
-
-/* CONTEÚDO GERAL DA REDE */
-
-#networkContent {
-    display: grid;
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-    column-gap: 45px;
-    width: 100%;
-    height: 100%;
-}
-
-/* COLUNAS */
-
-.networkColumn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 0;
-    height: 100%;
-}
-
-/* TÍTULOS */
-
-.networkCategory {
-    display: block;
-    width: 100%;
-    text-align: center;
-    margin: 0 0 15px 0;
-    padding-top: 100px;
-    font-size: 1em;
-    line-height: 1.4;
-    font-weight: 700;
+    border: none;
+    background: #ffffff;
 }
 
 /* =====================================================
-   NÚCLEO REGULAR: GRADE 2x2
+   BOTTOM LINKS
 ===================================================== */
 
-.networkPeople {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: repeat(2, auto);
-    align-content: center;
-    justify-items: center;
-    column-gap: 20px;
-    row-gap: 18px;
-    flex: 1;
-    min-height: 0;
-    width: 100%;
-}
-
-/* PESSOA */
-
-.networkPerson {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    color: #000000;
-    text-decoration: none;
-    text-align: center;
-    min-width: 0;
-}
-
-/* CAMADA BRANCA SOBRE A FOTO */
-
-.networkPerson::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(100%, 18vh, 150px);
-    aspect-ratio: 1 / 1;
-    background: rgba(255, 255, 255, 0.55);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-    z-index: 1;
-}
-
-.networkPerson:hover::before {
-    opacity: 1;
-}
-
-/* FOTOS QUADRADAS */
-
-.networkPerson img {
-    display: block;
-    width: min(100%, 18vh, 150px);
-    aspect-ratio: 1 / 1;
-    height: auto;
-    object-fit: contain;
-    object-position: center;
-    margin: 0 0 4px 0;
-}
-
-/* NOMES */
-
-.networkPerson span {
-    display: block;
-    margin: 0;
-    padding: 0;
-    line-height: 1.2;
-    text-align: center;
-    transition: color 0.2s ease;
-}
-
-.networkPerson:hover span {
-    color: #888888;
-}
-
-/* =====================================================
-   PARCERIAS
-===================================================== */
-
-.networkPartners {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: center;
-    width: 100%;
-    flex: 1;
-    min-height: 0;
-    gap: 7px;
-    text-align: center;
-}
-
-.networkPartners a {
-    display: block;
-    max-width: 100%;
-    color: #000000;
-    text-decoration: none;
-    text-align: right;
-    line-height: 1.35;
-    transition: color 0.2s ease;
-}
-
-.networkPartners a:hover {
-    color: #888888;
-}
-
-/* PERFIS INDIVIDUAIS */
-
-.networkBack {
-    display: inline-block;
-    margin-bottom: 20px;
-    color: #000000;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.networkBack:hover {
-    color: #888888;
-}
-
-/* =====================================================
-   EMAIL
-===================================================== */
-
+#backHome,
 #emailContact {
     position: fixed;
     bottom: 3vh;
-    right: 30px;
-    z-index: 10;
-    text-align: right;
-    white-space: nowrap;
+    z-index: 20;
+
+    color: #000000;
     font-size: 16px;
+    text-decoration: none;
+    white-space: nowrap;
+
+    transition: color 0.2s ease;
+}
+
+/* VOLTAR À ESQUERDA */
+
+#backHome {
+    left: 30px;
+}
+
+/* EMAIL À DIREITA */
+
+#emailContact {
+    right: 30px;
+    text-align: right;
     -webkit-user-select: text;
     user-select: text;
 }
 
+#backHome:hover,
+#emailContact:hover {
+    color: #888888;
+}
+
 #emailContact a {
-    color: #000000;
+    color: inherit;
     text-decoration: none;
     cursor: pointer;
     -webkit-user-select: text;
     user-select: text;
-    transition: color 0.2s ease;
-}
-
-#emailContact a:hover {
-    color: #888888;
 }
 
 /* =====================================================
@@ -403,936 +225,270 @@ html, body {
 
 @media (max-width: 600px) {
 
-    #header {
-    top: 35px;
-    right: 25px;
-    left: auto;
-    transform: none;
-}
-
-  #header img {
-    width: clamp(40px, 18vw, 70px);
-}
-
     #mainMenu {
         top: 35px;
         left: 20px;
-        transform: none;
         font-size: 13px;
-        gap: 5px;
-    }
-
-    #realizationsDropdown {
-        margin-left: 12px;
         gap: 5px;
     }
 
     #contentWindow {
         width: calc(100vw - 40px);
-        max-width: none;
-        max-height: 65vh;
-        padding: 25px;
+        height: 68vh;
+        max-height: 68vh;
         font-size: 13px;
         line-height: 1.4;
-        border-radius: 10px;
     }
 
-    /* REDE NO CELULAR */
-
-    #contentWindow.network {
-        width: calc(100vw - 30px);
-        height: 78vh;
-        max-height: 78vh;
-        padding: 18px 12px;
-        font-size: 11px;
-        line-height: 1.3;
-    }
-
-    #networkContent {
-        grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-        column-gap: 12px;
-    }
-
-    .networkCategory {
-        margin-bottom: 10px;
-        font-size: 1em;
-    }
-
-    /* GRADE 2x2 NO CELULAR */
-
-    .networkPeople {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        grid-template-rows: repeat(2, auto);
-        column-gap: 8px;
-        row-gap: 14px;
-    }
-
-    .networkPerson img {
-        width: min(100%, 11vh, 80px);
-        margin-bottom: 3px;
-    }
-
-    .networkPerson::before {
-        width: min(100%, 11vh, 80px);
-    }
-
-    .networkPerson span {
-        font-size: 0.95em;
-    }
-
-    .networkPartners {
-        gap: 6px;
-    }
-
-    .networkPartners a {
-        line-height: 1.25;
-        overflow-wrap: anywhere;
-    }
-
+    #backHome,
     #emailContact {
         bottom: 20px;
-        right: 20px;
         font-size: 13px;
     }
-}
 
-/* TELAS COM POUCA ALTURA */
-
-@media (max-height: 600px) and (min-width: 601px) {
-
-    #contentWindow.network {
-        height: 88vh;
-        max-height: 88vh;
-        padding-top: 15px;
-        padding-bottom: 15px;
-    }
-
-    .networkPerson img {
-        width: min(100%, 12vh, 95px);
-    }
-
-    .networkPerson::before {
-        width: min(100%, 12vh, 95px);
-    }
-
-    .networkPartners {
-        gap: 4px;
-    }
-}
-/* PULL TO REFRESH */
-
-#pullIndicator {
-    position: fixed;
-    top: 12px;
-    left: 50%;
-    transform: translate(-50%, -50px);
-    z-index: 9999;
-    padding: 8px 16px;
-    border-radius: 20px;
-    background: #ffffff;
-    color: #000000;
-    font-family: MyFont, sans-serif;
-    font-size: 12px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-#pullIndicator.visible {
-    opacity: 1;
-    transform: translate(-50%, 0);
-}
-/* =====================================================
-   MOBILE — ORIENTAÇÃO HORIZONTAL
-===================================================== */
-
-@media (orientation: landscape) and (max-height: 600px) and (max-width: 950px) {
-
-    /* LOGO */
-
-    #header {
-        top: 15px;
-        right: 20px;
-        left: auto;
-        transform: none;
-    }
-
-    #header img {
-        width: clamp(40px, 9vw, 70px);
-    }
-
-    /* MENU */
-
-    #mainMenu {
-        top: 15px;
+    #backHome {
         left: 20px;
-        right: 100px;
-        transform: none;
-
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 18px;
-
-        font-size: 12px;
-        line-height: 1.3;
     }
-
-    #realizationsDropdown {
-        position: absolute;
-        top: 22px;
-        left: 150px;
-
-        margin: 0;
-        padding: 8px 12px;
-
-        max-height: calc(100dvh - 75px);
-        overflow-y: auto;
-
-        background: rgba(255,255,255,0.95);
-        gap: 5px;
-    }
-
-    /* JANELA DE CONTEÚDO */
-
-    #contentWindow {
-        top: 55%;
-        width: 88vw;
-        max-width: none;
-
-        max-height: 70dvh;
-        padding: 12px 20px;
-
-        font-size: 12px;
-        line-height: 1.3;
-    }
-
-    /* REDE */
-
-    #contentWindow.network {
-        width: 90vw;
-        height: 78dvh;
-        max-height: 78dvh;
-
-        padding: 10px 20px;
-        font-size: 11px;
-    }
-
-    #contentWindow.network #contentText {
-        overflow: hidden;
-    }
-
-    #networkContent {
-        grid-template-columns: 0.85fr 1.15fr;
-        column-gap: 20px;
-    }
-
-    .networkCategory {
-        padding-top: 0;
-        margin-bottom: 6px;
-        font-size: 11px;
-    }
-
-    .networkPeople {
-        row-gap: 6px;
-        column-gap: 8px;
-    }
-
-    .networkPerson img {
-        width: min(100%, 14vh, 65px);
-        margin-bottom: 2px;
-    }
-
-    .networkPerson::before {
-        width: min(100%, 14vh, 65px);
-    }
-
-    .networkPerson span {
-        font-size: 10px;
-    }
-
-    .networkPartners {
-        gap: 4px;
-    }
-
-    .networkPartners a {
-        font-size: 10px;
-        line-height: 1.2;
-    }
-
-    /* EMAIL */
 
     #emailContact {
-        bottom: 10px;
-        right: 15px;
-        font-size: 11px;
+        right: 20px;
     }
 }
+
 </style>
 </head>
 
 <body>
-<div id="pullIndicator">Puxe para atualizar</div>
-<!-- BOIDS -->
-<div id="background">
-    <canvas id="canvas"></canvas>
+
+<!-- =================================================
+     BACKGROUND GAME
+================================================== -->
+
+<div id="backgroundGame">
+    <canvas id="gameCanvas"></canvas>
 </div>
 
-<!-- LOGO -->
-<header id="header">
-    <img
-        id="headerImage"
-        src="https://raw.githubusercontent.com/redesencontros/rdctsite/8cf3ec8ef2db295bfd288276372b4631fe39179f/ativos/logos/rdctpt.png"
-        alt="rdct"
-    >
-</header>
 
-<!-- MAIN MENU -->
+<!-- =================================================
+     MAIN MENU
+================================================== -->
+
 <nav id="mainMenu">
 
-    <div class="menuItem" data-content="sobre">Sobre</div>
-    <div class="menuItem" data-content="rede">Rede</div>
-
-    <div class="menuItem" id="realizationsToggle">
-        Realizações
+    <div id="menuName">
+        bernardo stumpf
     </div>
 
-    <div id="realizationsDropdown">
-        <div class="realizationItem" data-realization="1">Realização 1</div>
-        <div class="realizationItem" data-realization="2">Realização 2</div>
-        <div class="realizationItem" data-realization="3">Realização 3</div>
-        <div class="realizationItem" data-realization="4">Realização 4</div>
-        <div class="realizationItem" data-realization="5">Realização 5</div>
-        <div class="realizationItem" data-realization="6">Realização 6</div>
-        <div class="realizationItem" data-realization="7">Realização 7</div>
-        <div class="realizationItem" data-realization="8">Realização 8</div>
-        <div class="realizationItem" data-realization="9">Realização 9</div>
-        <div class="realizationItem" data-realization="10">Realização 10</div>
-        <div class="realizationItem" data-realization="11">Realização 11</div>
-        <div class="realizationItem" data-realization="12">Realização 12</div>
-        <div class="realizationItem" data-realization="13">Realização 13</div>
-        <div class="realizationItem" data-realization="14">Realização 14</div>
-        <div class="realizationItem" data-realization="15">Realização 15</div>
+    <div class="realizationItem" data-realization="1">
+        Realização 1
+    </div>
+
+    <div class="realizationItem" data-realization="2">
+        Realização 2
+    </div>
+
+    <div class="realizationItem" data-realization="3">
+        Realização 3
+    </div>
+
+    <div class="realizationItem" data-realization="4">
+        Realização 4
+    </div>
+
+    <div class="realizationItem" data-realization="5">
+        Realização 5
+    </div>
+
+    <div class="realizationItem" data-realization="6">
+        Realização 6
+    </div>
+
+    <div class="realizationItem" data-realization="7">
+        Realização 7
+    </div>
+
+    <div class="realizationItem" data-realization="8">
+        Realização 8
+    </div>
+
+    <div class="realizationItem" data-realization="9">
+        Realização 9
+    </div>
+
+    <div class="realizationItem" data-realization="10">
+        Realização 10
+    </div>
+
+    <div class="realizationItem" data-realization="11">
+        Realização 11
+    </div>
+
+    <div class="realizationItem" data-realization="12">
+        Realização 12
+    </div>
+
+    <div class="realizationItem" data-realization="13">
+        Realização 13
+    </div>
+
+    <div class="realizationItem" data-realization="14">
+        Realização 14
+    </div>
+
+    <div class="realizationItem" data-realization="15">
+        Realização 15
+    </div>
+
+    <div class="menuItem menuSection" data-section="curriculo">
+        Currículo
+    </div>
+
+    <div class="menuItem" data-section="portfolio">
+        Portfólio
     </div>
 
 </nav>
 
-<!-- CONTENT AREA -->
+
+<!-- =================================================
+     CONTENT AREA
+================================================== -->
+
 <div id="contentWindow">
     <div id="contentText"></div>
 </div>
 
-<!-- EMAIL -->
+
+<!-- =================================================
+     BOTTOM LINKS
+================================================== -->
+
+<a id="backHome" href="https://rdct.me/">
+    Voltar
+</a>
+
 <div id="emailContact">
-    <a href="mailto:contato.rdct@gmail.com">
-        contato.rdct@gmail.com
+    <a href="mailto:bernardostumpf@yahoo.com">
+        bernardostumpf@yahoo.com
     </a>
 </div>
+
 
 <script>
 
 /* =====================================================
-   BOIDS BACKGROUND
+   BACKGROUND GAME
 ===================================================== */
 
-const canvas = document.getElementById("canvas");
+const gameCanvas = document.getElementById("gameCanvas");
+const gameContext = gameCanvas.getContext("2d");
 
-const gl =
-    canvas.getContext("webgl", {
-        alpha: false,
-        antialias: true
-    }) ||
-    canvas.getContext("experimental-webgl");
+function resizeGameCanvas() {
 
-if (!gl) {
-    throw new Error("WebGL não disponível.");
-}
-
-let width;
-let height;
-let pixelRatio = 1;
-
-function resize() {
-
-    pixelRatio = Math.min(
+    const pixelRatio = Math.min(
         window.devicePixelRatio || 1,
         2
     );
 
-    width = window.innerWidth;
-    height = window.innerHeight;
+    gameCanvas.width = Math.round(
+        window.innerWidth * pixelRatio
+    );
 
-    canvas.width = Math.round(width * pixelRatio);
-    canvas.height = Math.round(height * pixelRatio);
+    gameCanvas.height = Math.round(
+        window.innerHeight * pixelRatio
+    );
 
-    gl.viewport(
+    gameCanvas.style.width = window.innerWidth + "px";
+    gameCanvas.style.height = window.innerHeight + "px";
+
+    gameContext.setTransform(
+        pixelRatio,
         0,
         0,
-        canvas.width,
-        canvas.height
-    );
-}
-
-window.addEventListener("resize", resize);
-resize();
-
-/* SHADERS */
-
-const vertexShaderSource = `
-attribute vec2 a_position;
-
-uniform vec2 u_resolution;
-uniform float u_pixelRatio;
-
-void main() {
-
-    vec2 zeroToOne = a_position / u_resolution;
-    vec2 zeroToTwo = zeroToOne * 2.0;
-    vec2 clipSpace = zeroToTwo - 1.0;
-
-    gl_Position = vec4(
-        clipSpace * vec2(1, -1),
+        pixelRatio,
         0,
-        1
+        0
     );
-
-    gl_PointSize = 1.5 * u_pixelRatio;
-
-}`;
-
-const fragmentShaderSource = `
-precision mediump float;
-
-void main() {
-    gl_FragColor = vec4(0.85, 0.85, 0.85, 1.0);
-}`;
-
-function createShader(type, source) {
-
-    const shader = gl.createShader(type);
-
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error(gl.getShaderInfoLog(shader));
-        throw new Error("Erro ao compilar shader.");
-    }
-
-    return shader;
 }
 
-const vertexShader = createShader(
-    gl.VERTEX_SHADER,
-    vertexShaderSource
-);
+window.addEventListener("resize", resizeGameCanvas);
 
-const fragmentShader = createShader(
-    gl.FRAGMENT_SHADER,
-    fragmentShaderSource
-);
-
-const program = gl.createProgram();
-
-gl.attachShader(program, vertexShader);
-gl.attachShader(program, fragmentShader);
-gl.linkProgram(program);
-
-if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    console.error(gl.getProgramInfoLog(program));
-    throw new Error("Erro ao criar programa WebGL.");
-}
-
-gl.useProgram(program);
-
-const positionLocation =
-    gl.getAttribLocation(program, "a_position");
-
-const resolutionLocation =
-    gl.getUniformLocation(program, "u_resolution");
-
-const pixelRatioLocation =
-    gl.getUniformLocation(program, "u_pixelRatio");
-
-const positionBuffer = gl.createBuffer();
-
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-gl.enableVertexAttribArray(positionLocation);
-
-gl.vertexAttribPointer(
-    positionLocation,
-    2,
-    gl.FLOAT,
-    false,
-    0,
-    0
-);
-
-/* BOIDS CONFIGURATION */
-
-const isMobile = window.innerWidth < 768;
-const BOID_COUNT = isMobile ? 1500 : 4000;
-
-const boids = [];
-
-let frame = 0;
-
-const perception = 22;
-const cellSize = perception;
-
-let grid = {};
-
-function buildGrid() {
-
-    grid = {};
-
-    for (let i = 0; i < boids.length; i++) {
-
-        const b = boids[i];
-
-        const cx = Math.floor(b.x / cellSize);
-        const cy = Math.floor(b.y / cellSize);
-
-        const key = cx + "," + cy;
-
-        if (!grid[key]) grid[key] = [];
-
-        grid[key].push(b);
-    }
-}
-
-function getNearbyBoids(boid) {
-
-    const cx = Math.floor(boid.x / cellSize);
-    const cy = Math.floor(boid.y / cellSize);
-
-    let neighbors = [];
-
-    for (let x = -1; x <= 1; x++) {
-
-        for (let y = -1; y <= 1; y++) {
-
-            const key = (cx + x) + "," + (cy + y);
-
-            if (grid[key]) {
-                neighbors = neighbors.concat(grid[key]);
-            }
-        }
-    }
-
-    return neighbors;
-}
-
-/* GLOBAL FLOW */
-
-let flowTime = 0;
-const flowScale = 0.003;
-let wavePhase = 0;
-
-const entrySide = Math.floor(Math.random() * 4);
-
-/* BOID CLASS */
-
-class Boid {
-
-    constructor() {
-
-        const clusterRadius = 150;
-        const angle = Math.random() * Math.PI * 2;
-        const r = Math.random() * clusterRadius;
-        const far = 300;
-
-        if (entrySide === 0) {
-
-            this.x = -far + Math.cos(angle) * r;
-            this.y = height / 2 + Math.sin(angle) * r;
-
-            this.vx = 3.5;
-            this.vy = (Math.random() - 0.5) * 0.4;
-        }
-
-        if (entrySide === 1) {
-
-            this.x = width + far + Math.cos(angle) * r;
-            this.y = height / 2 + Math.sin(angle) * r;
-
-            this.vx = -3.5;
-            this.vy = (Math.random() - 0.5) * 0.4;
-        }
-
-        if (entrySide === 2) {
-
-            this.x = width / 2 + Math.cos(angle) * r;
-            this.y = -far + Math.sin(angle) * r;
-
-            this.vx = (Math.random() - 0.5) * 0.4;
-            this.vy = 3.5;
-        }
-
-        if (entrySide === 3) {
-
-            this.x = width / 2 + Math.cos(angle) * r;
-            this.y = height + far + Math.sin(angle) * r;
-
-            this.vx = (Math.random() - 0.5) * 0.4;
-            this.vy = -3.5;
-        }
-    }
-
-    update() {
-
-        let alignX = 0;
-        let alignY = 0;
-
-        let cohesionX = 0;
-        let cohesionY = 0;
-
-        let separationX = 0;
-        let separationY = 0;
-
-        let count = 0;
-
-        const perceptionSq = perception * perception;
-        const neighbors = getNearbyBoids(this);
-
-        for (let other of neighbors) {
-
-            if (other === this) continue;
-
-            const dx = other.x - this.x;
-            const dy = other.y - this.y;
-
-            const distSq = dx * dx + dy * dy;
-
-            if (distSq < perceptionSq) {
-
-                alignX += other.vx;
-                alignY += other.vy;
-
-                cohesionX += other.x;
-                cohesionY += other.y;
-
-                if (distSq < 60) {
-                    separationX -= dx;
-                    separationY -= dy;
-                }
-
-                count++;
-            }
-        }
-
-        if (count > 0) {
-
-            alignX /= count;
-            alignY /= count;
-
-            cohesionX /= count;
-            cohesionY /= count;
-
-            this.vx += (alignX - this.vx) * 0.05;
-            this.vy += (alignY - this.vy) * 0.05;
-
-            this.vx += (cohesionX - this.x) * 0.001;
-            this.vy += (cohesionY - this.y) * 0.001;
-
-            this.vx += separationX * 0.02;
-            this.vy += separationY * 0.02;
-        }
-
-        const globalPull = 0.0001;
-
-        const driftX =
-            width / 2 +
-            Math.sin(flowTime * 0.2) * width * 0.35;
-
-        const driftY =
-            height / 2 +
-            Math.cos(flowTime * 0.15) * height * 0.35;
-
-        this.vx += (driftX - this.x) * globalPull;
-        this.vy += (driftY - this.y) * globalPull;
-
-        this.vy += (height / 2 - this.y) * 0.00001;
-
-        this.vx += Math.sin(wavePhase + this.x * 0.01) * 0.05;
-        this.vy += Math.cos(wavePhase + this.y * 0.01) * 0.05;
-
-        const nx = this.x * flowScale;
-        const ny = this.y * flowScale;
-
-        const fx = Math.sin(nx + flowTime);
-        const fy = Math.cos(ny + flowTime * 0.8);
-
-        this.vx += fx * 0.05;
-        this.vy += fy * 0.05;
-
-        this.vx += Math.sin(flowTime * 0.2) * 0.01;
-
-        this.vx += (Math.random() - 0.5) * 0.03;
-        this.vy += (Math.random() - 0.5) * 0.03;
-
-        const margin = 120;
-        const push = 0.002;
-
-        if (this.x < margin) this.vx += push;
-        if (this.x > width - margin) this.vx -= push;
-        if (this.y < margin) this.vy += push;
-        if (this.y > height - margin) this.vy -= push;
-
-        const speedSq =
-            this.vx * this.vx +
-            this.vy * this.vy;
-
-        const maxSpeed = 3.5;
-
-        if (speedSq > maxSpeed * maxSpeed) {
-
-            const scale = maxSpeed / Math.sqrt(speedSq);
-
-            this.vx *= scale;
-            this.vy *= scale;
-        }
-
-        this.x += this.vx;
-        this.y += this.vy;
-    }
-}
-
-/* INITIALIZE BOIDS */
-
-for (let i = 0; i < BOID_COUNT; i++) {
-    boids.push(new Boid());
-}
-
-const positions = new Float32Array(BOID_COUNT * 2);
-
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-
-gl.bufferData(
-    gl.ARRAY_BUFFER,
-    positions.byteLength,
-    gl.DYNAMIC_DRAW
-);
-
-/* ANIMATION LOOP */
-
-function animate() {
-
-    frame++;
-
-    flowTime += 0.004;
-    wavePhase += 0.015;
-
-    buildGrid();
-
-    for (let i = 0; i < boids.length; i++) {
-
-        if (i % 10 === frame % 10) {
-            boids[i].update();
-        }
-
-        positions[i * 2] = boids[i].x;
-        positions[i * 2 + 1] = boids[i].y;
-    }
-
-    gl.clearColor(1, 1, 1, 1);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-
-    gl.uniform2f(
-        resolutionLocation,
-        width,
-        height
-    );
-
-    gl.uniform1f(
-        pixelRatioLocation,
-        pixelRatio
-    );
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-
-    gl.bufferSubData(
-        gl.ARRAY_BUFFER,
-        0,
-        positions
-    );
-
-    gl.drawArrays(
-        gl.POINTS,
-        0,
-        BOID_COUNT
-    );
-
-    requestAnimationFrame(animate);
-}
-
-animate();
+resizeGameCanvas();
 
 
 /* =====================================================
-   TEXT CONTENT
+   MENU AND CONTENT
 ===================================================== */
 
 const contentWindow = document.getElementById("contentWindow");
 const contentText = document.getElementById("contentText");
 
-let contentRequestId = 0;
-
-
-/* =====================================================
-   LOAD TEXT
-===================================================== */
-
-async function loadText(path, target, requestId) {
-
-    try {
-
-        const response = await fetch(path);
-
-        if (!response.ok) {
-            throw new Error("Não foi possível carregar " + path);
-        }
-
-        const text = await response.text();
-
-        if (requestId !== contentRequestId) {
-            return;
-        }
-
-        target.innerHTML = text.trim();
-        target.scrollTop = 0;
-
-    } catch (error) {
-
-        if (requestId !== contentRequestId) {
-            return;
-        }
-
-        console.error(error);
-
-        target.textContent =
-            "Não foi possível carregar o conteúdo.";
-    }
-}
-
-
-/* =====================================================
-   MENU AND CONTENT WINDOWS
-===================================================== */
-
-const menuItems = document.querySelectorAll(".menuItem[data-content]");
-const realizationsToggle = document.getElementById("realizationsToggle");
-const realizationsDropdown = document.getElementById("realizationsDropdown");
 const realizationItems = document.querySelectorAll(".realizationItem");
+const sectionItems = document.querySelectorAll(".menuItem[data-section]");
 
 
-/* OPEN CONTENT */
+/* =====================================================
+   GOOGLE DOCS DOCUMENTS
+===================================================== */
 
-function openPlainContent(section, path) {
+/* CURRÍCULO */
 
-    const requestId = ++contentRequestId;
+const curriculumURL =
+    "https://docs.google.com/document/d/e/2PACX-1vTS1OYUMlFCzGvgsddqiGVi9nUt_ZqZG2aZbArTTmldwmwdSdFXiZVp0Z3YZQXMmVUwaSQe57r78GMv/pub?embedded=true";
 
-    contentWindow.classList.remove("realization");
-    contentWindow.classList.add("plain");
+/* PORTFÓLIO */
 
-    contentWindow.classList.toggle(
-        "network",
-        section === "rede"
-    );
+const portfolioURL =
+    "https://docs.google.com/document/d/e/2PACX-1vSVdDqITFGfC_bmcFBeMWz_RlUDwsDlTE0jA3YgPmMpIFVAm9v4Pwe_SpoQmJART2ZRHsuOXtEPNtE_/pub?embedded=true";
+
+
+/* =====================================================
+   OPEN CONTENT
+===================================================== */
+
+function openContent(title) {
+
+    contentText.innerHTML = "";
+
+    if (title === "Currículo" || title === "Portfólio") {
+
+        const frame = document.createElement("iframe");
+
+        frame.className = "documentFrame";
+
+        if (title === "Currículo") {
+            frame.src = curriculumURL;
+            frame.title = "Currículo de bernardo stumpf";
+        }
+
+        if (title === "Portfólio") {
+            frame.src = portfolioURL;
+            frame.title = "Portfólio de bernardo stumpf";
+        }
+
+        contentText.appendChild(frame);
+
+    } else {
+
+        contentText.textContent = title;
+    }
 
     contentWindow.classList.add("open");
-
-    contentWindow.dataset.section = section;
-
-    contentText.scrollTop = 0;
-    contentText.textContent = "Carregando...";
-
-    loadText(path, contentText, requestId);
 }
 
 
-/* OPEN REALIZATION WINDOW */
-
-function openRealization(number) {
-
-    contentRequestId++;
-
-    contentWindow.classList.remove(
-        "plain",
-        "network"
-    );
-
-    contentWindow.classList.add("realization");
-    contentWindow.classList.add("open");
-
-    contentWindow.dataset.section =
-        "realizacao-" + number;
-
-    contentText.scrollTop = 0;
-
-    contentText.textContent =
-        "Conteúdo da realização " + number + ".";
-}
-
-
-/* CLOSE CONTENT */
+/* =====================================================
+   CLOSE CONTENT
+===================================================== */
 
 function closeContent() {
 
-    contentRequestId++;
-
-    contentWindow.classList.remove(
-        "open",
-        "plain",
-        "realization",
-        "network"
-    );
-
-    contentWindow.dataset.section = "";
-
-    contentText.textContent = "";
-    contentText.scrollTop = 0;
+    contentWindow.classList.remove("open");
 }
 
 
 /* =====================================================
-   ABOUT AND NETWORK
-===================================================== */
-
-menuItems.forEach(item => {
-
-    item.addEventListener("click", () => {
-
-        const section = item.dataset.content;
-
-        const paths = {
-            sobre: "ativos/textos/sobre.txt",
-            rede: "ativos/rede/rede.html"
-        };
-
-        realizationsDropdown.classList.remove("open");
-
-        openPlainContent(
-            section,
-            paths[section]
-        );
-    });
-});
-
-
-/* =====================================================
-   REALIZATIONS DROPDOWN
-===================================================== */
-
-realizationsToggle.addEventListener("click", () => {
-
-    closeContent();
-
-    realizationsDropdown.classList.toggle("open");
-});
-
-
-/* =====================================================
-   REALIZATION WINDOWS
+   REALIZATION ITEMS
 ===================================================== */
 
 realizationItems.forEach(item => {
@@ -1341,133 +497,63 @@ realizationItems.forEach(item => {
 
         const number = item.dataset.realization;
 
-        openRealization(number);
+        openContent(
+            "Conteúdo da realização " + number + "."
+        );
     });
 });
 
 
 /* =====================================================
-   CLOSE WHEN CLICKING OUTSIDE
+   CURRICULUM AND PORTFOLIO
+===================================================== */
+
+sectionItems.forEach(item => {
+
+    item.addEventListener("click", () => {
+
+        const section = item.dataset.section;
+
+        if (section === "curriculo") {
+            openContent("Currículo");
+        }
+
+        if (section === "portfolio") {
+            openContent("Portfólio");
+        }
+    });
+});
+
+
+/* =====================================================
+   CLICK OUTSIDE
 ===================================================== */
 
 document.addEventListener("pointerdown", event => {
 
-    const isContentOpen =
-        contentWindow.classList.contains("open");
+    if (!contentWindow.classList.contains("open")) {
+        return;
+    }
 
-    if (!isContentOpen) return;
-
-    if (contentWindow.contains(event.target)) return;
+    if (contentWindow.contains(event.target)) {
+        return;
+    }
 
     closeContent();
 });
 
 
 /* =====================================================
-   CLOSE WITH ESCAPE
+   ESCAPE
 ===================================================== */
 
 document.addEventListener("keydown", event => {
 
     if (event.key === "Escape") {
-
         closeContent();
-
-        realizationsDropdown.classList.remove("open");
     }
 });
-/* =====================================================
-   PULL TO REFRESH — MOBILE
-===================================================== */
 
-if (window.matchMedia("(max-width: 600px)").matches) {
-
-    const pullIndicator = document.getElementById("pullIndicator");
-
-    let touchStartY = 0;
-    let pullDistance = 0;
-    let pulling = false;
-
-    const pullThreshold = 90;
-    const pullMaximum = 120;
-
-    document.addEventListener("touchstart", event => {
-
-        if (event.touches.length !== 1) return;
-
-        if (
-            event.target.closest(
-                "#mainMenu, #contentWindow, #emailContact, a"
-            )
-        ) {
-            return;
-        }
-
-        touchStartY = event.touches[0].clientY;
-        pullDistance = 0;
-        pulling = true;
-
-    }, { passive: true });
-
-    document.addEventListener("touchmove", event => {
-
-        if (!pulling) return;
-
-        const currentY = event.touches[0].clientY;
-        const distance = currentY - touchStartY;
-
-        if (distance > 0) {
-
-            pullDistance = Math.min(distance, pullMaximum);
-
-            if (pullDistance > 10) {
-                event.preventDefault();
-
-                pullIndicator.classList.add("visible");
-
-                pullIndicator.style.top =
-                    (12 + pullDistance * 0.45) + "px";
-
-                pullIndicator.textContent =
-                    pullDistance >= pullThreshold
-                    ? "Solte para atualizar"
-                    : "Puxe para atualizar";
-            }
-        }
-
-    }, { passive: false });
-
-    document.addEventListener("touchend", () => {
-
-        if (!pulling) return;
-
-        if (pullDistance >= pullThreshold) {
-
-            pullIndicator.textContent = "Atualizando...";
-
-            window.location.reload();
-
-        } else {
-
-            pullIndicator.classList.remove("visible");
-            pullIndicator.style.top = "12px";
-        }
-
-        pulling = false;
-        pullDistance = 0;
-
-    });
-
-    document.addEventListener("touchcancel", () => {
-
-        pulling = false;
-        pullDistance = 0;
-
-        pullIndicator.classList.remove("visible");
-        pullIndicator.style.top = "12px";
-
-    });
-}
 </script>
 
 </body>
