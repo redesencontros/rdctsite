@@ -192,8 +192,7 @@ html, body {
     text-align: left;
 }
 
-/* JANELAS DE TEXTO E REALIZAÇÕES:
-   passam a permitir rolagem quando o texto aumenta */
+/* JANELAS DE TEXTO E REALIZAÇÕES */
 
 #contentWindow.open:not(.network) {
     display: block;
@@ -236,6 +235,33 @@ html, body {
 }
 
 /* =====================================================
+   MENSAGEM DE CARREGAMENTO
+   CENTRALIZAÇÃO HORIZONTAL E VERTICAL
+===================================================== */
+
+#contentWindow.open.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: min(70vh, 500px);
+    max-height: 70vh;
+    overflow: hidden;
+    text-align: center;
+}
+
+#contentWindow.open.loading #contentText {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* =====================================================
    REDE
 ===================================================== */
 
@@ -262,6 +288,10 @@ html, body {
     padding: 0;
     white-space: normal;
 }
+
+/* =====================================================
+   CONTEÚDO DA REDE
+===================================================== */
 
 #networkContent {
     display: grid;
@@ -523,6 +553,13 @@ html, body {
         border-radius: 10px;
     }
 
+    /* CENTRALIZAÇÃO DA MENSAGEM NO MOBILE */
+
+    #contentWindow.open.loading {
+        height: 65vh;
+        max-height: 65vh;
+    }
+
     #contentWindow.network {
         width: calc(100vw - 30px);
         height: 78vh;
@@ -688,6 +725,14 @@ html, body {
         padding: 12px 20px;
         font-size: calc(12px * var(--font-scale));
         line-height: 1.3;
+    }
+
+    /* CENTRALIZAÇÃO DA MENSAGEM EM LANDSCAPE */
+
+    #contentWindow.open.loading {
+        top: 50%;
+        height: 70dvh;
+        max-height: 70dvh;
     }
 
     #contentWindow.network {
@@ -1706,7 +1751,9 @@ function openPlainContent(section, path) {
     const requestId = ++contentRequestId;
 
     contentWindow.classList.remove("realization");
+
     contentWindow.classList.add("plain");
+    contentWindow.classList.add("loading");
 
     contentWindow.classList.toggle(
         "network",
@@ -1722,7 +1769,14 @@ function openPlainContent(section, path) {
     contentText.textContent =
         translations[currentLanguage].loading;
 
-    loadText(path, contentText, requestId);
+    loadText(path, contentText, requestId)
+        .finally(() => {
+
+            if (requestId === contentRequestId) {
+                contentWindow.classList.remove("loading");
+            }
+
+        });
 
 }
 
@@ -1737,7 +1791,8 @@ function openRealization(number) {
 
     contentWindow.classList.remove(
         "plain",
-        "network"
+        "network",
+        "loading"
     );
 
     contentWindow.classList.add("realization");
@@ -1767,7 +1822,8 @@ function closeContent() {
         "open",
         "plain",
         "realization",
-        "network"
+        "network",
+        "loading"
     );
 
     contentWindow.dataset.section = "";
