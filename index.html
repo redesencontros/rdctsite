@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -68,6 +67,8 @@ html, body {
     inset: 0;
     z-index: 0;
     background: var(--page-bg);
+    opacity: 1;
+    transition: opacity 0.6s ease;
 }
 
 #canvas {
@@ -80,7 +81,139 @@ html, body {
 }
 
 /* =====================================================
-   LOGO
+   CENA DE ABERTURA
+===================================================== */
+
+#openingScene {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--page-bg);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: none;
+}
+
+#openingLogo {
+    display: block;
+    width: clamp(60px, 27vw, 105px);
+    height: auto;
+    opacity: 0;
+    transform: scale(1.5);
+    transform-origin: center;
+    will-change: transform, opacity;
+}
+
+/*
+   ANIMAÇÃO ÚNICA
+
+   Duração total: 3.200ms
+
+   0%:
+   Logo começa invisível, em escala 1.5.
+
+   18.75% (600ms):
+   Fade in concluído.
+
+   81.25% (2.600ms):
+   Permanência concluída.
+
+   100% (3.200ms):
+   Fade out concluído.
+
+   O crescimento ocorre continuamente durante
+   os 3.200ms, sem interrupções.
+*/
+
+#openingScene.playing #openingLogo {
+    animation: openingSequence 3.2s linear forwards;
+}
+
+@keyframes openingSequence {
+
+    0% {
+        opacity: 0;
+        transform: scale(1.5);
+    }
+
+    18.75% {
+        opacity: 1;
+        transform: scale(1.51875);
+    }
+
+    81.25% {
+        opacity: 1;
+        transform: scale(1.58125);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(1.6);
+    }
+
+}
+
+/*
+   Durante a abertura, os elementos da home
+   permanecem ocultos.
+*/
+
+body.intro-active #background,
+body.intro-active #header,
+body.intro-active #mainMenu,
+body.intro-active #homeAnimation,
+body.intro-active #siteControls,
+body.intro-active #emailContact {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* =====================================================
+   HOME — ANIMAÇÃO DE PALAVRAS
+===================================================== */
+
+#homeAnimation {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90vw;
+    text-align: center;
+    font-family: MyFont, sans-serif;
+    font-weight: 370;
+    font-size: calc(16px * var(--font-scale));
+    line-height: 1.4;
+    color: var(--page-fg);
+    pointer-events: none;
+    opacity: 0;
+    visibility: visible;
+    transition: opacity 0.6s ease;
+}
+
+#homeAnimation.visible {
+    opacity: 1;
+}
+
+#homeAnimation.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+#homeWord {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+/* =====================================================
+   LOGO DO CABEÇALHO
 ===================================================== */
 
 #header {
@@ -88,14 +221,17 @@ html, body {
     top: 5vh;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 10;
-    pointer-events: none;
+    z-index: 45;
+    pointer-events: auto;
+    cursor: pointer;
+    transition: opacity 0.6s ease;
 }
 
 #header img {
     display: block;
     width: clamp(30px, 18vw, 70px);
     height: auto;
+    cursor: pointer;
 }
 
 /* =====================================================
@@ -127,6 +263,7 @@ html, body {
     gap: 5px;
     font-size: calc(16px * var(--font-scale));
     line-height: 1.4;
+    transition: opacity 0.6s ease;
 }
 
 .menuItem {
@@ -190,9 +327,27 @@ html, body {
     font-size: calc(clamp(13px, 1.1vw, 17px) * var(--font-scale));
     line-height: 1.5;
     text-align: left;
+
+    opacity: 0;
+    visibility: hidden;
+    transition:
+        opacity 0.6s ease,
+        visibility 0s linear 0.6s;
+
+    pointer-events: none;
 }
 
-/* JANELAS DE TEXTO E REALIZAÇÕES */
+#contentWindow.open {
+    visibility: visible;
+    transition:
+        opacity 0.6s ease,
+        visibility 0s;
+}
+
+#contentWindow.open.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
 
 #contentWindow.open:not(.network) {
     display: block;
@@ -202,10 +357,6 @@ html, body {
 
 #contentWindow.network {
     display: none;
-}
-
-#contentWindow.open {
-    display: block;
 }
 
 #contentWindow.plain {
@@ -238,8 +389,6 @@ html, body {
    INDICADOR DE CARREGAMENTO
 ===================================================== */
 
-/* Centraliza a janela durante o carregamento */
-
 #contentWindow.open.loading {
     display: flex;
     align-items: center;
@@ -250,13 +399,9 @@ html, body {
     text-align: center;
 }
 
-/* Oculta o conteúdo enquanto carrega */
-
 #contentWindow.open.loading #contentText {
     display: none;
 }
-
-/* Círculo animado */
 
 #contentWindow.open.loading::after {
     content: "";
@@ -270,16 +415,9 @@ html, body {
     animation: loadingSpin 0.8s linear infinite;
 }
 
-/* Animação */
-
 @keyframes loadingSpin {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 /* =====================================================
@@ -309,8 +447,6 @@ html, body {
     padding: 0;
     white-space: normal;
 }
-
-/* Mantém o indicador centralizado também na Rede */
 
 #contentWindow.network.open.loading {
     align-items: center;
@@ -481,6 +617,7 @@ html, body {
     font-size: calc(16px * var(--font-scale));
     -webkit-user-select: text;
     user-select: text;
+    transition: opacity 0.6s ease;
 }
 
 #emailContact a {
@@ -511,6 +648,7 @@ html, body {
     font-size: calc(14px * var(--font-scale));
     line-height: 1;
     white-space: nowrap;
+    transition: opacity 0.6s ease;
 }
 
 .controlGroup {
@@ -577,6 +715,11 @@ html, body {
         gap: 5px;
     }
 
+    #homeAnimation {
+        width: calc(100vw - 40px);
+        font-size: calc(13px * var(--font-scale));
+    }
+
     #contentWindow {
         width: calc(100vw - 40px);
         max-width: none;
@@ -586,8 +729,6 @@ html, body {
         line-height: 1.4;
         border-radius: 10px;
     }
-
-    /* INDICADOR DE CARREGAMENTO NO MOBILE */
 
     #contentWindow.open.loading {
         height: 65vh;
@@ -762,6 +903,11 @@ html, body {
         gap: 5px;
     }
 
+    #homeAnimation {
+        width: 85vw;
+        font-size: calc(12px * var(--font-scale));
+    }
+
     #contentWindow {
         top: 55%;
         width: 88vw;
@@ -771,8 +917,6 @@ html, body {
         font-size: calc(12px * var(--font-scale));
         line-height: 1.3;
     }
-
-    /* INDICADOR DE CARREGAMENTO EM LANDSCAPE */
 
     #contentWindow.open.loading {
         top: 50%;
@@ -868,36 +1012,64 @@ body.dark-mode #contentText a {
 
 @media (prefers-reduced-motion: reduce) {
 
+    #contentWindow,
+    #homeAnimation,
+    #background,
+    #header,
+    #mainMenu,
+    #siteControls,
+    #emailContact {
+        transition-duration: 0.01ms;
+    }
+
+    #openingScene.playing #openingLogo {
+        animation-duration: 0.01ms;
+    }
+
     #contentWindow.open.loading::after {
         animation-duration: 2s;
     }
-
 }
 
 </style>
 </head>
 
-<body>
+<body class="intro-active">
 
 <div id="pullIndicator">Puxe para atualizar</div>
-
-<!-- BOIDS -->
 
 <div id="background">
     <canvas id="canvas"></canvas>
 </div>
 
-<!-- LOGO -->
+<!-- CENA DE ABERTURA -->
+
+<div id="openingScene" aria-hidden="true">
+    <img
+        id="openingLogo"
+        src="https://raw.githubusercontent.com/redesencontros/rdctsite/8cf3ec8ef2db295bfd288276372b4631fe39179f/ativos/logos/rdctpt.png"
+        alt=""
+    >
+</div>
+
+<!-- ANIMAÇÃO DE PALAVRAS -->
+
+<div id="homeAnimation" class="hidden" aria-live="polite">
+    <span id="homeWord"></span>
+</div>
+
+<!-- CABEÇALHO -->
 
 <header id="header">
     <img
         id="headerImage"
         src="https://raw.githubusercontent.com/redesencontros/rdctsite/8cf3ec8ef2db295bfd288276372b4631fe39179f/ativos/logos/rdctpt.png"
         alt="rdct"
+        title="Início"
     >
 </header>
 
-<!-- MAIN MENU -->
+<!-- MENU -->
 
 <nav id="mainMenu">
 
@@ -928,13 +1100,13 @@ body.dark-mode #contentText a {
 
 </nav>
 
-<!-- CONTENT AREA -->
+<!-- JANELA DE CONTEÚDO -->
 
 <div id="contentWindow">
     <div id="contentText"></div>
 </div>
 
-<!-- SITE CONTROLS -->
+<!-- CONTROLES -->
 
 <div id="siteControls">
 
@@ -990,6 +1162,327 @@ const LOGO_DARK =
 
 
 /* =====================================================
+   IDIOMA E PREFERÊNCIAS
+===================================================== */
+
+let currentLanguage =
+    localStorage.getItem("rdct-language") || "pt";
+
+let isDarkMode =
+    localStorage.getItem("rdct-dark-mode") === "true";
+
+
+/* =====================================================
+   PALAVRAS DA HOME — PT / EN / ES
+===================================================== */
+
+const homeWords = {
+
+    pt: [
+        "ARTE",
+        "CULTURA",
+        "EDUCAÇÃO",
+        "COMUNIDADE",
+        "TERRITÓRIO",
+        "CRIAÇÃO",
+        "PESQUISA",
+        "EXPERIMENTAÇÃO",
+        "DIÁLOGO",
+        "TRANSDISCIPLINARIDADE",
+        "COOPERAÇÃO"
+    ],
+
+    en: [
+        "ART",
+        "CULTURE",
+        "EDUCATION",
+        "COMMUNITY",
+        "TERRITORY",
+        "CREATION",
+        "RESEARCH",
+        "EXPERIMENTATION",
+        "DIALOGUE",
+        "TRANSDISCIPLINARITY",
+        "COOPERATION"
+    ],
+
+    es: [
+        "ARTE",
+        "CULTURA",
+        "EDUCACIÓN",
+        "COMUNIDAD",
+        "TERRITORIO",
+        "CREACIÓN",
+        "INVESTIGACIÓN",
+        "EXPERIMENTACIÓN",
+        "DIÁLOGO",
+        "TRANSDISCIPLINARIEDAD",
+        "COOPERACIÓN"
+    ]
+
+};
+
+
+/* =====================================================
+   CENA DE ABERTURA — PRIMEIRO CARREGAMENTO
+===================================================== */
+
+const openingScene =
+    document.getElementById("openingScene");
+
+const openingLogo =
+    document.getElementById("openingLogo");
+
+const OPENING_DELAY = 1000;
+const OPENING_TOTAL_DURATION = 3200;
+
+let openingStarted = false;
+
+
+/*
+   Inicia a abertura somente uma vez.
+
+   A animação CSS controla a opacidade e a escala
+   durante os mesmos 3.200ms.
+
+   Ao terminar, o evento animationend libera a home.
+*/
+
+function runOpeningScene() {
+
+    if (openingStarted) return;
+
+    openingStarted = true;
+
+    openingLogo.src =
+        isDarkMode ? LOGO_DARK : LOGO_LIGHT;
+
+    setTimeout(() => {
+
+        /*
+           Reinicia a animação sem alterar o estado
+           intermediário da logo.
+        */
+
+        openingScene.classList.remove("playing");
+
+        void openingLogo.offsetWidth;
+
+        openingScene.classList.add("playing");
+
+    }, OPENING_DELAY);
+
+}
+
+
+/*
+   Finalização da abertura.
+
+   Só acontece quando a animação completa os
+   3.200ms, incluindo o fade out.
+*/
+
+openingLogo.addEventListener("animationend", event => {
+
+    if (event.animationName !== "openingSequence") return;
+
+    openingScene.classList.remove("playing");
+
+    openingScene.style.display = "none";
+
+    document.body.classList.remove("intro-active");
+
+    /*
+       A animação de palavras começa depois de
+       mais 2 segundos.
+    */
+
+    startHomeAnimation();
+
+});
+
+
+/* =====================================================
+   HOME — CONTROLE DA ANIMAÇÃO DE PALAVRAS
+===================================================== */
+
+const homeAnimation =
+    document.getElementById("homeAnimation");
+
+const homeWord =
+    document.getElementById("homeWord");
+
+const HOME_INITIAL_DELAY = 2000;
+const HOME_FADE_DURATION = 600;
+const HOME_VISIBLE_DURATION = 2000;
+
+let homeTimeout = null;
+let homeExitTimeout = null;
+let homeExitCallbacks = [];
+
+let lastHomeWordIndex = -1;
+let homeAnimationActive = false;
+
+
+function getHomeWords() {
+    return homeWords[currentLanguage] || homeWords.pt;
+}
+
+
+function showRandomHomeWord() {
+
+    const words = getHomeWords();
+
+    if (!words.length) return;
+
+    let index;
+
+    if (words.length === 1) {
+
+        index = 0;
+
+    } else {
+
+        do {
+            index = Math.floor(Math.random() * words.length);
+        } while (index === lastHomeWordIndex);
+
+    }
+
+    lastHomeWordIndex = index;
+    homeWord.textContent = words[index];
+}
+
+
+function runHomeWordCycle() {
+
+    if (!homeAnimationActive) return;
+
+    showRandomHomeWord();
+
+    homeAnimation.classList.remove("hidden");
+
+    requestAnimationFrame(() => {
+
+        if (!homeAnimationActive) return;
+
+        requestAnimationFrame(() => {
+            homeAnimation.classList.add("visible");
+        });
+
+    });
+
+    homeTimeout = setTimeout(() => {
+
+        if (!homeAnimationActive) return;
+
+        homeAnimation.classList.remove("visible");
+
+        homeTimeout = setTimeout(() => {
+
+            if (!homeAnimationActive) return;
+
+            runHomeWordCycle();
+
+        }, HOME_FADE_DURATION);
+
+    }, HOME_FADE_DURATION + HOME_VISIBLE_DURATION);
+
+}
+
+
+function startHomeAnimation() {
+
+    stopHomeAnimation();
+
+    if (!getHomeWords().length) return;
+
+    homeAnimationActive = true;
+    lastHomeWordIndex = -1;
+
+    homeAnimation.classList.remove("visible");
+    homeAnimation.classList.add("hidden");
+
+    homeTimeout = setTimeout(() => {
+
+        if (!homeAnimationActive) return;
+
+        runHomeWordCycle();
+
+    }, HOME_INITIAL_DELAY);
+
+}
+
+
+function finishHomeAnimation(callback) {
+
+    if (callback) {
+        homeExitCallbacks.push(callback);
+    }
+
+    if (homeExitTimeout !== null) return;
+
+    const wasVisible =
+        homeAnimation.classList.contains("visible");
+
+    homeAnimationActive = false;
+
+    if (homeTimeout !== null) {
+        clearTimeout(homeTimeout);
+        homeTimeout = null;
+    }
+
+    if (wasVisible) {
+
+        homeAnimation.classList.remove("visible");
+
+        homeExitTimeout = setTimeout(() => {
+
+            homeAnimation.classList.add("hidden");
+            homeExitTimeout = null;
+
+            const callbacks = homeExitCallbacks.splice(0);
+
+            callbacks.forEach(fn => fn());
+
+        }, HOME_FADE_DURATION);
+
+    } else {
+
+        homeAnimation.classList.add("hidden");
+
+        const callbacks = homeExitCallbacks.splice(0);
+
+        callbacks.forEach(fn => fn());
+
+    }
+
+}
+
+
+function stopHomeAnimation() {
+
+    homeAnimationActive = false;
+
+    if (homeTimeout !== null) {
+        clearTimeout(homeTimeout);
+        homeTimeout = null;
+    }
+
+    if (homeExitTimeout !== null) {
+        clearTimeout(homeExitTimeout);
+        homeExitTimeout = null;
+    }
+
+    homeExitCallbacks = [];
+
+    homeAnimation.classList.remove("visible");
+    homeAnimation.classList.add("hidden");
+
+}
+
+
+/* =====================================================
    BOIDS BACKGROUND
 ===================================================== */
 
@@ -1028,6 +1521,7 @@ function resize() {
 
 window.addEventListener("resize", resize);
 resize();
+
 
 /* SHADERS */
 
@@ -1129,6 +1623,7 @@ gl.vertexAttribPointer(
     0
 );
 
+
 /* BOIDS CONFIGURATION */
 
 const isMobile = window.innerWidth < 768;
@@ -1183,6 +1678,7 @@ function getNearbyBoids(boid) {
     return neighbors;
 }
 
+
 /* GLOBAL FLOW */
 
 let flowTime = 0;
@@ -1190,6 +1686,7 @@ const flowScale = 0.003;
 let wavePhase = 0;
 
 const entrySide = Math.floor(Math.random() * 4);
+
 
 /* BOID CLASS */
 
@@ -1358,6 +1855,7 @@ class Boid {
     }
 }
 
+
 /* INITIALIZE BOIDS */
 
 for (let i = 0; i < BOID_COUNT; i++) {
@@ -1373,6 +1871,7 @@ gl.bufferData(
     positions.byteLength,
     gl.DYNAMIC_DRAW
 );
+
 
 /* ANIMATION LOOP */
 
@@ -1457,6 +1956,10 @@ const headerImage =
     document.getElementById("headerImage");
 
 let contentRequestId = 0;
+let contentTransitionId = 0;
+
+let contentCloseTimeout = null;
+let contentCloseCallbacks = [];
 
 
 /* MENU ELEMENTS */
@@ -1476,7 +1979,6 @@ const realizationItems =
 
 /* =====================================================
    TRANSLATIONS
-   EDITE OS TEXTOS DE CADA IDIOMA AQUI
 ===================================================== */
 
 const translations = {
@@ -1504,7 +2006,7 @@ const translations = {
         rede: "Red",
         realizacoes: "Proyectos",
         realization: "Proyecto",
-        error: "No fue posible cargar el contenido.",
+        error: "No fue posible carregar o conteúdo.",
         back: "Volver"
     }
 
@@ -1557,15 +2059,11 @@ let savedFontScale =
     Number(localStorage.getItem("rdct-font-scale"));
 
 let fontScale =
-    Number.isFinite(savedFontScale) && savedFontScale >= 0.8 && savedFontScale <= 1.5
-    ? savedFontScale
-    : 1;
-
-let currentLanguage =
-    localStorage.getItem("rdct-language") || "pt";
-
-let isDarkMode =
-    localStorage.getItem("rdct-dark-mode") === "true";
+    Number.isFinite(savedFontScale) &&
+    savedFontScale >= 0.8 &&
+    savedFontScale <= 1.5
+        ? savedFontScale
+        : 1;
 
 
 /* =====================================================
@@ -1627,10 +2125,11 @@ function updateTheme() {
     themeToggle.textContent =
         isDarkMode ? "◑" : "◐";
 
-    /* TROCA A LOGO CONFORME O FUNDO */
-
-    headerImage.src =
+    const logoSource =
         isDarkMode ? LOGO_DARK : LOGO_LIGHT;
+
+    headerImage.src = logoSource;
+    openingLogo.src = logoSource;
 
     localStorage.setItem(
         "rdct-dark-mode",
@@ -1692,8 +2191,100 @@ function updateLanguageInterface() {
 
 
 /* =====================================================
-   CHANGE LANGUAGE
-   MANTÉM A SEÇÃO QUE ESTÁ ABERTA
+   FECHAMENTO ANIMADO DO CONTEÚDO
+===================================================== */
+
+function closeContent(callback) {
+
+    if (callback) {
+        contentCloseCallbacks.push(callback);
+    }
+
+    if (contentCloseTimeout !== null) return;
+
+    contentRequestId++;
+
+    const isOpen =
+        contentWindow.classList.contains("open");
+
+    const isVisible =
+        contentWindow.classList.contains("visible");
+
+    if (!isOpen) {
+
+        contentWindow.classList.remove(
+            "open",
+            "visible",
+            "plain",
+            "realization",
+            "network",
+            "loading"
+        );
+
+        contentWindow.dataset.section = "";
+        contentText.textContent = "";
+
+        const callbacks = contentCloseCallbacks.splice(0);
+        callbacks.forEach(fn => fn());
+
+        return;
+    }
+
+    contentWindow.classList.remove("visible");
+
+    contentCloseTimeout = setTimeout(() => {
+
+        contentWindow.classList.remove(
+            "open",
+            "plain",
+            "realization",
+            "network",
+            "loading"
+        );
+
+        contentWindow.dataset.section = "";
+
+        contentText.textContent = "";
+        contentText.scrollTop = 0;
+
+        contentCloseTimeout = null;
+
+        const callbacks = contentCloseCallbacks.splice(0);
+        callbacks.forEach(fn => fn());
+
+    }, isVisible ? 600 : 0);
+
+}
+
+
+/* =====================================================
+   PREPARA A ENTRADA DE UM NOVO CONTEÚDO
+===================================================== */
+
+function prepareContent(callback) {
+
+    const transitionId = ++contentTransitionId;
+
+    finishHomeAnimation(() => {
+
+        if (transitionId !== contentTransitionId) return;
+
+        closeContent(() => {
+
+            if (transitionId !== contentTransitionId) return;
+
+            callback();
+
+        });
+
+    });
+
+}
+
+
+/* =====================================================
+   TROCA DE IDIOMA
+   ATUALIZA O CONTEÚDO SEM FADE DA JANELA
 ===================================================== */
 
 function changeLanguage(language) {
@@ -1713,19 +2304,30 @@ function changeLanguage(language) {
 
     if (section === "sobre" || section === "rede") {
 
-        openPlainContent(
-            section,
-            getContentPath(section)
-        );
+        const requestId = ++contentRequestId;
+
+        contentWindow.classList.add("loading");
+
+        loadText(
+            getContentPath(section),
+            contentText,
+            requestId
+        ).finally(() => {
+
+            if (requestId === contentRequestId) {
+                contentWindow.classList.remove("loading");
+            }
+
+        });
 
     } else if (section.startsWith("realizacao-")) {
 
-        const number = section.replace(
-            "realizacao-",
-            ""
-        );
+        const number = section.replace("realizacao-", "");
 
-        openRealization(number);
+        contentText.textContent =
+            translations[currentLanguage].realization +
+            " " + number + ".";
+
     }
 
 }
@@ -1739,9 +2341,7 @@ document.querySelectorAll(
 
     button.addEventListener("click", () => {
 
-        changeLanguage(
-            button.dataset.language
-        );
+        changeLanguage(button.dataset.language);
 
     });
 
@@ -1802,41 +2402,63 @@ async function loadText(path, target, requestId) {
 
 
 /* =====================================================
+   ENTRADA VISUAL DO CONTEÚDO
+===================================================== */
+
+function revealContent() {
+
+    requestAnimationFrame(() => {
+
+        requestAnimationFrame(() => {
+
+            contentWindow.classList.add("visible");
+
+        });
+
+    });
+
+}
+
+
+/* =====================================================
    OPEN CONTENT
 ===================================================== */
 
 function openPlainContent(section, path) {
 
-    const requestId = ++contentRequestId;
+    prepareContent(() => {
 
-    contentWindow.classList.remove("realization");
+        const requestId = ++contentRequestId;
 
-    contentWindow.classList.add("plain");
-    contentWindow.classList.add("loading");
+        contentWindow.classList.remove("realization");
 
-    contentWindow.classList.toggle(
-        "network",
-        section === "rede"
-    );
+        contentWindow.classList.add("plain");
+        contentWindow.classList.add("loading");
 
-    contentWindow.classList.add("open");
+        contentWindow.classList.toggle(
+            "network",
+            section === "rede"
+        );
 
-    contentWindow.dataset.section = section;
+        contentWindow.classList.add("open");
 
-    contentText.scrollTop = 0;
+        contentWindow.dataset.section = section;
 
-    /* O INDICADOR É EXIBIDO PELO CSS */
+        contentText.scrollTop = 0;
+        contentText.textContent = "";
 
-    contentText.textContent = "";
+        revealContent();
 
-    loadText(path, contentText, requestId)
-        .finally(() => {
+        loadText(path, contentText, requestId)
+            .finally(() => {
 
-            if (requestId === contentRequestId) {
-                contentWindow.classList.remove("loading");
-            }
+                if (requestId === contentRequestId) {
+                    contentWindow.classList.remove("loading");
+                }
 
-        });
+            });
+
+    });
 
 }
 
@@ -1847,51 +2469,53 @@ function openPlainContent(section, path) {
 
 function openRealization(number) {
 
-    contentRequestId++;
+    prepareContent(() => {
 
-    contentWindow.classList.remove(
-        "plain",
-        "network",
-        "loading"
-    );
+        contentRequestId++;
 
-    contentWindow.classList.add("realization");
-    contentWindow.classList.add("open");
+        contentWindow.classList.remove(
+            "plain",
+            "network",
+            "loading"
+        );
 
-    contentWindow.dataset.section =
-        "realizacao-" + number;
+        contentWindow.classList.add("realization");
+        contentWindow.classList.add("open");
 
-    contentText.scrollTop = 0;
+        contentWindow.dataset.section =
+            "realizacao-" + number;
 
-    contentText.textContent =
-        translations[currentLanguage].realization +
-        " " + number + ".";
+        contentText.scrollTop = 0;
+
+        contentText.textContent =
+            translations[currentLanguage].realization +
+            " " + number + ".";
+
+        revealContent();
+
+    });
 
 }
 
 
 /* =====================================================
-   CLOSE CONTENT
+   LOGO — RETORNAR À HOME
+   NÃO REPETE A CENA DE ABERTURA
 ===================================================== */
 
-function closeContent() {
+headerImage.addEventListener("click", () => {
 
-    contentRequestId++;
+    ++contentTransitionId;
 
-    contentWindow.classList.remove(
-        "open",
-        "plain",
-        "realization",
-        "network",
-        "loading"
-    );
+    realizationsDropdown.classList.remove("open");
 
-    contentWindow.dataset.section = "";
+    closeContent(() => {
 
-    contentText.textContent = "";
-    contentText.scrollTop = 0;
+        startHomeAnimation();
 
-}
+    });
+
+});
 
 
 /* =====================================================
@@ -1922,9 +2546,27 @@ menuItems.forEach(item => {
 
 realizationsToggle.addEventListener("click", () => {
 
-    closeContent();
+    const shouldOpen =
+        !realizationsDropdown.classList.contains("open");
 
-    realizationsDropdown.classList.toggle("open");
+    const transitionId = ++contentTransitionId;
+
+    finishHomeAnimation(() => {
+
+        if (transitionId !== contentTransitionId) return;
+
+        closeContent(() => {
+
+            if (transitionId !== contentTransitionId) return;
+
+            realizationsDropdown.classList.toggle(
+                "open",
+                shouldOpen
+            );
+
+        });
+
+    });
 
 });
 
@@ -1938,6 +2580,8 @@ realizationItems.forEach(item => {
     item.addEventListener("click", () => {
 
         const number = item.dataset.realization;
+
+        realizationsDropdown.classList.remove("open");
 
         openRealization(number);
 
@@ -1959,9 +2603,11 @@ document.addEventListener("pointerdown", event => {
 
     if (contentWindow.contains(event.target)) return;
 
-    /* NÃO FECHA AO CLICAR NOS CONTROLES DE IDIOMA */
-
     if (event.target.closest("#siteControls")) return;
+
+    if (event.target.closest("#header")) return;
+
+    if (event.target.closest("#mainMenu")) return;
 
     closeContent();
 
@@ -2082,6 +2728,13 @@ if (window.matchMedia("(max-width: 600px)").matches) {
     });
 
 }
+
+
+/* =====================================================
+   INICIALIZAÇÃO
+===================================================== */
+
+runOpeningScene();
 
 </script>
 
