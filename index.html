@@ -235,9 +235,10 @@ html, body {
 }
 
 /* =====================================================
-   MENSAGEM DE CARREGAMENTO
-   CENTRALIZAÇÃO HORIZONTAL E VERTICAL
+   INDICADOR DE CARREGAMENTO
 ===================================================== */
+
+/* Centraliza a janela durante o carregamento */
 
 #contentWindow.open.loading {
     display: flex;
@@ -249,16 +250,36 @@ html, body {
     text-align: center;
 }
 
+/* Oculta o conteúdo enquanto carrega */
+
 #contentWindow.open.loading #contentText {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    min-height: 0;
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
+    display: none;
+}
+
+/* Círculo animado */
+
+#contentWindow.open.loading::after {
+    content: "";
+    display: block;
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    border: 2px solid var(--panel-border);
+    border-top-color: var(--page-fg);
+    border-radius: 50%;
+    animation: loadingSpin 0.8s linear infinite;
+}
+
+/* Animação */
+
+@keyframes loadingSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* =====================================================
@@ -287,6 +308,19 @@ html, body {
     overflow: hidden;
     padding: 0;
     white-space: normal;
+}
+
+/* Mantém o indicador centralizado também na Rede */
+
+#contentWindow.network.open.loading {
+    align-items: center;
+    justify-content: center;
+    height: min(82vh, 760px);
+    max-height: 82vh;
+}
+
+#contentWindow.network.open.loading #contentText {
+    display: none;
 }
 
 /* =====================================================
@@ -553,11 +587,17 @@ html, body {
         border-radius: 10px;
     }
 
-    /* CENTRALIZAÇÃO DA MENSAGEM NO MOBILE */
+    /* INDICADOR DE CARREGAMENTO NO MOBILE */
 
     #contentWindow.open.loading {
         height: 65vh;
         max-height: 65vh;
+    }
+
+    #contentWindow.open.loading::after {
+        width: 26px;
+        height: 26px;
+        flex-basis: 26px;
     }
 
     #contentWindow.network {
@@ -567,6 +607,11 @@ html, body {
         padding: 18px 12px;
         font-size: calc(11px * var(--font-scale));
         line-height: 1.3;
+    }
+
+    #contentWindow.network.open.loading {
+        height: 78vh;
+        max-height: 78vh;
     }
 
     #networkContent {
@@ -727,7 +772,7 @@ html, body {
         line-height: 1.3;
     }
 
-    /* CENTRALIZAÇÃO DA MENSAGEM EM LANDSCAPE */
+    /* INDICADOR DE CARREGAMENTO EM LANDSCAPE */
 
     #contentWindow.open.loading {
         top: 50%;
@@ -741,6 +786,11 @@ html, body {
         max-height: 78dvh;
         padding: 10px 20px;
         font-size: calc(11px * var(--font-scale));
+    }
+
+    #contentWindow.network.open.loading {
+        height: 78dvh;
+        max-height: 78dvh;
     }
 
     #contentWindow.network #contentText {
@@ -810,6 +860,18 @@ body.dark-mode #contentText * {
 
 body.dark-mode #contentText a {
     color: var(--page-fg) !important;
+}
+
+/* =====================================================
+   ACESSIBILIDADE — MOVIMENTO REDUZIDO
+===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    #contentWindow.open.loading::after {
+        animation-duration: 2s;
+    }
+
 }
 
 </style>
@@ -1424,7 +1486,6 @@ const translations = {
         rede: "Rede",
         realizacoes: "Realizações",
         realization: "Realização",
-        loading: "Carregando...",
         error: "Não foi possível carregar o conteúdo.",
         back: "Voltar"
     },
@@ -1434,7 +1495,6 @@ const translations = {
         rede: "Collective",
         realizacoes: "Works",
         realization: "Work",
-        loading: "Loading...",
         error: "Could not load the content.",
         back: "Back"
     },
@@ -1444,7 +1504,6 @@ const translations = {
         rede: "Red",
         realizacoes: "Proyectos",
         realization: "Proyecto",
-        loading: "Cargando...",
         error: "No fue posible cargar el contenido.",
         back: "Volver"
     }
@@ -1766,8 +1825,9 @@ function openPlainContent(section, path) {
 
     contentText.scrollTop = 0;
 
-    contentText.textContent =
-        translations[currentLanguage].loading;
+    /* O INDICADOR É EXIBIDO PELO CSS */
+
+    contentText.textContent = "";
 
     loadText(path, contentText, requestId)
         .finally(() => {
