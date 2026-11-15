@@ -7,25 +7,51 @@
 <title>rdct</title>
 
 <style>
+/* =====================================================
+   RESET E VARIÁVEIS
+===================================================== */
 
-/* RESET */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+:root {
+    --page-bg: #ffffff;
+    --page-fg: #000000;
+    --page-hover: #888888;
+    --panel-bg: #ffffff;
+    --panel-border: #cccccc;
+    --photo-overlay: rgba(255,255,255,0.55);
+    --font-scale: 1;
+}
+
+body.dark-mode {
+    --page-bg: #000000;
+    --page-fg: #ffffff;
+    --page-hover: #999999;
+    --panel-bg: #000000;
+    --panel-border: #555555;
+    --photo-overlay: rgba(0,0,0,0.55);
+}
+
 html, body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: #ffffff;
+    background: var(--page-bg);
+    color: var(--page-fg);
     font-family: sans-serif;
     -webkit-user-select: none;
     user-select: none;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
-/* TYPOGRAPHY */
+/* =====================================================
+   TYPOGRAPHY
+===================================================== */
+
 @font-face {
     font-family: "MyFont";
     src: url("https://redesencontros.github.io/rdctsite/ativos/fontes/jost.woff2") format("woff2");
@@ -33,12 +59,15 @@ html, body {
     font-style: normal;
 }
 
-/* BOIDS BACKGROUND */
+/* =====================================================
+   BOIDS BACKGROUND
+===================================================== */
+
 #background {
     position: fixed;
     inset: 0;
     z-index: 0;
-    background: #ffffff;
+    background: var(--page-bg);
 }
 
 #canvas {
@@ -50,7 +79,10 @@ html, body {
     pointer-events: none;
 }
 
-/* LOGO */
+/* =====================================================
+   LOGO
+===================================================== */
+
 #header {
     position: fixed;
     top: 5vh;
@@ -66,16 +98,23 @@ html, body {
     height: auto;
 }
 
-/* TYPOGRAPHY SHARED */
+/* =====================================================
+   TYPOGRAPHY SHARED
+===================================================== */
+
 #mainMenu,
 #emailContact,
-#contentWindow {
+#contentWindow,
+#siteControls {
     font-family: MyFont, sans-serif;
     font-weight: 370;
-    color: #000000;
+    color: var(--page-fg);
 }
 
-/* MAIN MENU */
+/* =====================================================
+   MAIN MENU
+===================================================== */
+
 #mainMenu {
     position: fixed;
     top: 5vh;
@@ -86,13 +125,13 @@ html, body {
     flex-direction: column;
     align-items: flex-start;
     gap: 5px;
-    font-size: 16px;
+    font-size: calc(16px * var(--font-scale));
     line-height: 1.4;
 }
 
 .menuItem {
     position: relative;
-    color: #000000;
+    color: var(--page-fg);
     white-space: nowrap;
     cursor: pointer;
     text-transform: none;
@@ -100,10 +139,13 @@ html, body {
 }
 
 .menuItem:hover {
-    color: #888888;
+    color: var(--page-hover);
 }
 
-/* REALIZATIONS DROPDOWN */
+/* =====================================================
+   REALIZATIONS DROPDOWN
+===================================================== */
+
 #realizationsDropdown {
     display: none;
     flex-direction: column;
@@ -118,14 +160,14 @@ html, body {
 }
 
 .realizationItem {
-    color: #000000;
+    color: var(--page-fg);
     white-space: nowrap;
     cursor: pointer;
     transition: color 0.2s ease;
 }
 
 .realizationItem:hover {
-    color: #888888;
+    color: var(--page-hover);
 }
 
 /* =====================================================
@@ -145,16 +187,28 @@ html, body {
     max-height: 70vh;
     overflow: hidden;
     padding: 40px;
-    font-size: 16px;
+    font-size: calc(clamp(13px, 1.1vw, 17px) * var(--font-scale));
     line-height: 1.5;
     text-align: left;
 }
 
-#contentWindow.open {
-    display: flex;
+/* JANELAS DE TEXTO E REALIZAÇÕES:
+   passam a permitir rolagem quando o texto aumenta */
+
+#contentWindow.open:not(.network) {
+    display: block;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-/* SOBRE */
+#contentWindow.network {
+    display: none;
+}
+
+#contentWindow.open {
+    display: block;
+}
+
 #contentWindow.plain {
     background: transparent;
     backdrop-filter: none;
@@ -162,7 +216,6 @@ html, body {
     border-radius: 0;
 }
 
-/* REALIZAÇÕES */
 #contentWindow.realization {
     background: transparent;
     backdrop-filter: none;
@@ -170,11 +223,11 @@ html, body {
     border-radius: 0;
 }
 
-/* CONTENT TEXT */
 #contentText {
     width: 100%;
     min-width: 0;
     white-space: pre-line;
+    color: var(--page-fg);
 }
 
 #contentText p {
@@ -183,18 +236,16 @@ html, body {
 }
 
 /* =====================================================
-   REDE: DUAS COLUNAS SEM ROLAGEM
+   REDE
 ===================================================== */
 
 #contentWindow.network {
     display: none;
     align-items: stretch;
     justify-content: center;
-
     width: min(1000px, 86vw);
     height: min(82vh, 760px);
     max-height: 82vh;
-
     overflow: hidden;
     padding: 30px 40px;
 }
@@ -212,8 +263,6 @@ html, body {
     white-space: normal;
 }
 
-/* CONTEÚDO GERAL DA REDE */
-
 #networkContent {
     display: grid;
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
@@ -222,8 +271,6 @@ html, body {
     height: 100%;
 }
 
-/* COLUNAS */
-
 .networkColumn {
     display: flex;
     flex-direction: column;
@@ -231,8 +278,6 @@ html, body {
     min-width: 0;
     height: 100%;
 }
-
-/* TÍTULOS */
 
 .networkCategory {
     display: block;
@@ -246,7 +291,7 @@ html, body {
 }
 
 /* =====================================================
-   NÚCLEO REGULAR: GRADE 2x2
+   NÚCLEO REGULAR
 ===================================================== */
 
 .networkPeople {
@@ -262,21 +307,17 @@ html, body {
     width: 100%;
 }
 
-/* PESSOA */
-
 .networkPerson {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    color: #000000;
+    color: var(--page-fg);
     text-decoration: none;
     text-align: center;
     min-width: 0;
 }
-
-/* CAMADA BRANCA SOBRE A FOTO */
 
 .networkPerson::before {
     content: "";
@@ -286,7 +327,7 @@ html, body {
     transform: translateX(-50%);
     width: min(100%, 18vh, 150px);
     aspect-ratio: 1 / 1;
-    background: rgba(255, 255, 255, 0.55);
+    background: var(--photo-overlay);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
@@ -296,8 +337,6 @@ html, body {
 .networkPerson:hover::before {
     opacity: 1;
 }
-
-/* FOTOS QUADRADAS */
 
 .networkPerson img {
     display: block;
@@ -309,8 +348,6 @@ html, body {
     margin: 0 0 4px 0;
 }
 
-/* NOMES */
-
 .networkPerson span {
     display: block;
     margin: 0;
@@ -321,7 +358,7 @@ html, body {
 }
 
 .networkPerson:hover span {
-    color: #888888;
+    color: var(--page-hover);
 }
 
 /* =====================================================
@@ -343,7 +380,7 @@ html, body {
 .networkPartners a {
     display: block;
     max-width: 100%;
-    color: #000000;
+    color: var(--page-fg);
     text-decoration: none;
     text-align: right;
     line-height: 1.35;
@@ -351,21 +388,19 @@ html, body {
 }
 
 .networkPartners a:hover {
-    color: #888888;
+    color: var(--page-hover);
 }
-
-/* PERFIS INDIVIDUAIS */
 
 .networkBack {
     display: inline-block;
     margin-bottom: 20px;
-    color: #000000;
+    color: var(--page-fg);
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
 .networkBack:hover {
-    color: #888888;
+    color: var(--page-hover);
 }
 
 /* =====================================================
@@ -379,13 +414,13 @@ html, body {
     z-index: 10;
     text-align: right;
     white-space: nowrap;
-    font-size: 16px;
+    font-size: calc(16px * var(--font-scale));
     -webkit-user-select: text;
     user-select: text;
 }
 
 #emailContact a {
-    color: #000000;
+    color: var(--page-fg);
     text-decoration: none;
     cursor: pointer;
     -webkit-user-select: text;
@@ -394,7 +429,58 @@ html, body {
 }
 
 #emailContact a:hover {
-    color: #888888;
+    color: var(--page-hover);
+}
+
+/* =====================================================
+   CONTROLES DO SITE
+===================================================== */
+
+#siteControls {
+    position: fixed;
+    left: 30px;
+    bottom: 3vh;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: calc(14px * var(--font-scale));
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.controlGroup {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.siteControl {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--page-fg);
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    cursor: pointer;
+    padding: 3px 4px;
+    transition: color 0.2s ease;
+}
+
+.siteControl:hover {
+    color: var(--page-hover);
+}
+
+.siteControl.active {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.controlDivider {
+    width: 1px;
+    height: 15px;
+    background: var(--panel-border);
 }
 
 /* =====================================================
@@ -404,21 +490,21 @@ html, body {
 @media (max-width: 600px) {
 
     #header {
-    top: 35px;
-    right: 25px;
-    left: auto;
-    transform: none;
-}
+        top: 35px;
+        right: 25px;
+        left: auto;
+        transform: none;
+    }
 
-  #header img {
-    width: clamp(40px, 18vw, 70px);
-}
+    #header img {
+        width: clamp(40px, 18vw, 70px);
+    }
 
     #mainMenu {
         top: 35px;
         left: 20px;
         transform: none;
-        font-size: 13px;
+        font-size: calc(13px * var(--font-scale));
         gap: 5px;
     }
 
@@ -432,19 +518,17 @@ html, body {
         max-width: none;
         max-height: 65vh;
         padding: 25px;
-        font-size: 13px;
+        font-size: calc(clamp(12px, 3.2vw, 19px) * var(--font-scale));
         line-height: 1.4;
         border-radius: 10px;
     }
-
-    /* REDE NO CELULAR */
 
     #contentWindow.network {
         width: calc(100vw - 30px);
         height: 78vh;
         max-height: 78vh;
         padding: 18px 12px;
-        font-size: 11px;
+        font-size: calc(11px * var(--font-scale));
         line-height: 1.3;
     }
 
@@ -457,8 +541,6 @@ html, body {
         margin-bottom: 10px;
         font-size: 1em;
     }
-
-    /* GRADE 2x2 NO CELULAR */
 
     .networkPeople {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -492,11 +574,20 @@ html, body {
     #emailContact {
         bottom: 20px;
         right: 20px;
-        font-size: 13px;
+        font-size: calc(13px * var(--font-scale));
+    }
+
+    #siteControls {
+        left: 20px;
+        bottom: 20px;
+        gap: 8px;
+        font-size: calc(12px * var(--font-scale));
     }
 }
 
-/* TELAS COM POUCA ALTURA */
+/* =====================================================
+   TELAS COM POUCA ALTURA
+===================================================== */
 
 @media (max-height: 600px) and (min-width: 601px) {
 
@@ -519,7 +610,10 @@ html, body {
         gap: 4px;
     }
 }
-/* PULL TO REFRESH */
+
+/* =====================================================
+   PULL TO REFRESH
+===================================================== */
 
 #pullIndicator {
     position: fixed;
@@ -529,8 +623,8 @@ html, body {
     z-index: 9999;
     padding: 8px 16px;
     border-radius: 20px;
-    background: #ffffff;
-    color: #000000;
+    background: var(--panel-bg);
+    color: var(--page-fg);
     font-family: MyFont, sans-serif;
     font-size: 12px;
     opacity: 0;
@@ -542,13 +636,14 @@ html, body {
     opacity: 1;
     transform: translate(-50%, 0);
 }
+
 /* =====================================================
    MOBILE — ORIENTAÇÃO HORIZONTAL
 ===================================================== */
 
-@media (orientation: landscape) and (max-height: 600px) and (max-width: 950px) {
-
-    /* LOGO */
+@media (orientation: landscape) and
+(max-height: 600px) and
+(max-width: 950px) {
 
     #header {
         top: 15px;
@@ -561,19 +656,15 @@ html, body {
         width: clamp(40px, 9vw, 70px);
     }
 
-    /* MENU */
-
     #mainMenu {
         top: 15px;
         left: 20px;
         right: 100px;
         transform: none;
-
         flex-direction: row;
         align-items: flex-start;
         gap: 18px;
-
-        font-size: 12px;
+        font-size: calc(12px * var(--font-scale));
         line-height: 1.3;
     }
 
@@ -581,40 +672,30 @@ html, body {
         position: absolute;
         top: 22px;
         left: 150px;
-
         margin: 0;
         padding: 8px 12px;
-
         max-height: calc(100dvh - 75px);
         overflow-y: auto;
-
-        background: rgba(255,255,255,0.95);
+        background: var(--panel-bg);
         gap: 5px;
     }
-
-    /* JANELA DE CONTEÚDO */
 
     #contentWindow {
         top: 55%;
         width: 88vw;
         max-width: none;
-
         max-height: 70dvh;
         padding: 12px 20px;
-
-        font-size: 12px;
+        font-size: calc(12px * var(--font-scale));
         line-height: 1.3;
     }
-
-    /* REDE */
 
     #contentWindow.network {
         width: 90vw;
         height: 78dvh;
         max-height: 78dvh;
-
         padding: 10px 20px;
-        font-size: 11px;
+        font-size: calc(11px * var(--font-scale));
     }
 
     #contentWindow.network #contentText {
@@ -629,7 +710,7 @@ html, body {
     .networkCategory {
         padding-top: 0;
         margin-bottom: 6px;
-        font-size: 11px;
+        font-size: 1em;
     }
 
     .networkPeople {
@@ -647,7 +728,7 @@ html, body {
     }
 
     .networkPerson span {
-        font-size: 10px;
+        font-size: 0.95em;
     }
 
     .networkPartners {
@@ -655,29 +736,52 @@ html, body {
     }
 
     .networkPartners a {
-        font-size: 10px;
+        font-size: 0.95em;
         line-height: 1.2;
     }
-
-    /* EMAIL */
 
     #emailContact {
         bottom: 10px;
         right: 15px;
-        font-size: 11px;
+        font-size: calc(11px * var(--font-scale));
+    }
+
+    #siteControls {
+        bottom: 10px;
+        left: 15px;
+        font-size: calc(11px * var(--font-scale));
+        gap: 7px;
     }
 }
+
+/* =====================================================
+   TEMA ESCURO — CONTEÚDO CARREGADO
+===================================================== */
+
+body.dark-mode #contentText,
+body.dark-mode #contentText * {
+    color: var(--page-fg) !important;
+}
+
+body.dark-mode #contentText a {
+    color: var(--page-fg) !important;
+}
+
 </style>
 </head>
 
 <body>
+
 <div id="pullIndicator">Puxe para atualizar</div>
+
 <!-- BOIDS -->
+
 <div id="background">
     <canvas id="canvas"></canvas>
 </div>
 
 <!-- LOGO -->
+
 <header id="header">
     <img
         id="headerImage"
@@ -687,6 +791,7 @@ html, body {
 </header>
 
 <!-- MAIN MENU -->
+
 <nav id="mainMenu">
 
     <div class="menuItem" data-content="sobre">Sobre</div>
@@ -717,11 +822,47 @@ html, body {
 </nav>
 
 <!-- CONTENT AREA -->
+
 <div id="contentWindow">
     <div id="contentText"></div>
 </div>
 
+<!-- SITE CONTROLS -->
+
+<div id="siteControls">
+
+    <div class="controlGroup">
+        <button class="siteControl" id="fontDecrease"
+            aria-label="Diminuir fonte" title="Diminuir fonte">A−</button>
+
+        <button class="siteControl" id="fontIncrease"
+            aria-label="Aumentar fonte" title="Aumentar fonte">A+</button>
+    </div>
+
+    <div class="controlDivider"></div>
+
+    <div class="controlGroup">
+        <button class="siteControl" id="themeToggle"
+            aria-label="Inverter cores" title="Inverter cores">◐</button>
+    </div>
+
+    <div class="controlDivider"></div>
+
+    <div class="controlGroup">
+        <button class="siteControl active" data-language="pt"
+            aria-label="Português">PT</button>
+
+        <button class="siteControl" data-language="en"
+            aria-label="English">EN</button>
+
+        <button class="siteControl" data-language="es"
+            aria-label="Español">ES</button>
+    </div>
+
+</div>
+
 <!-- EMAIL -->
+
 <div id="emailContact">
     <a href="mailto:contato.rdct@gmail.com">
         contato.rdct@gmail.com
@@ -729,6 +870,17 @@ html, body {
 </div>
 
 <script>
+
+/* =====================================================
+   CONFIGURAÇÕES GERAIS
+===================================================== */
+
+const LOGO_LIGHT =
+    "https://raw.githubusercontent.com/redesencontros/rdctsite/8cf3ec8ef2db295bfd288276372b4631fe39179f/ativos/logos/rdctpt.png";
+
+const LOGO_DARK =
+    "https://raw.githubusercontent.com/redesencontros/rdctsite/8cf3ec8ef2db295bfd288276372b4631fe39179f/ativos/logos/rdctbr.png";
+
 
 /* =====================================================
    BOIDS BACKGROUND
@@ -764,12 +916,7 @@ function resize() {
     canvas.width = Math.round(width * pixelRatio);
     canvas.height = Math.round(height * pixelRatio);
 
-    gl.viewport(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
+    gl.viewport(0, 0, canvas.width, canvas.height);
 }
 
 window.addEventListener("resize", resize);
@@ -802,8 +949,13 @@ void main() {
 const fragmentShaderSource = `
 precision mediump float;
 
+uniform float u_theme;
+
 void main() {
-    gl_FragColor = vec4(0.85, 0.85, 0.85, 1.0);
+
+    float c = mix(0.85, 0.15, u_theme);
+
+    gl_FragColor = vec4(c, c, c, 1.0);
 }`;
 
 function createShader(type, source) {
@@ -852,6 +1004,9 @@ const resolutionLocation =
 
 const pixelRatioLocation =
     gl.getUniformLocation(program, "u_pixelRatio");
+
+const themeLocation =
+    gl.getUniformLocation(program, "u_theme");
 
 const positionBuffer = gl.createBuffer();
 
@@ -908,7 +1063,6 @@ function getNearbyBoids(boid) {
     let neighbors = [];
 
     for (let x = -1; x <= 1; x++) {
-
         for (let y = -1; y <= 1; y++) {
 
             const key = (cx + x) + "," + (cy + y);
@@ -1134,7 +1288,16 @@ function animate() {
         positions[i * 2 + 1] = boids[i].y;
     }
 
-    gl.clearColor(1, 1, 1, 1);
+    const dark =
+        document.body.classList.contains("dark-mode");
+
+    gl.clearColor(
+        dark ? 0 : 1,
+        dark ? 0 : 1,
+        dark ? 0 : 1,
+        1
+    );
+
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     gl.uniform2f(
@@ -1146,6 +1309,11 @@ function animate() {
     gl.uniform1f(
         pixelRatioLocation,
         pixelRatio
+    );
+
+    gl.uniform1f(
+        themeLocation,
+        dark ? 1.0 : 0.0
     );
 
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -1169,13 +1337,326 @@ animate();
 
 
 /* =====================================================
-   TEXT CONTENT
+   CONTENT ELEMENTS
 ===================================================== */
 
-const contentWindow = document.getElementById("contentWindow");
-const contentText = document.getElementById("contentText");
+const contentWindow =
+    document.getElementById("contentWindow");
+
+const contentText =
+    document.getElementById("contentText");
+
+const headerImage =
+    document.getElementById("headerImage");
 
 let contentRequestId = 0;
+
+
+/* MENU ELEMENTS */
+
+const menuItems =
+    document.querySelectorAll(".menuItem[data-content]");
+
+const realizationsToggle =
+    document.getElementById("realizationsToggle");
+
+const realizationsDropdown =
+    document.getElementById("realizationsDropdown");
+
+const realizationItems =
+    document.querySelectorAll(".realizationItem");
+
+
+/* =====================================================
+   TRANSLATIONS
+   EDITE OS TEXTOS DE CADA IDIOMA AQUI
+===================================================== */
+
+const translations = {
+
+    pt: {
+        sobre: "Sobre",
+        rede: "Rede",
+        realizacoes: "Realizações",
+        realization: "Realização",
+        loading: "Carregando...",
+        error: "Não foi possível carregar o conteúdo.",
+        back: "Voltar"
+    },
+
+    en: {
+        sobre: "About",
+        rede: "Collective",
+        realizacoes: "Works",
+        realization: "Work",
+        loading: "Loading...",
+        error: "Could not load the content.",
+        back: "Back"
+    },
+
+    es: {
+        sobre: "Acerca de",
+        rede: "Red",
+        realizacoes: "Proyectos",
+        realization: "Proyecto",
+        loading: "Cargando...",
+        error: "No fue posible cargar el contenido.",
+        back: "Volver"
+    }
+
+};
+
+
+/* =====================================================
+   CONTENT PATHS
+===================================================== */
+
+function getContentPath(section) {
+
+    const paths = {
+
+        pt: {
+            sobre: "ativos/textos/sobre.txt",
+            rede: "ativos/rede/rede.html"
+        },
+
+        en: {
+            sobre: "ativos/textos/about.txt",
+            rede: "ativos/rede/redeen.html"
+        },
+
+        es: {
+            sobre: "ativos/textos/acercade.txt",
+            rede: "ativos/rede/redees.html"
+        }
+
+    };
+
+    return paths[currentLanguage][section];
+}
+
+
+/* =====================================================
+   ACCESSIBILITY AND LANGUAGE CONTROLS
+===================================================== */
+
+const fontDecrease =
+    document.getElementById("fontDecrease");
+
+const fontIncrease =
+    document.getElementById("fontIncrease");
+
+const themeToggle =
+    document.getElementById("themeToggle");
+
+let savedFontScale =
+    Number(localStorage.getItem("rdct-font-scale"));
+
+let fontScale =
+    Number.isFinite(savedFontScale) && savedFontScale >= 0.8 && savedFontScale <= 1.5
+    ? savedFontScale
+    : 1;
+
+let currentLanguage =
+    localStorage.getItem("rdct-language") || "pt";
+
+let isDarkMode =
+    localStorage.getItem("rdct-dark-mode") === "true";
+
+
+/* =====================================================
+   FONT SIZE
+===================================================== */
+
+function updateFontSize() {
+
+    fontScale = Math.max(
+        0.8,
+        Math.min(1.5, fontScale)
+    );
+
+    fontScale = Math.round(fontScale * 10) / 10;
+
+    document.documentElement.style.setProperty(
+        "--font-scale",
+        String(fontScale)
+    );
+
+    localStorage.setItem(
+        "rdct-font-scale",
+        String(fontScale)
+    );
+
+}
+
+fontDecrease.addEventListener("click", () => {
+
+    fontScale = Math.round((fontScale - 0.1) * 10) / 10;
+    updateFontSize();
+
+});
+
+fontIncrease.addEventListener("click", () => {
+
+    fontScale = Math.round((fontScale + 0.1) * 10) / 10;
+    updateFontSize();
+
+});
+
+
+/* =====================================================
+   COLOR THEME + LOGO
+===================================================== */
+
+function updateTheme() {
+
+    document.body.classList.toggle(
+        "dark-mode",
+        isDarkMode
+    );
+
+    themeToggle.classList.toggle(
+        "active",
+        isDarkMode
+    );
+
+    themeToggle.textContent =
+        isDarkMode ? "◑" : "◐";
+
+    /* TROCA A LOGO CONFORME O FUNDO */
+
+    headerImage.src =
+        isDarkMode ? LOGO_DARK : LOGO_LIGHT;
+
+    localStorage.setItem(
+        "rdct-dark-mode",
+        String(isDarkMode)
+    );
+
+}
+
+themeToggle.addEventListener("click", () => {
+
+    isDarkMode = !isDarkMode;
+    updateTheme();
+
+});
+
+
+/* =====================================================
+   LANGUAGE INTERFACE
+===================================================== */
+
+function updateLanguageInterface() {
+
+    const t = translations[currentLanguage];
+
+    document.documentElement.lang =
+        currentLanguage === "pt" ? "pt-BR" : currentLanguage;
+
+    document.querySelector(
+        '[data-content="sobre"]'
+    ).textContent = t.sobre;
+
+    document.querySelector(
+        '[data-content="rede"]'
+    ).textContent = t.rede;
+
+    realizationsToggle.textContent = t.realizacoes;
+
+    realizationItems.forEach(item => {
+
+        const number = item.dataset.realization;
+
+        item.textContent =
+            t.realization + " " + number;
+
+    });
+
+    document.querySelectorAll(
+        "[data-language]"
+    ).forEach(button => {
+
+        button.classList.toggle(
+            "active",
+            button.dataset.language === currentLanguage
+        );
+
+    });
+
+}
+
+
+/* =====================================================
+   CHANGE LANGUAGE
+   MANTÉM A SEÇÃO QUE ESTÁ ABERTA
+===================================================== */
+
+function changeLanguage(language) {
+
+    if (!translations[language]) return;
+
+    currentLanguage = language;
+
+    localStorage.setItem(
+        "rdct-language",
+        currentLanguage
+    );
+
+    updateLanguageInterface();
+
+    const section = contentWindow.dataset.section || "";
+
+    if (section === "sobre" || section === "rede") {
+
+        openPlainContent(
+            section,
+            getContentPath(section)
+        );
+
+    } else if (section.startsWith("realizacao-")) {
+
+        const number = section.replace(
+            "realizacao-",
+            ""
+        );
+
+        openRealization(number);
+    }
+
+}
+
+
+/* LANGUAGE BUTTONS */
+
+document.querySelectorAll(
+    "[data-language]"
+).forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        changeLanguage(
+            button.dataset.language
+        );
+
+    });
+
+});
+
+
+/* RESTORE LANGUAGE */
+
+if (!translations[currentLanguage]) {
+    currentLanguage = "pt";
+}
+
+updateLanguageInterface();
+
+
+/* RESTORE PREFERENCES */
+
+updateFontSize();
+updateTheme();
 
 
 /* =====================================================
@@ -1210,22 +1691,15 @@ async function loadText(path, target, requestId) {
         console.error(error);
 
         target.textContent =
-            "Não foi possível carregar o conteúdo.";
+            translations[currentLanguage].error;
     }
+
 }
 
 
 /* =====================================================
-   MENU AND CONTENT WINDOWS
+   OPEN CONTENT
 ===================================================== */
-
-const menuItems = document.querySelectorAll(".menuItem[data-content]");
-const realizationsToggle = document.getElementById("realizationsToggle");
-const realizationsDropdown = document.getElementById("realizationsDropdown");
-const realizationItems = document.querySelectorAll(".realizationItem");
-
-
-/* OPEN CONTENT */
 
 function openPlainContent(section, path) {
 
@@ -1244,13 +1718,18 @@ function openPlainContent(section, path) {
     contentWindow.dataset.section = section;
 
     contentText.scrollTop = 0;
-    contentText.textContent = "Carregando...";
+
+    contentText.textContent =
+        translations[currentLanguage].loading;
 
     loadText(path, contentText, requestId);
+
 }
 
 
-/* OPEN REALIZATION WINDOW */
+/* =====================================================
+   OPEN REALIZATION
+===================================================== */
 
 function openRealization(number) {
 
@@ -1270,11 +1749,15 @@ function openRealization(number) {
     contentText.scrollTop = 0;
 
     contentText.textContent =
-        "Conteúdo da realização " + number + ".";
+        translations[currentLanguage].realization +
+        " " + number + ".";
+
 }
 
 
-/* CLOSE CONTENT */
+/* =====================================================
+   CLOSE CONTENT
+===================================================== */
 
 function closeContent() {
 
@@ -1291,6 +1774,7 @@ function closeContent() {
 
     contentText.textContent = "";
     contentText.scrollTop = 0;
+
 }
 
 
@@ -1304,18 +1788,15 @@ menuItems.forEach(item => {
 
         const section = item.dataset.content;
 
-        const paths = {
-            sobre: "ativos/textos/sobre.txt",
-            rede: "ativos/rede/rede.html"
-        };
-
         realizationsDropdown.classList.remove("open");
 
         openPlainContent(
             section,
-            paths[section]
+            getContentPath(section)
         );
+
     });
+
 });
 
 
@@ -1328,6 +1809,7 @@ realizationsToggle.addEventListener("click", () => {
     closeContent();
 
     realizationsDropdown.classList.toggle("open");
+
 });
 
 
@@ -1342,7 +1824,9 @@ realizationItems.forEach(item => {
         const number = item.dataset.realization;
 
         openRealization(number);
+
     });
+
 });
 
 
@@ -1359,7 +1843,12 @@ document.addEventListener("pointerdown", event => {
 
     if (contentWindow.contains(event.target)) return;
 
+    /* NÃO FECHA AO CLICAR NOS CONTROLES DE IDIOMA */
+
+    if (event.target.closest("#siteControls")) return;
+
     closeContent();
+
 });
 
 
@@ -1375,14 +1864,18 @@ document.addEventListener("keydown", event => {
 
         realizationsDropdown.classList.remove("open");
     }
+
 });
+
+
 /* =====================================================
    PULL TO REFRESH — MOBILE
 ===================================================== */
 
 if (window.matchMedia("(max-width: 600px)").matches) {
 
-    const pullIndicator = document.getElementById("pullIndicator");
+    const pullIndicator =
+        document.getElementById("pullIndicator");
 
     let touchStartY = 0;
     let pullDistance = 0;
@@ -1397,7 +1890,7 @@ if (window.matchMedia("(max-width: 600px)").matches) {
 
         if (
             event.target.closest(
-                "#mainMenu, #contentWindow, #emailContact, a"
+                "#mainMenu, #contentWindow, #emailContact, #siteControls, a, button"
             )
         ) {
             return;
@@ -1408,6 +1901,7 @@ if (window.matchMedia("(max-width: 600px)").matches) {
         pulling = true;
 
     }, { passive: true });
+
 
     document.addEventListener("touchmove", event => {
 
@@ -1421,6 +1915,7 @@ if (window.matchMedia("(max-width: 600px)").matches) {
             pullDistance = Math.min(distance, pullMaximum);
 
             if (pullDistance > 10) {
+
                 event.preventDefault();
 
                 pullIndicator.classList.add("visible");
@@ -1436,6 +1931,7 @@ if (window.matchMedia("(max-width: 600px)").matches) {
         }
 
     }, { passive: false });
+
 
     document.addEventListener("touchend", () => {
 
@@ -1458,6 +1954,7 @@ if (window.matchMedia("(max-width: 600px)").matches) {
 
     });
 
+
     document.addEventListener("touchcancel", () => {
 
         pulling = false;
@@ -1467,7 +1964,9 @@ if (window.matchMedia("(max-width: 600px)").matches) {
         pullIndicator.style.top = "12px";
 
     });
+
 }
+
 </script>
 
 </body>
