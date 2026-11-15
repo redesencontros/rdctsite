@@ -457,7 +457,7 @@ function openContent(title) {
         frame.className = "documentFrame";
 
         if (title === "Currículo") {
-            frame.src = curriculumURL;
+            frame.src = curriculumURL + "&teste=" + Date.now();
             frame.title = "Currículo de bernardo stumpf";
         }
 
