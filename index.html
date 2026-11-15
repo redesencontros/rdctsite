@@ -102,7 +102,7 @@ html, body {
     width: clamp(60px, 27vw, 105px);
     height: auto;
     opacity: 0;
-    transform: scale(1.5);
+    transform: scale(1.2);
     transform-origin: center;
     will-change: transform, opacity;
 }
@@ -110,22 +110,25 @@ html, body {
 /*
    ANIMAÇÃO ÚNICA
 
-   Duração total: 3.200ms
+   Duração total: 3.200ms.
 
    0%:
-   Logo começa invisível, em escala 1.5.
+   Logo começa invisível, em escala 1.2.
 
    18.75% (600ms):
    Fade in concluído.
+   Escala: 1.25625.
 
    81.25% (2.600ms):
    Permanência concluída.
+   Escala: 1.44375.
 
    100% (3.200ms):
    Fade out concluído.
+   Escala: 1.5.
 
-   O crescimento ocorre continuamente durante
-   os 3.200ms, sem interrupções.
+   O crescimento ocorre continuamente e de forma
+   linear durante os 3.200ms completos.
 */
 
 #openingScene.playing #openingLogo {
@@ -136,22 +139,22 @@ html, body {
 
     0% {
         opacity: 0;
-        transform: scale(1.5);
+        transform: scale(1.2);
     }
 
     18.75% {
         opacity: 1;
-        transform: scale(1.51875);
+        transform: scale(1.25625);
     }
 
     81.25% {
         opacity: 1;
-        transform: scale(1.58125);
+        transform: scale(1.44375);
     }
 
     100% {
         opacity: 0;
-        transform: scale(1.6);
+        transform: scale(1.5);
     }
 
 }
@@ -1258,11 +1261,6 @@ function runOpeningScene() {
         isDarkMode ? LOGO_DARK : LOGO_LIGHT;
 
     setTimeout(() => {
-
-        /*
-           Reinicia a animação sem alterar o estado
-           intermediário da logo.
-        */
 
         openingScene.classList.remove("playing");
 
