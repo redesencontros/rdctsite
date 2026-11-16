@@ -1051,6 +1051,102 @@ body.dark-mode #contentText a {
     }
 }
 
+/* =====================================================
+   MOBILE — RODAPÉ CENTRALIZADO
+   E DESTAQUE DE TOQUE MONOCROMÁTICO
+===================================================== */
+
+/* Remove o realce azul padrão ao tocar em elementos interativos. */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Quando houver seleção real de texto, usa realce cinza. */
+::selection {
+    background: rgba(128, 128, 128, 0.35);
+    color: inherit;
+}
+
+@media (max-width: 600px) {
+
+    #emailContact {
+        left: 50%;
+        right: auto;
+        bottom: calc(48px + env(safe-area-inset-bottom));
+        transform: translateX(-50%);
+        width: max-content;
+        max-width: calc(100vw - 24px);
+        text-align: center;
+        white-space: normal;
+        font-size: calc(13px * var(--font-scale));
+    }
+
+    #siteControls {
+        left: 50%;
+        right: auto;
+        bottom: calc(12px + env(safe-area-inset-bottom));
+        transform: translateX(-50%);
+        justify-content: center;
+        width: max-content;
+        max-width: calc(100vw - 20px);
+        gap: 8px;
+        font-size: calc(12px * var(--font-scale));
+    }
+
+    .siteControl {
+        -webkit-tap-highlight-color: transparent;
+        outline-color: var(--page-hover);
+    }
+
+    .siteControl:focus,
+    .siteControl:active {
+        background: transparent;
+        color: var(--page-fg);
+        box-shadow: none;
+    }
+}
+
+/* Mantém o mesmo rodapé em celulares na orientação horizontal. */
+@media (orientation: landscape) and
+(max-height: 600px) and
+(max-width: 950px) {
+
+    #emailContact {
+        left: 50%;
+        right: auto;
+        bottom: calc(38px + env(safe-area-inset-bottom));
+        transform: translateX(-50%);
+        width: max-content;
+        max-width: calc(100vw - 24px);
+        text-align: center;
+        white-space: normal;
+        font-size: calc(11px * var(--font-scale));
+    }
+
+    #siteControls {
+        left: 50%;
+        right: auto;
+        bottom: calc(7px + env(safe-area-inset-bottom));
+        transform: translateX(-50%);
+        justify-content: center;
+        width: max-content;
+        max-width: calc(100vw - 20px);
+        gap: 7px;
+        font-size: calc(11px * var(--font-scale));
+    }
+
+    .siteControl {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .siteControl:focus,
+    .siteControl:active {
+        background: transparent;
+        color: var(--page-fg);
+        box-shadow: none;
+    }
+}
+
 </style>
 </head>
 
