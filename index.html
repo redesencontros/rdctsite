@@ -1303,7 +1303,7 @@ const homeWords = {
         "PESQUISA",
         "EXPERIMENTAÇÃO",
         "DIÁLOGO",
-        "TRANSDISCIPLINARIDADE",
+        "MULTIPLICIDADE",
         "COOPERAÇÃO",
         "MEMÓRIA"
     ],
@@ -1318,7 +1318,7 @@ const homeWords = {
         "RESEARCH",
         "EXPERIMENTATION",
         "DIALOGUE",
-        "TRANSDISCIPLINARITY",
+        "MULTIPLICITY",
         "COOPERATION",
         "MEMORY"
     ],
@@ -1333,7 +1333,7 @@ const homeWords = {
         "INVESTIGACIÓN",
         "EXPERIMENTACIÓN",
         "DIÁLOGO",
-        "TRANSDISCIPLINARIEDAD",
+        "MULTIPLICIDAD",
         "COOPERACIÓN",
         "MEMORIA"
     ]
@@ -2753,24 +2753,10 @@ realizationsToggle.addEventListener("click", () => {
     const shouldOpen =
         !realizationsDropdown.classList.contains("open");
 
-    const transitionId = ++contentTransitionId;
-
-    finishHomeAnimation(() => {
-
-        if (transitionId !== contentTransitionId) return;
-
-        closeContent(() => {
-
-            if (transitionId !== contentTransitionId) return;
-
-            realizationsDropdown.classList.toggle(
-                "open",
-                shouldOpen
-            );
-
-        });
-
-    });
+    realizationsDropdown.classList.toggle(
+        "open",
+        shouldOpen
+    );
 
 });
 
@@ -2813,7 +2799,11 @@ document.addEventListener("pointerdown", event => {
 
     if (event.target.closest("#mainMenu")) return;
 
-    closeContent();
+    closeContent(() => {
+
+        startHomeAnimation();
+
+    });
 
 });
 
