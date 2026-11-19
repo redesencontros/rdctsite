@@ -1831,6 +1831,9 @@ openingLogo.addEventListener("animationend", event => {
 
     document.body.classList.remove("intro-active");
 
+    /* Inicia os boids somente após a abertura */
+    startBoids();
+
     startHomeAnimation();
 
 });
@@ -2451,19 +2454,34 @@ class Boid {
 
 /* INITIALIZE BOIDS */
 
-for (let i = 0; i < BOID_COUNT; i++) {
-    boids.push(new Boid());
-}
-
 const positions = new Float32Array(BOID_COUNT * 2);
 
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+let boidsStarted = false;
 
-gl.bufferData(
-    gl.ARRAY_BUFFER,
-    positions.byteLength,
-    gl.DYNAMIC_DRAW
-);
+function startBoids() {
+
+    /* Impede inicializações duplicadas */
+    if (boidsStarted) return;
+
+    boidsStarted = true;
+
+    /* Cria os boids somente agora */
+    for (let i = 0; i < BOID_COUNT; i++) {
+        boids.push(new Boid());
+    }
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+    gl.bufferData(
+        gl.ARRAY_BUFFER,
+        positions.byteLength,
+        gl.DYNAMIC_DRAW
+    );
+
+    /* Inicia a animação */
+    animate();
+
+}
 
 
 /* ANIMATION LOOP */
@@ -2529,8 +2547,6 @@ function animate() {
 
     requestAnimationFrame(animate);
 }
-
-animate();
 
 
 /* =====================================================
