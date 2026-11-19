@@ -14,6 +14,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 :root {
@@ -45,6 +46,11 @@ html, body {
     -webkit-user-select: none;
     user-select: none;
     transition: background 0.2s ease, color 0.2s ease;
+}
+
+::selection {
+    background: rgba(128,128,128,0.35);
+    color: inherit;
 }
 
 /* =====================================================
@@ -116,17 +122,14 @@ html, body {
         opacity: 0;
         transform: scale(1.2);
     }
-
     18.75% {
         opacity: 1;
         transform: scale(1.25625);
     }
-
     81.25% {
         opacity: 1;
         transform: scale(1.44375);
     }
-
     100% {
         opacity: 0;
         transform: scale(1.5);
@@ -282,7 +285,6 @@ body.intro-active #emailContact {
 
 /* =====================================================
    CONTENT WINDOW
-   CONTÊINER EXTERNO — SEM ROLAGEM E SEM PADDING
 ===================================================== */
 
 #contentWindow {
@@ -294,22 +296,17 @@ body.intro-active #emailContact {
     display: none;
     align-items: center;
     justify-content: center;
-
     width: 100vw;
     max-height: 70vh;
-
     overflow: hidden;
-
     font-size: calc(clamp(13px, 1.1vw, 17px) * var(--font-scale));
     line-height: 1.5;
     text-align: left;
     opacity: 0;
     visibility: hidden;
-
     transition:
         opacity 0.6s ease,
         visibility 0s linear 0.6s;
-
     pointer-events: none;
 }
 
@@ -329,13 +326,7 @@ body.intro-active #emailContact {
     display: block;
 }
 
-#contentWindow.plain {
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    border-radius: 0;
-}
-
+#contentWindow.plain,
 #contentWindow.realization {
     background: transparent;
     backdrop-filter: none;
@@ -345,20 +336,16 @@ body.intro-active #emailContact {
 
 /* =====================================================
    CONTENT TEXT
-   CONTÊINER INTERNO — ROLAGEM NA EXTREMA DIREITA
 ===================================================== */
 
 #contentText {
     width: 100%;
     min-width: 0;
     max-height: 70vh;
-
     overflow-y: auto;
     overflow-x: hidden;
     overscroll-behavior: contain;
-
     padding: 40px max(40px, calc((100vw - 800px) / 2));
-
     white-space: pre-line;
     color: var(--page-fg);
     overflow-wrap: anywhere;
@@ -405,206 +392,6 @@ body.intro-active #emailContact {
 }
 
 /* =====================================================
-   REDE
-   CONTÊINER EXTERNO — LARGURA TOTAL
-===================================================== */
-
-#contentWindow.network {
-    display: none;
-    align-items: stretch;
-    justify-content: center;
-
-    width: 100vw;
-    height: min(82vh, 760px);
-    max-height: 82vh;
-
-    overflow: hidden;
-}
-
-#contentWindow.network.open {
-    display: flex;
-}
-
-/* ROLAGEM INTERNA DA REDE */
-
-#contentWindow.network #contentText {
-    flex: 1 1 auto;
-    width: 100%;
-    min-width: 0;
-    min-height: 0;
-    height: 100%;
-    max-height: 100%;
-
-    overflow-y: auto;
-    overflow-x: hidden;
-    overscroll-behavior: contain;
-
-    padding: 30px max(40px, calc((100vw - 1000px) / 2));
-
-    white-space: normal;
-}
-
-#contentWindow.network.open.loading {
-    align-items: center;
-    justify-content: center;
-    height: min(82vh, 760px);
-    max-height: 82vh;
-    overflow: hidden;
-}
-
-#contentWindow.network.open.loading #contentText {
-    display: none;
-}
-
-/* =====================================================
-   CONTEÚDO DA REDE
-===================================================== */
-
-#networkContent {
-    display: grid;
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-    column-gap: 45px;
-    width: 100%;
-    min-height: 100%;
-    height: auto;
-}
-
-.networkColumn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 0;
-    min-height: 100%;
-    height: auto;
-}
-
-.networkCategory {
-    display: block;
-    width: 100%;
-    text-align: center;
-    margin: 0 0 15px 0;
-    padding-top: 100px;
-    font-size: 1em;
-    line-height: 1.4;
-    font-weight: 700;
-}
-
-/* =====================================================
-   NÚCLEO REGULAR
-===================================================== */
-
-.networkPeople {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: repeat(2, auto);
-    align-content: center;
-    justify-items: center;
-    column-gap: 20px;
-    row-gap: 18px;
-    flex: 1;
-    min-height: 0;
-    width: 100%;
-}
-
-.networkPerson {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    color: var(--page-fg);
-    text-decoration: none;
-    text-align: center;
-    min-width: 0;
-}
-
-.networkPerson::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(100%, 18vh, 150px);
-    aspect-ratio: 1 / 1;
-    background: var(--photo-overlay);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-    z-index: 1;
-}
-
-.networkPerson:hover::before {
-    opacity: 1;
-}
-
-.networkPerson img {
-    display: block;
-    width: min(100%, 18vh, 150px);
-    aspect-ratio: 1 / 1;
-    height: auto;
-    object-fit: contain;
-    object-position: center;
-    margin: 0 0 4px 0;
-}
-
-.networkPerson span {
-    display: block;
-    margin: 0;
-    padding: 0;
-    line-height: 1.2;
-    text-align: center;
-    transition: color 0.2s ease;
-    overflow-wrap: anywhere;
-}
-
-.networkPerson:hover span {
-    color: var(--page-hover);
-}
-
-/* =====================================================
-   PARCERIAS
-===================================================== */
-
-.networkPartners {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: center;
-    width: 100%;
-    flex: 1;
-    min-height: 0;
-    gap: 7px;
-    text-align: center;
-}
-
-.networkPartners a {
-    display: block;
-    max-width: 100%;
-    color: var(--page-fg);
-    text-decoration: none;
-    text-align: right;
-    line-height: 1.35;
-    overflow-wrap: anywhere;
-    transition: color 0.2s ease;
-}
-
-.networkPartners a:hover {
-    color: var(--page-hover);
-}
-
-.networkBack {
-    display: inline-block;
-    margin-bottom: 20px;
-    color: var(--page-fg);
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.networkBack:hover {
-    color: var(--page-hover);
-}
-
-/* =====================================================
    EMAIL
 ===================================================== */
 
@@ -612,7 +399,7 @@ body.intro-active #emailContact {
     position: fixed;
     bottom: 3vh;
     right: 30px;
-    z-index: 10;
+    z-index: 50;
     text-align: right;
     white-space: nowrap;
     font-size: calc(16px * var(--font-scale));
@@ -687,6 +474,389 @@ body.intro-active #emailContact {
 }
 
 /* =====================================================
+   REDE — JANELA E NAVEGAÇÃO POR MOVIMENTOS
+===================================================== */
+
+#contentWindow.network {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    position: fixed;
+    width: 100vw;
+    height: 50vh;
+    max-height: 50vh;
+    overflow: hidden;
+}
+
+#contentWindow.network.open {
+    display: flex;
+}
+
+/* TÍTULO FIXO */
+
+#networkFixedHeader {
+    display: none;
+    flex: 0 0 auto;
+    width: 100%;
+    padding: 0 20px 12px;
+    text-align: center;
+    font-size: 1em;
+    line-height: 1.4;
+    font-weight: 700;
+    color: var(--page-fg);
+}
+
+#contentWindow.network.open #networkFixedHeader {
+    display: block;
+}
+
+/* CARREGAMENTO */
+
+#contentWindow.network.open.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+    max-height: 50vh;
+    overflow: hidden;
+}
+
+#contentWindow.network.open.loading #networkFixedHeader,
+#contentWindow.network.open.loading #contentText,
+#contentWindow.network.open.loading #networkStepControl {
+    display: none;
+}
+
+/* JANELA DE EXIBIÇÃO */
+
+#contentWindow.network #contentText {
+    display: block;
+    position: relative;
+    flex: 1 1 0;
+    width: 100%;
+    height: 0;
+    min-height: 0;
+    max-height: none;
+    padding: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+    white-space: normal;
+    text-align: center;
+    scrollbar-width: none;
+    touch-action: pan-y;
+}
+
+#contentWindow.network #contentText::-webkit-scrollbar {
+    display: none;
+}
+
+/* SEQUÊNCIA DE MOVIMENTOS */
+
+#networkContent {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    min-height: 0;
+    transform: translateY(0);
+    transition: transform 550ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    will-change: transform;
+}
+
+/* CADA PARADA TEM A ALTURA EXATA DA JANELA */
+
+#networkContent .networkStop {
+    flex: 0 0 var(--network-step-height, 1px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    height: var(--network-step-height, 1px);
+    min-height: 0;
+    max-height: var(--network-step-height, 1px);
+    padding: 12px 20px;
+    overflow: hidden;
+}
+
+/* NÚCLEO REGULAR — QUATRO INTEGRANTES NA MESMA JANELA */
+
+#networkContent .networkCore {
+    padding: 12px 20px;
+}
+
+#networkContent .networkCore > .networkCategory {
+    display: none;
+}
+
+#networkContent .networkCore .networkPeople {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: minmax(0, 1fr);
+    align-items: center;
+    justify-items: center;
+    align-content: center;
+    width: calc(100% - 48px);
+    height: 100%;
+    min-height: 0;
+    margin-right: auto;
+    gap: 14px;
+    max-width: 900px;
+margin-left: auto;
+margin-right: auto;
+}
+
+#networkContent .networkCore .networkPerson {
+    --network-photo-size: min(24vh, 22vw, 260px);
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+#networkContent .networkCore .networkPerson::before {
+    display: none;
+}
+
+#networkContent .networkCore .networkPhoto {
+    display: block;
+    cursor: pointer;
+    flex: 0 1 auto;
+    width: var(--network-photo-size);
+    max-width: 100%;
+    min-width: 0;
+    color: inherit;
+}
+
+#networkContent .networkCore .networkPhoto img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    margin: 0;
+}
+
+#networkContent .networkCore .networkBio {
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+    padding: 0;
+    text-align: center;
+}
+
+#networkContent .networkCore .networkName {
+    display: inline-block;
+    cursor: pointer;
+    max-width: 100%;
+    margin: 0;
+    color: var(--page-fg);
+    font-size: 1em;
+    line-height: 1.3;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+/* INTEGRANTES */
+
+#networkContent .networkPerson {
+    --network-photo-size: clamp(200px, 30vh, 250px);
+    position: relative;
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: fit-content;
+    max-width: 100%;
+    color: var(--page-fg);
+    text-decoration: none;
+}
+
+/* FOTOGRAFIA */
+
+#networkContent .networkPerson img {
+    display: block;
+    cursor: pointer;
+    width: var(--network-photo-size);
+    height: var(--network-photo-size);
+    max-width: 100%;
+    margin: 0 0 10px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* SEM SOBREPOSIÇÃO DE COR SOBRE A FOTO */
+
+/* NOME */
+
+#networkContent .networkPerson span {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    color: var(--page-fg);
+    text-align: center;
+    text-decoration: none;
+    line-height: 1.3;
+    transition: color 0.2s ease;
+}
+
+#networkContent .networkPerson span:hover {
+    color: var(--page-hover);
+}
+
+/* LINKS */
+
+#contentWindow.network #contentText a.networkPerson,
+#contentWindow.network #contentText a.networkPerson:link,
+#contentWindow.network #contentText a.networkPerson:visited {
+    color: var(--page-fg);
+    text-decoration: none;
+}
+
+/* MINIBIO */
+
+#networkContent .networkPerson p {
+    display: block;
+    width: min(100%, 420px);
+    margin: 8px auto 0;
+    font-size: 0.9em;
+    line-height: 1.45;
+    font-weight: 370;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+/* PARCERIAS */
+
+#networkContent .networkPartnerships {
+    padding: 12px 20px;
+}
+
+#networkContent .networkPartners {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
+    overflow: hidden;
+    gap: 7px;
+}
+
+#networkContent .networkPartners a {
+    display: block;
+    max-width: 100%;
+    color: var(--page-fg);
+    text-decoration: none;
+    text-align: center;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+    transition: color 0.2s ease;
+}
+
+#networkContent .networkPartners a:hover {
+    color: var(--page-hover);
+}
+
+/* =====================================================
+   REDE — INDICADOR MORFOLÓGICO DE NAVEGAÇÃO
+===================================================== */
+
+#contentWindow.network {
+    overflow: visible;
+}
+
+/* BOTÃO */
+
+#networkStepControl {
+    appearance: none;
+    position: absolute;
+    left: 50%;
+    bottom: -39px;
+    top: auto;
+    transform: translateX(-50%);
+    z-index: 35;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 30px;
+    padding: 0;
+
+    border: none;
+    background: transparent;
+    color: var(--page-fg);
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+/* SVG */
+
+#networkArrow {
+    display: block;
+    width: 42px;
+    height: 30px;
+    overflow: visible;
+}
+
+/* FORMA */
+
+#networkArrowShape {
+    fill: currentColor;
+}
+
+/* HOVER */
+
+#networkStepControl:hover {
+    color: var(--page-hover);
+    transform: translate(-50%, 3px);
+}
+
+/* HOVER NAS PARCERIAS */
+
+#networkStepControl.partnerships:hover {
+    transform: translate(-50%, -3px);
+}
+
+/* FOCO DE TECLADO */
+
+#networkStepControl:focus-visible {
+    outline: 1px solid var(--page-hover);
+    outline-offset: 3px;
+}
+
+/* OCULTA QUANDO NÃO HÁ OUTRO MOVIMENTO */
+
+#networkStepControl[hidden] {
+    display: none;
+}
+
+/* MOVIMENTO REDUZIDO */
+
+@media (prefers-reduced-motion: reduce) {
+    #networkStepControl {
+        transition-duration: 0.01ms;
+    }
+}
+
+/* =====================================================
    MOBILE
 ===================================================== */
 
@@ -746,65 +916,53 @@ body.intro-active #emailContact {
         flex-basis: 26px;
     }
 
+    /* REDE */
+
     #contentWindow.network {
         width: 100vw;
-        height: 78vh;
-        max-height: 78vh;
+        height: 50vh;
+        max-height: 50vh;
     }
 
     #contentWindow.network #contentText {
-        height: 100%;
-        max-height: 100%;
-        padding: 18px 20px;
+        padding: 0;
         font-size: calc(11px * var(--font-scale));
-        line-height: 1.3;
+        line-height: 1.4;
     }
 
-    #contentWindow.network.open.loading {
-        height: 78vh;
-        max-height: 78vh;
+    #networkContent .networkPerson {
+        --network-photo-size: min(140px, calc(100vw - 40px));
     }
 
-    #networkContent {
-        grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-        column-gap: 12px;
+    #networkContent .networkCore {
+        padding: 10px 12px;
     }
 
-    .networkCategory {
-        margin-bottom: 10px;
-        font-size: 1em;
-    }
-
-    .networkPeople {
+    #networkContent .networkCore .networkPeople {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        grid-template-rows: repeat(2, auto);
-        column-gap: 8px;
-        row-gap: 14px;
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+        width: calc(100% - 34px);
+        gap: 8px 10px;
     }
 
-    .networkPerson img {
-        width: min(100%, 11vh, 80px);
-        margin-bottom: 3px;
+    #networkContent .networkCore .networkPerson {
+        --network-photo-size: min(17vh, 100%, calc((100vw - 90px) / 2));
+        gap: 5px;
     }
 
-    .networkPerson::before {
-        width: min(100%, 11vh, 80px);
-    }
-
-    .networkPerson span {
+    #networkContent .networkCore .networkName {
         font-size: 0.95em;
     }
 
-    .networkPartners {
+    #networkContent .networkStop {
+        padding: 10px 18px;
+    }
+
+    #networkContent .networkPartners {
         gap: 6px;
     }
 
-    .networkPartners a {
-        line-height: 1.25;
-        overflow-wrap: anywhere;
-    }
-
-    #emailContact {
+       #emailContact {
         bottom: 20px;
         right: 20px;
         font-size: calc(13px * var(--font-scale));
@@ -822,27 +980,32 @@ body.intro-active #emailContact {
    TELAS COM POUCA ALTURA
 ===================================================== */
 
-@media (max-height: 600px) and (min-width: 601px) {
+@media (max-height: 600px) {
 
     #contentWindow.network {
-        height: 88vh;
-        max-height: 88vh;
+        height: 50vh;
+        max-height: 50vh;
     }
 
-    #contentWindow.network #contentText {
-        padding-top: 15px;
-        padding-bottom: 15px;
+    #networkContent .networkPerson {
+        --network-photo-size: min(115px, calc(100vw - 40px));
     }
 
-    .networkPerson img {
-        width: min(100%, 12vh, 95px);
+    #networkContent .networkCore .networkPerson {
+        --network-photo-size: min(19vh, 21vw, 210px);
     }
 
-    .networkPerson::before {
-        width: min(100%, 12vh, 95px);
+    #networkContent .networkStop {
+        padding-top: 6px;
+        padding-bottom: 6px;
     }
 
-    .networkPartners {
+    #networkContent .networkPartnerships {
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+
+    #networkContent .networkPartners {
         gap: 4px;
     }
 }
@@ -941,64 +1104,56 @@ body.intro-active #emailContact {
         max-height: 70dvh;
     }
 
+    /* REDE */
+
     #contentWindow.network {
+        top: 50%;
         width: 100vw;
-        height: 78dvh;
-        max-height: 78dvh;
+        height: 50vh;
+        max-height: 50vh;
     }
 
     #contentWindow.network #contentText {
-        height: 100%;
-        max-height: 100%;
-        padding: 10px 20px;
+        padding: 0;
         font-size: calc(11px * var(--font-scale));
-        overflow-y: auto;
+        overflow: hidden;
     }
 
     #contentWindow.network.open.loading {
-        height: 78dvh;
-        max-height: 78dvh;
+        height: 50vh;
+        max-height: 50vh;
     }
 
-    #networkContent {
-        grid-template-columns: 0.85fr 1.15fr;
-        column-gap: 20px;
+    #networkContent .networkPerson {
+        --network-photo-size: min(115px, 22vh);
     }
 
-    .networkCategory {
-        padding-top: 0;
-        margin-bottom: 6px;
-        font-size: 1em;
+    #networkContent .networkCore {
+        padding: 6px 10px;
     }
 
-    .networkPeople {
-        row-gap: 6px;
-        column-gap: 8px;
+    #networkContent .networkCore .networkPeople {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+        width: calc(100% - 36px);
+        gap: 5px 8px;
     }
 
-    .networkPerson img {
-        width: min(100%, 14vh, 65px);
-        margin-bottom: 2px;
+    #networkContent .networkCore .networkPerson {
+        --network-photo-size: min(15vh, 18vw, 125px);
+        gap: 3px;
     }
 
-    .networkPerson::before {
-        width: min(100%, 14vh, 65px);
-    }
-
-    .networkPerson span {
-        font-size: 0.95em;
-    }
-
-    .networkPartners {
+    #networkContent .networkPartners {
         gap: 4px;
     }
 
-    .networkPartners a {
+    #networkContent .networkPartners a {
         font-size: 0.95em;
         line-height: 1.2;
     }
 
-    #emailContact {
+        #emailContact {
         bottom: 10px;
         right: 15px;
         font-size: calc(11px * var(--font-scale));
@@ -1038,7 +1193,9 @@ body.dark-mode #contentText a {
     #header,
     #mainMenu,
     #siteControls,
-    #emailContact {
+    #emailContact,
+    #networkContent,
+    .networkProgressDot {
         transition-duration: 0.01ms;
     }
 
@@ -1053,19 +1210,7 @@ body.dark-mode #contentText a {
 
 /* =====================================================
    MOBILE — RODAPÉ CENTRALIZADO
-   E DESTAQUE DE TOQUE MONOCROMÁTICO
 ===================================================== */
-
-/* Remove o realce azul padrão ao tocar em elementos interativos. */
-* {
-    -webkit-tap-highlight-color: transparent;
-}
-
-/* Quando houver seleção real de texto, usa realce cinza. */
-::selection {
-    background: rgba(128, 128, 128, 0.35);
-    color: inherit;
-}
 
 @media (max-width: 600px) {
 
@@ -1094,7 +1239,6 @@ body.dark-mode #contentText a {
     }
 
     .siteControl {
-        -webkit-tap-highlight-color: transparent;
         outline-color: var(--page-hover);
     }
 
@@ -1106,7 +1250,10 @@ body.dark-mode #contentText a {
     }
 }
 
-/* Mantém o mesmo rodapé em celulares na orientação horizontal. */
+/* =====================================================
+   RODAPÉ — CELULARES NA HORIZONTAL
+===================================================== */
+
 @media (orientation: landscape) and
 (max-height: 600px) and
 (max-width: 950px) {
@@ -1135,10 +1282,6 @@ body.dark-mode #contentText a {
         font-size: calc(11px * var(--font-scale));
     }
 
-    .siteControl {
-        -webkit-tap-highlight-color: transparent;
-    }
-
     .siteControl:focus,
     .siteControl:active {
         background: transparent;
@@ -1146,7 +1289,280 @@ body.dark-mode #contentText a {
         box-shadow: none;
     }
 }
+/* =====================================================
+   REDE — FOTOGRAFIAS SEMPRE QUADRADAS
+===================================================== */
 
+/* DESKTOP — QUATRO FOTOS */
+
+#networkContent .networkCore .networkPerson {
+    --network-photo-size:
+        min(24vh, calc((100vw - 150px) / 4), 260px);
+}
+
+#networkContent .networkCore .networkPhoto {
+    display: block;
+    flex: 0 0 var(--network-photo-size);
+    width: var(--network-photo-size);
+    height: var(--network-photo-size);
+    max-width: none;
+    min-width: 0;
+}
+
+#networkContent .networkCore .networkPhoto img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center;
+}
+
+
+/* FOTOS EM ESTRUTURAS INDIVIDUAIS */
+
+#networkContent .networkPerson img {
+    width: var(--network-photo-size);
+    height: var(--network-photo-size);
+    max-width: none;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center;
+}
+
+
+/* MOBILE — DUAS COLUNAS */
+
+@media (max-width: 600px) {
+
+    #networkContent .networkCore .networkPerson {
+        --network-photo-size:
+            min(17vh, calc((100vw - 90px) / 2), 140px);
+    }
+
+    #networkContent .networkCore .networkPhoto {
+        flex: 0 0 var(--network-photo-size);
+        width: var(--network-photo-size);
+        height: var(--network-photo-size);
+    }
+
+    #networkContent .networkCore .networkPhoto img {
+        width: 100%;
+        height: 100%;
+    }
+
+    #networkContent .networkPerson {
+        --network-photo-size:
+            min(140px, calc(100vw - 40px));
+    }
+}
+
+
+/* TELAS COM POUCA ALTURA */
+
+@media (max-height: 600px) {
+
+    #networkContent .networkCore .networkPerson {
+        --network-photo-size:
+            min(19vh, calc((100vw - 150px) / 4), 210px);
+    }
+}
+
+
+/* CELULARES NA HORIZONTAL */
+
+@media (orientation: landscape) and
+(max-height: 600px) and
+(max-width: 950px) {
+
+    #networkContent .networkCore .networkPerson {
+        --network-photo-size:
+            min(15vh, 18vw, 125px);
+    }
+}
+/* =====================================================
+   REDE — HOVER NA FOTO TAMBÉM ALTERA A COR DO NOME
+===================================================== */
+
+/* TEMA CLARO */
+
+#networkContent .networkPerson:hover .networkName,
+#networkContent .networkPerson:hover span {
+    color: var(--page-hover);
+}
+
+/* TEMA ESCURO */
+
+body.dark-mode #networkContent .networkPerson:hover .networkName,
+body.dark-mode #networkContent .networkPerson:hover span {
+    color: var(--page-hover) !important;
+}
+/* =====================================================
+   REDE — AJUSTE FINAL DAS FOTOS E ÁREAS CLICÁVEIS
+===================================================== */
+
+/* LINKS DOS INTEGRANTES */
+
+#networkContent .networkCore .networkPerson {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: var(--network-photo-size);
+    height: auto;
+    min-width: 0;
+    max-width: 100%;
+
+    cursor: default;
+    pointer-events: none;
+}
+
+/* A FOTO É UMA ÁREA CLICÁVEL INDEPENDENTE */
+
+#networkContent .networkCore .networkPerson img {
+    display: block;
+
+    width: var(--network-photo-size);
+    height: var(--network-photo-size);
+
+    max-width: 100%;
+    flex: 0 0 auto;
+
+    margin: 0 0 8px;
+
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center;
+
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+/* O NOME É CLICÁVEL SOMENTE SOBRE O TEXTO */
+
+#networkContent .networkCore .networkPerson span {
+    display: table;
+
+    width: fit-content;
+    max-width: 100%;
+
+    margin: 0 auto;
+
+    cursor: pointer;
+    pointer-events: auto;
+
+    text-align: center;
+    line-height: 1.3;
+
+    transition: color 0.2s ease;
+}
+
+/* HOVER SOBRE A FOTO OU O NOME */
+
+#networkContent .networkCore .networkPerson:hover span {
+    color: var(--page-hover);
+}
+
+/* =====================================================
+   DUAS COLUNAS — FOTOS MAIS PRÓXIMAS
+===================================================== */
+
+@media (max-width: 600px) {
+
+    #networkContent .networkCore .networkPeople {
+        display: grid;
+
+        grid-template-columns: repeat(2, max-content);
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+
+        justify-content: center;
+        justify-items: center;
+        align-items: center;
+        align-content: center;
+
+        width: 100%;
+        max-width: 100%;
+
+        margin: 0 auto;
+
+        column-gap: clamp(12px, 4vw, 24px);
+        row-gap: 8px;
+    }
+
+    #networkContent .networkCore .networkPerson {
+        --network-photo-size:
+            min(17vh, calc((100vw - 70px) / 2), 140px);
+
+        width: var(--network-photo-size);
+        height: auto;
+        max-width: 100%;
+    }
+
+    #networkContent .networkCore .networkName,
+    #networkContent .networkCore .networkPerson span {
+        font-size: 0.95em;
+    }
+
+}
+
+/* =====================================================
+   CELULARES NA HORIZONTAL
+===================================================== */
+
+@media (orientation: landscape) and
+(max-height: 600px) and
+(max-width: 950px) {
+
+    #networkContent .networkCore .networkPeople {
+        display: grid;
+
+        grid-template-columns: repeat(2, max-content);
+        grid-template-rows: repeat(2, minmax(0, 1fr));
+
+        justify-content: center;
+        justify-items: center;
+        align-items: center;
+        align-content: center;
+
+        width: 100%;
+        max-width: 100%;
+
+        margin: 0 auto;
+
+        column-gap: clamp(12px, 3vw, 24px);
+        row-gap: 5px;
+    }
+
+    #networkContent .networkCore .networkPerson {
+        --network-photo-size:
+            min(15vh, 18vw, 125px);
+
+        width: var(--network-photo-size);
+        height: auto;
+        max-width: 100%;
+    }
+
+}
+
+/* =====================================================
+   DESKTOP — INTERAÇÃO RESTRITA A FOTO E NOME
+===================================================== */
+
+@media (min-width: 601px) {
+
+    #networkContent .networkCore .networkPeople {
+        justify-items: center;
+    }
+
+    #networkContent .networkCore .networkPerson {
+        width: var(--network-photo-size);
+        height: auto;
+        pointer-events: none;
+    }
+
+}
 </style>
 </head>
 
@@ -1218,7 +1634,33 @@ body.dark-mode #contentText a {
 <!-- JANELA DE CONTEÚDO -->
 
 <div id="contentWindow">
+
+    <div id="networkFixedHeader">NÚCLEO REGULAR</div>
+
+    <!-- INDICADOR DE NAVEGAÇÃO ENTRE MOVIMENTOS -->
+
+<button
+    id="networkStepControl"
+    type="button"
+    aria-label="Ir para Parcerias"
+    aria-controls="contentText"
+    title="Ir para Parcerias"
+>
+    <svg
+        id="networkArrow"
+        viewBox="0 0 42 30"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+    >
+        <polygon
+            id="networkArrowShape"
+            points="12,9 30,9 21,20"
+        />
+    </svg>
+</button>
+
     <div id="contentText"></div>
+
 </div>
 
 <!-- CONTROLES -->
@@ -1342,7 +1784,7 @@ const homeWords = {
 
 
 /* =====================================================
-   CENA DE ABERTURA — PRIMEIRO CARREGAMENTO
+   CENA DE ABERTURA
 ===================================================== */
 
 const openingScene =
@@ -1418,20 +1860,10 @@ let currentHomeWordIndex = null;
 let homeAnimationActive = false;
 
 
-/* =====================================================
-   HOME — OBTENÇÃO DAS PALAVRAS
-===================================================== */
-
 function getHomeWords() {
-
     return homeWords[currentLanguage] || homeWords.pt;
-
 }
 
-
-/* =====================================================
-   HOME — EMBARALHAMENTO DO DECK
-===================================================== */
 
 function shuffleHomeDeck() {
 
@@ -1464,31 +1896,18 @@ function shuffleHomeDeck() {
     }
 
     return deck;
-
 }
 
-
-/* =====================================================
-   HOME — CRIAR NOVO DECK
-===================================================== */
 
 function createHomeDeck() {
-
     homeDeck = shuffleHomeDeck();
-
 }
 
-
-/* =====================================================
-   HOME — SORTEAR PRÓXIMA PALAVRA
-===================================================== */
 
 function showRandomHomeWord() {
 
     if (homeDeck.length === 0) {
-
         createHomeDeck();
-
     }
 
     if (homeDeck.length === 0) return;
@@ -1496,19 +1915,13 @@ function showRandomHomeWord() {
     const index = homeDeck.shift();
 
     currentHomeWordIndex = index;
-
     lastHomeWordIndex = index;
 
     const words = getHomeWords();
 
     homeWord.textContent = words[index];
-
 }
 
-
-/* =====================================================
-   HOME — CICLO DE ANIMAÇÃO
-===================================================== */
 
 function runHomeWordCycle() {
 
@@ -1523,9 +1936,7 @@ function runHomeWordCycle() {
         if (!homeAnimationActive) return;
 
         requestAnimationFrame(() => {
-
             homeAnimation.classList.add("visible");
-
         });
 
     });
@@ -1545,13 +1956,8 @@ function runHomeWordCycle() {
         }, HOME_FADE_DURATION);
 
     }, HOME_FADE_DURATION + HOME_VISIBLE_DURATION);
-
 }
 
-
-/* =====================================================
-   HOME — INICIAR ANIMAÇÃO
-===================================================== */
 
 function startHomeAnimation() {
 
@@ -1562,7 +1968,6 @@ function startHomeAnimation() {
     homeAnimationActive = true;
 
     homeAnimation.classList.remove("visible");
-
     homeAnimation.classList.add("hidden");
 
     homeTimeout = setTimeout(() => {
@@ -1572,13 +1977,8 @@ function startHomeAnimation() {
         runHomeWordCycle();
 
     }, HOME_INITIAL_DELAY);
-
 }
 
-
-/* =====================================================
-   HOME — FINALIZAR ANIMAÇÃO
-===================================================== */
 
 function finishHomeAnimation(callback) {
 
@@ -1594,11 +1994,8 @@ function finishHomeAnimation(callback) {
     homeAnimationActive = false;
 
     if (homeTimeout !== null) {
-
         clearTimeout(homeTimeout);
-
         homeTimeout = null;
-
     }
 
     if (wasVisible) {
@@ -1612,7 +2009,6 @@ function finishHomeAnimation(callback) {
             homeExitTimeout = null;
 
             const callbacks = homeExitCallbacks.splice(0);
-
             callbacks.forEach(fn => fn());
 
         }, HOME_FADE_DURATION);
@@ -1622,63 +2018,52 @@ function finishHomeAnimation(callback) {
         homeAnimation.classList.add("hidden");
 
         const callbacks = homeExitCallbacks.splice(0);
-
         callbacks.forEach(fn => fn());
 
     }
-
 }
 
-
-/* =====================================================
-   HOME — INTERROMPER ANIMAÇÃO
-===================================================== */
 
 function stopHomeAnimation() {
 
     homeAnimationActive = false;
 
     if (homeTimeout !== null) {
-
         clearTimeout(homeTimeout);
-
         homeTimeout = null;
-
     }
 
     if (homeExitTimeout !== null) {
-
         clearTimeout(homeExitTimeout);
-
         homeExitTimeout = null;
-
     }
 
     homeExitCallbacks = [];
 
     homeAnimation.classList.remove("visible");
-
     homeAnimation.classList.add("hidden");
-
 }
+
 
 /* =====================================================
    TEXTO ALTERNATIVO HOME
 ===================================================== */
 
 function updateLogoTitle() {
-    const logo = document.getElementById('headerImage');
+
+    const logo = document.getElementById("headerImage");
 
     const titles = {
-        pt: 'Início',
-        en: 'Home',
-        es: 'Inicio'
+        pt: "Início",
+        en: "Home",
+        es: "Inicio"
     };
 
     if (logo) {
-        logo.title = titles[currentLanguage] || 'Início';
+        logo.title = titles[currentLanguage] || "Início";
     }
 }
+
 
 /* =====================================================
    BOIDS BACKGROUND
@@ -1701,6 +2086,7 @@ let width;
 let height;
 let pixelRatio = 1;
 
+
 function resize() {
 
     pixelRatio = Math.min(
@@ -1720,8 +2106,6 @@ function resize() {
 window.addEventListener("resize", resize);
 resize();
 
-
-/* SHADERS */
 
 const vertexShaderSource = `
 attribute vec2 a_position;
@@ -1759,6 +2143,7 @@ void main() {
 
 }`;
 
+
 function createShader(type, source) {
 
     const shader = gl.createShader(type);
@@ -1773,6 +2158,7 @@ function createShader(type, source) {
 
     return shader;
 }
+
 
 const vertexShader = createShader(
     gl.VERTEX_SHADER,
@@ -1796,8 +2182,6 @@ if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
 }
 
 gl.useProgram(program);
-
-/* BLENDING PARA PERMITIR 75% DE OPACIDADE */
 
 gl.enable(gl.BLEND);
 
@@ -1844,6 +2228,7 @@ const cellSize = perception;
 
 let grid = {};
 
+
 function buildGrid() {
 
     grid = {};
@@ -1862,6 +2247,7 @@ function buildGrid() {
         grid[key].push(b);
     }
 }
+
 
 function getNearbyBoids(boid) {
 
@@ -1941,6 +2327,7 @@ class Boid {
             this.vy = -3.5;
         }
     }
+
 
     update() {
 
@@ -2293,6 +2680,14 @@ function updateFontSize() {
         String(fontScale)
     );
 
+    /* A alteração da fonte pode mudar a altura do cabeçalho fixo
+       e, consequentemente, a altura disponível para cada movimento. */
+    if (typeof isNetworkActive === "function" && isNetworkActive()) {
+        requestAnimationFrame(() => {
+            resizeNetworkStops();
+        });
+    }
+
 }
 
 fontDecrease.addEventListener("click", () => {
@@ -2395,6 +2790,938 @@ function updateLanguageInterface() {
 
 
 /* =====================================================
+   REDE — NAVEGAÇÃO POR MOVIMENTOS
+===================================================== */
+
+let networkStops = [];
+let networkCurrentIndex = 0;
+let networkStepHeight = 0;
+let networkAnimating = false;
+let networkTransitionTimer = null;
+let networkTouchStartY = null;
+
+const networkViewport =
+    document.getElementById("contentText");
+
+const networkHeader =
+    document.getElementById("networkFixedHeader");
+
+const networkStepControl =
+    document.getElementById("networkStepControl");
+
+    /* =====================================================
+   REDE — ANIMAÇÃO DE TRANSFORMAÇÃO DA SETA
+===================================================== */
+
+const networkArrowShape =
+    document.getElementById("networkArrowShape");
+
+const ARROW_ANIMATION_DURATION = 450;
+const ARROW_POINT_COUNT = 48;
+
+let networkArrowFrame = null;
+
+
+/* ÁREA DE UM POLÍGONO */
+
+function getPolygonArea(points) {
+
+    let area = 0;
+
+    for (let i = 0; i < points.length; i++) {
+
+        const next = (i + 1) % points.length;
+
+        area +=
+            points[i].x * points[next].y -
+            points[next].x * points[i].y;
+
+    }
+
+    return Math.abs(area) / 2;
+}
+
+
+/* CENTRO DE UM POLÍGONO */
+
+function getPolygonCenter(points) {
+
+    let x = 0;
+    let y = 0;
+
+    points.forEach(point => {
+        x += point.x;
+        y += point.y;
+    });
+
+    return {
+        x: x / points.length,
+        y: y / points.length
+    };
+}
+
+
+/* GERA PONTOS UNIFORMEMENTE DISTRIBUÍDOS
+   AO REDOR DO CENTRO DE UMA FORMA */
+
+function getRadialPolygon(vertices, count) {
+
+    const center = getPolygonCenter(vertices);
+    const points = [];
+
+    for (let i = 0; i < count; i++) {
+
+        const angle =
+            (Math.PI * 2 * i) / count;
+
+        const dx = Math.cos(angle);
+        const dy = Math.sin(angle);
+
+        let nearestDistance = Infinity;
+
+        for (let j = 0; j < vertices.length; j++) {
+
+            const a = vertices[j];
+            const b = vertices[(j + 1) % vertices.length];
+
+            const ax = a.x - center.x;
+            const ay = a.y - center.y;
+
+            const ex = b.x - a.x;
+            const ey = b.y - a.y;
+
+            const denominator =
+                dx * ey - dy * ex;
+
+            if (Math.abs(denominator) < 0.000001) {
+                continue;
+            }
+
+            const distance =
+                (ax * ey - ay * ex) / denominator;
+
+            const edgePosition =
+                (ax * dy - ay * dx) / denominator;
+
+            if (
+                distance >= 0 &&
+                edgePosition >= -0.000001 &&
+                edgePosition <= 1.000001
+            ) {
+                nearestDistance = Math.min(
+                    nearestDistance,
+                    distance
+                );
+            }
+
+        }
+
+        points.push({
+            x: center.x + dx * nearestDistance,
+            y: center.y + dy * nearestDistance
+        });
+
+    }
+
+    return points;
+}
+
+
+/* CÍRCULO COM A MESMA ÁREA DO TRIÂNGULO */
+
+function createEqualAreaCircle(count, area) {
+
+    const center = { x: 21, y: 14.5 };
+
+    const radius = Math.sqrt(area / Math.PI);
+
+    const points = [];
+
+    for (let i = 0; i < count; i++) {
+
+        const angle =
+            (Math.PI * 2 * i) / count;
+
+        points.push({
+            x: center.x + Math.cos(angle) * radius,
+            y: center.y + Math.sin(angle) * radius
+        });
+
+    }
+
+    return points;
+}
+
+
+/* FORMAS INICIAIS */
+
+const arrowDown = getRadialPolygon([
+    { x: 12, y: 9 },
+    { x: 30, y: 9 },
+    { x: 21, y: 20 }
+], ARROW_POINT_COUNT);
+
+const arrowUp = getRadialPolygon([
+    { x: 12, y: 20 },
+    { x: 30, y: 20 },
+    { x: 21, y: 9 }
+], ARROW_POINT_COUNT);
+
+const arrowArea = getPolygonArea([
+    { x: 12, y: 9 },
+    { x: 30, y: 9 },
+    { x: 21, y: 20 }
+]);
+
+const arrowCircle =
+    createEqualAreaCircle(
+        ARROW_POINT_COUNT,
+        arrowArea
+    );
+
+
+/* EASING SUAVE */
+
+function arrowEase(value) {
+
+    return value < 0.5
+        ? 4 * value * value * value
+        : 1 - Math.pow(-2 * value + 2, 3) / 2;
+
+}
+
+
+/* INTERPOLAÇÃO ENTRE DUAS FORMAS */
+
+function interpolateArrow(from, to, progress) {
+
+    const points = from.map((point, index) => {
+
+        return {
+            x: point.x + (to[index].x - point.x) * progress,
+            y: point.y + (to[index].y - point.y) * progress
+        };
+
+    });
+
+    /* Normaliza a área para que a forma não aumente
+       nem diminua durante a transformação. */
+
+    const currentArea = getPolygonArea(points);
+
+    if (currentArea > 0) {
+
+        const scale = Math.sqrt(
+            arrowArea / currentArea
+        );
+
+        const center = getPolygonCenter(points);
+
+        points.forEach(point => {
+
+            point.x =
+                center.x + (point.x - center.x) * scale;
+
+            point.y =
+                center.y + (point.y - center.y) * scale;
+
+        });
+
+    }
+
+    return points;
+}
+
+
+/* DESENHA A FORMA */
+
+function renderArrow(points) {
+
+    networkArrowShape.setAttribute(
+        "points",
+        points.map(point =>
+            `${point.x.toFixed(3)},${point.y.toFixed(3)}`
+        ).join(" ")
+    );
+
+}
+
+
+/* ANIMAÇÃO TRIÂNGULO → CÍRCULO → TRIÂNGULO */
+
+function animateNetworkArrow(toPartnerships) {
+
+    if (networkArrowFrame !== null) {
+        cancelAnimationFrame(networkArrowFrame);
+        networkArrowFrame = null;
+    }
+
+    const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    const from = toPartnerships ? arrowDown : arrowUp;
+    const to = toPartnerships ? arrowUp : arrowDown;
+
+    if (reducedMotion) {
+        renderArrow(to);
+        return;
+    }
+
+    const startTime = performance.now();
+
+    function animate(now) {
+
+        const elapsed = now - startTime;
+
+        const progress = Math.min(
+            elapsed / ARROW_ANIMATION_DURATION,
+            1
+        );
+
+        const eased = arrowEase(progress);
+
+        let points;
+
+        if (eased < 0.5) {
+
+            points = interpolateArrow(
+                from,
+                arrowCircle,
+                eased * 2
+            );
+
+        } else {
+
+            points = interpolateArrow(
+                arrowCircle,
+                to,
+                (eased - 0.5) * 2
+            );
+
+        }
+
+        renderArrow(points);
+
+        if (progress < 1) {
+
+            networkArrowFrame =
+                requestAnimationFrame(animate);
+
+        } else {
+
+            renderArrow(to);
+            networkArrowFrame = null;
+
+        }
+
+    }
+
+    networkArrowFrame =
+        requestAnimationFrame(animate);
+
+}
+
+
+/* ESTADO INICIAL */
+
+renderArrow(arrowDown);
+
+/* VERIFICA SE A REDE ESTÁ ABERTA */
+
+function isNetworkActive() {
+
+    return (
+        contentWindow.classList.contains("open") &&
+        contentWindow.classList.contains("network") &&
+        !contentWindow.classList.contains("loading")
+    );
+}
+
+
+/* ATUALIZA O TÍTULO */
+
+function updateNetworkHeader() {
+
+    if (!networkHeader) return;
+
+    const currentStop =
+        networkStops[networkCurrentIndex];
+
+    const isPartnerships =
+        currentStop &&
+        (
+            currentStop.classList.contains("networkPartnerships") ||
+            currentStop.querySelector(".networkPartners")
+        );
+
+    const titles = {
+        pt: {
+            partnerships: "PARCERIAS",
+            regular: "NÚCLEO REGULAR"
+        },
+        en: {
+            partnerships: "COLLABORATIVE NETWORK",
+            regular: "CORE TEAM"
+        },
+        es: {
+            partnerships: "ARTICULACIONES",
+            regular: "NÚCLEO BASE"
+        }
+    };
+
+    const language = titles[currentLanguage] || titles.pt;
+
+    networkHeader.textContent = isPartnerships
+        ? language.partnerships
+        : language.regular;
+}
+
+
+/* ATUALIZA O INDICADOR TRIANGULAR */
+
+function updateNetworkProgress() {
+
+    if (!networkStepControl) return;
+
+    const hasMultipleStops =
+        networkStops.length > 1;
+
+    networkStepControl.hidden = !hasMultipleStops;
+
+    const isPartnerships =
+        networkCurrentIndex === 1;
+
+    networkStepControl.classList.toggle(
+        "partnerships",
+        isPartnerships
+    );
+
+    if (isPartnerships) {
+
+        networkStepControl.setAttribute(
+            "aria-label",
+            "Voltar para Núcleo regular"
+        );
+
+        networkStepControl.title =
+            "Voltar para Núcleo regular";
+
+    } else {
+
+        networkStepControl.setAttribute(
+            "aria-label",
+            "Ir para Parcerias"
+        );
+
+        networkStepControl.title =
+            "Ir para Parcerias";
+
+    }
+
+}
+
+
+/* APLICA A POSIÇÃO DO MOVIMENTO */
+
+function applyNetworkPosition(animate = true) {
+
+    const networkContent =
+        networkViewport.querySelector("#networkContent");
+
+    if (!networkContent || !networkStepHeight) return;
+
+    networkContent.style.transition = animate
+        ? ""
+        : "none";
+
+    networkContent.style.transform =
+        `translate3d(0, ${-networkCurrentIndex * networkStepHeight}px, 0)`;
+
+    if (!animate) {
+
+        networkContent.offsetHeight;
+        networkContent.style.transition = "";
+
+    }
+
+    updateNetworkHeader();
+    updateNetworkProgress();
+}
+
+
+/* CALCULA A ALTURA REAL DA JANELA */
+
+function fitNetworkPartnerships() {
+
+    const partners =
+        networkViewport.querySelector(".networkPartners");
+
+    if (!partners) return;
+
+    const links = Array.from(partners.querySelectorAll("a"));
+
+    if (!links.length) return;
+
+    /* Começa sempre pela escala natural, para que o ajuste não
+       vá diminuindo progressivamente a cada redimensionamento. */
+    partners.style.fontSize = "1em";
+    partners.style.gap = "7px";
+
+    const availableHeight = partners.clientHeight;
+
+    if (!availableHeight) return;
+
+    const fits = () =>
+        partners.scrollHeight <= availableHeight + 0.5;
+
+    if (fits()) return;
+
+    /* Busca binária encontra a maior escala que mantém todos os
+       links dentro da parada, sem criar rolagem interna. */
+    let low = 0.5;
+    let high = 1;
+
+    for (let i = 0; i < 12; i++) {
+
+        const middle = (low + high) / 2;
+        partners.style.fontSize = middle + "em";
+        partners.style.gap = Math.max(2, 7 * middle) + "px";
+
+        if (fits()) {
+            low = middle;
+        } else {
+            high = middle;
+        }
+
+    }
+
+    partners.style.fontSize = low + "em";
+    partners.style.gap = Math.max(2, 7 * low) + "px";
+}
+
+
+function resizeNetworkStops() {
+
+    if (!networkStops.length) return;
+
+    /* getBoundingClientRect preserva frações de pixel; clientHeight
+       arredonda o valor e podia deixar aparecer 1px do movimento seguinte. */
+    networkStepHeight =
+        networkViewport.getBoundingClientRect().height;
+
+    if (!networkStepHeight) return;
+
+    networkViewport.style.setProperty(
+        "--network-step-height",
+        networkStepHeight + "px"
+    );
+
+    networkStops.forEach(stop => {
+
+        stop.style.flexBasis =
+            networkStepHeight + "px";
+
+        stop.style.height =
+            networkStepHeight + "px";
+
+        stop.style.maxHeight =
+            networkStepHeight + "px";
+
+    });
+
+    fitNetworkPartnerships();
+    applyNetworkPosition(false);
+}
+
+
+/* INICIALIZA OS MOVIMENTOS */
+
+function initializeNetworkNavigation(preserveIndex = 0) {
+
+    const networkContent =
+        networkViewport.querySelector("#networkContent");
+
+    if (!networkContent) {
+
+        networkStops = [];
+        networkCurrentIndex = 0;
+
+        updateNetworkProgress();
+
+        return;
+    }
+
+    /* Compatibilidade com as duas estruturas de Rede usadas no projeto:
+       - duas seções (Núcleo Regular + Parcerias);
+       - cinco paradas antigas (quatro integrantes + Parcerias).
+       Em ambos os casos, a navegação final terá somente duas paradas. */
+    const networkSections = Array.from(
+        networkContent.querySelectorAll(":scope > .networkSection")
+    );
+
+    if (networkSections.length) {
+        networkSections.forEach(section => {
+            section.classList.add("networkStop");
+        });
+
+        networkSections[0].classList.add("networkCore");
+        networkStops = networkSections;
+
+    } else {
+        const directStops = Array.from(
+            networkContent.querySelectorAll(":scope > .networkStop")
+        );
+
+        if (directStops.length >= 5) {
+            const coreStop = directStops[0];
+            const peopleGrid = document.createElement("div");
+            peopleGrid.className = "networkPeople";
+
+            directStops.slice(0, 4).forEach(stop => {
+                const person = stop.querySelector(".networkPerson");
+                if (person) peopleGrid.appendChild(person);
+            });
+
+            coreStop.querySelectorAll(".networkCategory").forEach(title => {
+                title.remove();
+            });
+
+            coreStop.appendChild(peopleGrid);
+            coreStop.classList.add("networkCore");
+
+            directStops.slice(1, 4).forEach(stop => stop.remove());
+
+            networkStops = [coreStop, ...directStops.slice(4)];
+
+        } else {
+            networkStops = directStops;
+            if (networkStops[0]) {
+                networkStops[0].classList.add("networkCore");
+            }
+        }
+    }
+
+        networkCurrentIndex = Math.min(
+    preserveIndex,
+    Math.max(0, networkStops.length - 1)
+);
+
+networkAnimating = false;
+
+    if (networkTransitionTimer !== null) {
+        clearTimeout(networkTransitionTimer);
+        networkTransitionTimer = null;
+    }
+
+    resizeNetworkStops();
+
+    updateNetworkHeader();
+    updateNetworkProgress();
+
+}
+
+
+/* OBSERVA MUDANÇAS NA ÁREA DISPONÍVEL DA REDE */
+
+let networkViewportObserver = null;
+
+if ("ResizeObserver" in window) {
+
+    networkViewportObserver = new ResizeObserver(() => {
+
+        if (!contentWindow.classList.contains("network")) return;
+        if (!networkStops.length) return;
+
+        resizeNetworkStops();
+
+    });
+
+    networkViewportObserver.observe(networkViewport);
+
+}
+
+
+/* FINALIZA A ANIMAÇÃO */
+
+function finishNetworkTransition() {
+
+    networkAnimating = false;
+
+    if (networkTransitionTimer !== null) {
+        clearTimeout(networkTransitionTimer);
+        networkTransitionTimer = null;
+    }
+}
+
+
+/* MUDA PARA UM MOVIMENTO */
+
+function goToNetworkStep(index) {
+
+    if (!isNetworkActive()) return;
+
+    if (!networkStops.length) return;
+
+    if (networkAnimating) return;
+
+    const nextIndex = Math.max(
+        0,
+        Math.min(networkStops.length - 1, index)
+    );
+
+    if (nextIndex === networkCurrentIndex) return;
+
+    /* ANIMA A TRANSFORMAÇÃO DO INDICADOR */
+
+    animateNetworkArrow(nextIndex === 1);
+
+    networkCurrentIndex = nextIndex;
+    networkAnimating = true;
+
+    applyNetworkPosition(true);
+
+    networkTransitionTimer = setTimeout(() => {
+        finishNetworkTransition();
+    }, 600);
+}
+
+
+/* MOVIMENTO ANTERIOR E SEGUINTE */
+
+function nextNetworkStep() {
+    goToNetworkStep(networkCurrentIndex + 1);
+}
+
+function previousNetworkStep() {
+    goToNetworkStep(networkCurrentIndex - 1);
+}
+
+
+/* CLIQUE NO TRIÂNGULO */
+
+networkStepControl.addEventListener("click", () => {
+
+    if (!isNetworkActive()) return;
+
+    if (networkCurrentIndex === 0) {
+        goToNetworkStep(1);
+    } else {
+        goToNetworkStep(0);
+    }
+
+});
+
+
+/* =====================================================
+   ROLAGEM GLOBAL — TODA A TELA
+===================================================== */
+
+document.addEventListener("wheel", event => {
+
+    if (!isNetworkActive()) return;
+
+    /* Elementos de interface que não devem acionar a Rede */
+    const protectedArea = event.target.closest(
+        "#header, #mainMenu, #siteControls, #emailContact, #networkStepControl"
+    );
+
+    if (protectedArea) return;
+
+    event.preventDefault();
+
+    if (networkAnimating) return;
+
+    if (Math.abs(event.deltaY) < 12) return;
+
+    if (event.deltaY > 0) {
+        nextNetworkStep();
+    } else {
+        previousNetworkStep();
+    }
+
+}, { passive: false });
+
+
+/* TOQUE — CELULAR */
+
+networkViewport.addEventListener("touchstart", event => {
+
+    if (!isNetworkActive()) return;
+
+    if (event.touches.length !== 1) return;
+
+    networkTouchStartY =
+        event.touches[0].clientY;
+
+}, { passive: true });
+
+
+networkViewport.addEventListener("touchend", event => {
+
+    if (!isNetworkActive()) return;
+
+    if (networkTouchStartY === null) return;
+
+    const touchEndY =
+        event.changedTouches[0].clientY;
+
+    const difference =
+        networkTouchStartY - touchEndY;
+
+    networkTouchStartY = null;
+
+    if (Math.abs(difference) < 35) return;
+
+    if (difference > 0) {
+        nextNetworkStep();
+    } else {
+        previousNetworkStep();
+    }
+
+}, { passive: true });
+
+
+networkViewport.addEventListener("touchcancel", () => {
+    networkTouchStartY = null;
+});
+
+/* =====================================================
+   TOQUE GLOBAL — FORA DA JANELA DA REDE
+===================================================== */
+
+let globalNetworkTouchStartY = null;
+let globalNetworkTouchStartedOutside = false;
+
+document.addEventListener("touchstart", event => {
+
+    if (!isNetworkActive()) return;
+
+    if (event.touches.length !== 1) return;
+
+    const target = event.target;
+
+    const protectedArea = target.closest(
+        "#header, #mainMenu, #siteControls, #emailContact, #networkStepControl"
+    );
+
+    if (protectedArea) return;
+
+    /* A janela da Rede já possui seu próprio controle de toque */
+    if (target.closest("#contentWindow")) return;
+
+    globalNetworkTouchStartedOutside = true;
+
+    globalNetworkTouchStartY =
+        event.touches[0].clientY;
+
+}, { passive: true });
+
+
+document.addEventListener("touchend", event => {
+
+    if (!globalNetworkTouchStartedOutside) return;
+
+    globalNetworkTouchStartedOutside = false;
+
+    if (globalNetworkTouchStartY === null) return;
+
+    const difference =
+        globalNetworkTouchStartY -
+        event.changedTouches[0].clientY;
+
+    globalNetworkTouchStartY = null;
+
+    if (Math.abs(difference) < 35) return;
+
+    if (difference > 0) {
+        nextNetworkStep();
+    } else {
+        previousNetworkStep();
+    }
+
+}, { passive: true });
+
+
+document.addEventListener("touchcancel", () => {
+
+    globalNetworkTouchStartY = null;
+    globalNetworkTouchStartedOutside = false;
+
+});
+
+/* TECLADO */
+
+document.addEventListener("keydown", event => {
+
+    if (!isNetworkActive()) return;
+
+    const activeElement =
+        document.activeElement;
+
+    if (
+        activeElement &&
+        (
+            activeElement.closest("#networkContent a") ||
+            activeElement.closest("#networkStepControl")
+        )
+    ) {
+        return;
+    }
+
+    if (
+        event.key === "ArrowDown" ||
+        event.key === "PageDown"
+    ) {
+        event.preventDefault();
+        nextNetworkStep();
+    }
+
+    if (
+        event.key === "ArrowUp" ||
+        event.key === "PageUp"
+    ) {
+        event.preventDefault();
+        previousNetworkStep();
+    }
+
+    if (event.key === "Home") {
+        event.preventDefault();
+        goToNetworkStep(0);
+    }
+
+    if (event.key === "End") {
+        event.preventDefault();
+        goToNetworkStep(networkStops.length - 1);
+    }
+
+});
+
+
+/* REDIMENSIONAMENTO DA JANELA */
+
+let networkResizeTimer = null;
+
+window.addEventListener("resize", () => {
+
+    if (!contentWindow.classList.contains("network")) return;
+
+    if (networkResizeTimer !== null) {
+        clearTimeout(networkResizeTimer);
+    }
+
+    networkResizeTimer = setTimeout(() => {
+
+        resizeNetworkStops();
+
+        networkResizeTimer = null;
+
+    }, 100);
+
+});
+
+
+/* =====================================================
    FECHAMENTO ANIMADO DO CONTEÚDO
 ===================================================== */
 
@@ -2407,6 +3734,8 @@ function closeContent(callback) {
     if (contentCloseTimeout !== null) return;
 
     contentRequestId++;
+
+    finishNetworkTransition();
 
     const isOpen =
         contentWindow.classList.contains("open");
@@ -2427,6 +3756,11 @@ function closeContent(callback) {
 
         contentWindow.dataset.section = "";
         contentText.textContent = "";
+
+        networkStops = [];
+        networkCurrentIndex = 0;
+
+        updateNetworkProgress();
 
         const callbacks = contentCloseCallbacks.splice(0);
         callbacks.forEach(fn => fn());
@@ -2450,6 +3784,11 @@ function closeContent(callback) {
 
         contentText.textContent = "";
         contentText.scrollTop = 0;
+
+        networkStops = [];
+        networkCurrentIndex = 0;
+
+        updateNetworkProgress();
 
         contentCloseTimeout = null;
 
@@ -2505,6 +3844,7 @@ function changeLanguage(language) {
     updateLogoTitle();
 
     const section = contentWindow.dataset.section || "";
+    const previousNetworkIndex = networkCurrentIndex;
 
     if (section === "sobre" || section === "rede") {
 
@@ -2520,6 +3860,11 @@ function changeLanguage(language) {
 
             if (requestId === contentRequestId) {
                 contentWindow.classList.remove("loading");
+
+                if (section === "rede") {
+    initializeNetworkNavigation(previousNetworkIndex);
+}
+
             }
 
         });
@@ -2544,9 +3889,7 @@ document.querySelectorAll(
 ).forEach(button => {
 
     button.addEventListener("click", () => {
-
         changeLanguage(button.dataset.language);
-
     });
 
 });
@@ -2589,7 +3932,16 @@ async function loadText(path, target, requestId) {
         }
 
         target.innerHTML = text.trim();
-        contentText.scrollTop = 0;
+
+        target.scrollTop = 0;
+
+        if (
+            target.id === "contentText" &&
+            contentWindow.classList.contains("network") &&
+            !contentWindow.classList.contains("loading")
+        ) {
+            initializeNetworkNavigation();
+        }
 
     } catch (error) {
 
@@ -2615,13 +3967,10 @@ function revealContent() {
     requestAnimationFrame(() => {
 
         requestAnimationFrame(() => {
-
             contentWindow.classList.add("visible");
-
         });
 
     });
-
 }
 
 
@@ -2638,13 +3987,13 @@ function openPlainContent(section, path) {
         contentWindow.classList.remove("realization");
 
         contentWindow.classList.add("plain");
-        contentWindow.classList.add("loading");
 
         contentWindow.classList.toggle(
             "network",
             section === "rede"
         );
 
+        contentWindow.classList.add("loading");
         contentWindow.classList.add("open");
 
         contentWindow.dataset.section = section;
@@ -2652,13 +4001,24 @@ function openPlainContent(section, path) {
         contentText.scrollTop = 0;
         contentText.textContent = "";
 
+        networkStops = [];
+        networkCurrentIndex = 0;
+
+        updateNetworkProgress();
+
         revealContent();
 
         loadText(path, contentText, requestId)
             .finally(() => {
 
                 if (requestId === contentRequestId) {
+
                     contentWindow.classList.remove("loading");
+
+                    if (section === "rede") {
+                        initializeNetworkNavigation();
+                    }
+
                 }
 
             });
@@ -2714,9 +4074,7 @@ headerImage.addEventListener("click", () => {
     realizationsDropdown.classList.remove("open");
 
     closeContent(() => {
-
         startHomeAnimation();
-
     });
 
 });
@@ -2800,9 +4158,7 @@ document.addEventListener("pointerdown", event => {
     if (event.target.closest("#mainMenu")) return;
 
     closeContent(() => {
-
         startHomeAnimation();
-
     });
 
 });
@@ -2816,9 +4172,19 @@ document.addEventListener("keydown", event => {
 
     if (event.key === "Escape") {
 
-        closeContent();
+        const isContentOpen =
+            contentWindow.classList.contains("open");
+
+        if (isContentOpen) {
+
+            closeContent(() => {
+                startHomeAnimation();
+            });
+
+        }
 
         realizationsDropdown.classList.remove("open");
+
     }
 
 });
@@ -2840,9 +4206,12 @@ if (window.matchMedia("(max-width: 600px)").matches) {
     const pullThreshold = 90;
     const pullMaximum = 120;
 
+
     document.addEventListener("touchstart", event => {
 
-        if (event.touches.length !== 1) return;
+    if (isNetworkActive()) return;
+
+    if (event.touches.length !== 1) return;
 
         if (
             event.target.closest(
