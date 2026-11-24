@@ -53,6 +53,24 @@ html, body {
     background: rgba(128,128,128,0.35);
     color: inherit;
 }
+   /* =====================================================
+   BLOQUEIO DE SELEÇÃO DE TEXTO
+===================================================== */
+
+*,
+*::before,
+*::after {
+    -webkit-user-select: none !important;
+    user-select: none !important;
+}
+
+/* EXCEÇÃO: EMAIL */
+
+#emailContact,
+#emailContact * {
+    -webkit-user-select: text !important;
+    user-select: text !important;
+}
 
 /* =====================================================
    TYPOGRAPHY
@@ -2300,7 +2318,13 @@ margin: 0;
 </div>
 
 <script>
+/* =====================================================
+   BLOQUEIO DO MENU DE CONTEXTO
+===================================================== */
 
+document.addEventListener("contextmenu", function(event) {
+    event.preventDefault();
+});
 /* =====================================================
    CONFIGURAÇÕES GERAIS
 ===================================================== */
