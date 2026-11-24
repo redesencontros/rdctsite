@@ -25,6 +25,7 @@
     --panel-border: #cccccc;
     --photo-overlay: rgba(245,245,245,0.55);
     --font-scale: 1;
+    --site-font-size: 16px;
 }
 
 body.dark-mode {
@@ -108,7 +109,7 @@ html, body {
     width: clamp(60px, 27vw, 105px);
     height: auto;
     opacity: 0;
-    transform: scale(1.2);
+    transform: scale(1);
     transform-origin: center;
     will-change: transform, opacity;
 }
@@ -120,19 +121,19 @@ html, body {
 @keyframes openingSequence {
     0% {
         opacity: 0;
-        transform: scale(1.2);
+        transform: scale(1);
     }
     18.75% {
         opacity: 1;
-        transform: scale(1.25625);
+        transform: scale(1.0375);
     }
     81.25% {
         opacity: 1;
-        transform: scale(1.44375);
+        transform: scale(1.1625);
     }
     100% {
         opacity: 0;
-        transform: scale(1.5);
+        transform: scale(1.2);
     }
 }
 
@@ -197,7 +198,7 @@ body.intro-active #emailContact {
     top: 5vh;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 45;
+    z-index: 1001;
     pointer-events: auto;
     cursor: pointer;
     transition: opacity 0.6s ease;
@@ -237,7 +238,7 @@ body.intro-active #emailContact {
     flex-direction: column;
     align-items: flex-start;
     gap: 5px;
-    font-size: calc(16px * var(--font-scale));
+    font-size: calc(var(--site-font-size) * var(--font-scale));
     line-height: 1.4;
     transition: opacity 0.6s ease;
 }
@@ -252,34 +253,6 @@ body.intro-active #emailContact {
 }
 
 .menuItem:hover {
-    color: var(--page-hover);
-}
-
-/* =====================================================
-   REALIZATIONS DROPDOWN
-===================================================== */
-
-#realizationsDropdown {
-    display: none;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-    margin-top: 5px;
-    margin-left: 15px;
-}
-
-#realizationsDropdown.open {
-    display: flex;
-}
-
-.realizationItem {
-    color: var(--page-fg);
-    white-space: nowrap;
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-
-.realizationItem:hover {
     color: var(--page-hover);
 }
 
@@ -299,7 +272,11 @@ body.intro-active #emailContact {
     width: 100vw;
     max-height: 70vh;
     overflow: hidden;
-    font-size: calc(clamp(13px, 1.1vw, 17px) * var(--font-scale));
+    font-size: calc(
+    var(--site-font-size) *
+    var(--font-scale) *
+    var(--content-fit-scale, 1)
+);
     line-height: 1.5;
     text-align: left;
     opacity: 0;
@@ -334,6 +311,14 @@ body.intro-active #emailContact {
     border-radius: 0;
 }
 
+/* POSICIONAMENTO DA JANELA DE REALIZAÇÕES — DESKTOP */
+@media (min-width: 601px) {
+    #contentWindow.realization {
+        top: 22vh;
+        transform: translateX(-50%);
+    }
+}
+
 /* =====================================================
    CONTENT TEXT
 ===================================================== */
@@ -345,7 +330,7 @@ body.intro-active #emailContact {
     overflow-y: auto;
     overflow-x: hidden;
     overscroll-behavior: contain;
-    padding: 40px max(40px, calc((100vw - 800px) / 2));
+    padding: 40px max(0px, calc((100vw - 60px - 850px) / 2));
     white-space: pre-line;
     color: var(--page-fg);
     overflow-wrap: anywhere;
@@ -558,7 +543,10 @@ body.intro-active #emailContact {
     flex-direction: column;
     align-items: stretch;
     width: 100%;
+    max-width: 850px;
     min-height: 0;
+    margin-left: auto;
+    margin-right: auto;
     transform: translateY(0);
     transition: transform 550ms cubic-bezier(0.22, 0.61, 0.36, 1);
     will-change: transform;
@@ -583,7 +571,7 @@ body.intro-active #emailContact {
 /* NÚCLEO REGULAR — QUATRO INTEGRANTES NA MESMA JANELA */
 
 #networkContent .networkCore {
-    padding: 12px 20px;
+    padding: 12px 0;
 }
 
 #networkContent .networkCore > .networkCategory {
@@ -597,14 +585,12 @@ body.intro-active #emailContact {
     align-items: center;
     justify-items: center;
     align-content: center;
-    width: calc(100% - 48px);
+    width: 100%;
     height: 100%;
     min-height: 0;
-    margin-right: auto;
+    margin: 0 auto;
     gap: 14px;
-    max-width: 900px;
-margin-left: auto;
-margin-right: auto;
+    max-width: none;
 }
 
 #networkContent .networkCore .networkPerson {
@@ -645,24 +631,18 @@ margin-right: auto;
     margin: 0;
 }
 
-#networkContent .networkCore .networkBio {
-    flex: 0 0 auto;
-    width: 100%;
-    min-width: 0;
-    padding: 0;
-    text-align: center;
-}
-
 #networkContent .networkCore .networkName {
     display: inline-block;
     cursor: pointer;
+    width: fit-content;
     max-width: 100%;
     margin: 0;
     color: var(--page-fg);
-    font-size: 1em;
+    font-size: 0.95em;
     line-height: 1.3;
     text-align: center;
-    overflow-wrap: anywhere;
+    white-space: nowrap;
+    overflow-wrap: normal;
 }
 
 /* INTEGRANTES */
@@ -720,19 +700,6 @@ margin-right: auto;
 #contentWindow.network #contentText a.networkPerson:visited {
     color: var(--page-fg);
     text-decoration: none;
-}
-
-/* MINIBIO */
-
-#networkContent .networkPerson p {
-    display: block;
-    width: min(100%, 420px);
-    margin: 8px auto 0;
-    font-size: 0.9em;
-    line-height: 1.45;
-    font-weight: 370;
-    text-align: center;
-    overflow-wrap: anywhere;
 }
 
 /* PARCERIAS */
@@ -877,14 +844,10 @@ margin-right: auto;
         top: 35px;
         left: 20px;
         transform: none;
-        font-size: calc(13px * var(--font-scale));
+        font-size: calc(var(--site-font-size) * var(--font-scale));
         gap: 5px;
     }
 
-    #realizationsDropdown {
-        margin-left: 12px;
-        gap: 5px;
-    }
 
     #homeAnimation {
         width: calc(100vw - 40px);
@@ -900,8 +863,8 @@ margin-right: auto;
 
     #contentText {
         max-height: 65vh;
-        padding: 25px 20px;
-        font-size: calc(clamp(12px, 3.2vw, 19px) * var(--font-scale));
+        padding: 25px 0;
+font-size: inherit;
         line-height: 1.4;
     }
 
@@ -926,7 +889,7 @@ margin-right: auto;
 
     #contentWindow.network #contentText {
         padding: 0;
-        font-size: calc(11px * var(--font-scale));
+        font-size: inherit;
         line-height: 1.4;
     }
 
@@ -935,13 +898,13 @@ margin-right: auto;
     }
 
     #networkContent .networkCore {
-        padding: 10px 12px;
-    }
+    padding: 10px 0;
+}
 
     #networkContent .networkCore .networkPeople {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         grid-template-rows: repeat(2, minmax(0, 1fr));
-        width: calc(100% - 34px);
+        width: 100%;
         gap: 8px 10px;
     }
 
@@ -1011,32 +974,6 @@ margin-right: auto;
 }
 
 /* =====================================================
-   PULL TO REFRESH
-===================================================== */
-
-#pullIndicator {
-    position: fixed;
-    top: 12px;
-    left: 50%;
-    transform: translate(-50%, -50px);
-    z-index: 9999;
-    padding: 8px 16px;
-    border-radius: 20px;
-    background: var(--panel-bg);
-    color: var(--page-fg);
-    font-family: MyFont, sans-serif;
-    font-size: 12px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-#pullIndicator.visible {
-    opacity: 1;
-    transform: translate(-50%, 0);
-}
-
-/* =====================================================
    MOBILE — ORIENTAÇÃO HORIZONTAL
 ===================================================== */
 
@@ -1067,17 +1004,6 @@ margin-right: auto;
         line-height: 1.3;
     }
 
-    #realizationsDropdown {
-        position: absolute;
-        top: 22px;
-        left: 150px;
-        margin: 0;
-        padding: 8px 12px;
-        max-height: calc(100dvh - 75px);
-        overflow-y: auto;
-        background: var(--panel-bg);
-        gap: 5px;
-    }
 
     #homeAnimation {
         width: 85vw;
@@ -1089,12 +1015,17 @@ margin-right: auto;
         width: 100vw;
         max-width: none;
         max-height: 70dvh;
+        font-size: calc(
+    12px *
+    var(--font-scale) *
+    var(--content-fit-scale, 1)
+);
     }
 
     #contentText {
         max-height: 70dvh;
-        padding: 12px 20px;
-        font-size: calc(12px * var(--font-scale));
+        padding: 12px 0;
+font-size: inherit;
         line-height: 1.3;
     }
 
@@ -1115,7 +1046,7 @@ margin-right: auto;
 
     #contentWindow.network #contentText {
         padding: 0;
-        font-size: calc(11px * var(--font-scale));
+        font-size: inherit;
         overflow: hidden;
     }
 
@@ -1141,7 +1072,7 @@ margin-right: auto;
 
     #networkContent .networkCore .networkPerson {
         --network-photo-size: min(15vh, 18vw, 125px);
-        gap: 3px;
+        gap: 1px;
     }
 
     #networkContent .networkPartners {
@@ -1149,7 +1080,7 @@ margin-right: auto;
     }
 
     #networkContent .networkPartners a {
-        font-size: 0.95em;
+        font-size: 1em;
         line-height: 1.2;
     }
 
@@ -1370,16 +1301,14 @@ body.dark-mode #contentText a {
 }
 
 
-/* CELULARES NA HORIZONTAL */
+/* AVISO — QUALQUER TELA EM ORIENTAÇÃO HORIZONTAL */
 
-@media (orientation: landscape) and
-(max-height: 600px) and
-(max-width: 950px) {
+@media (orientation: landscape) and (max-width: 1200px) {
 
-    #networkContent .networkCore .networkPerson {
-        --network-photo-size:
-            min(15vh, 18vw, 125px);
+    #orientationWarning {
+        display: flex;
     }
+
 }
 /* =====================================================
    REDE — HOVER NA FOTO TAMBÉM ALTERA A COR DO NOME
@@ -1453,8 +1382,12 @@ body.dark-mode #networkContent .networkPerson:hover span {
     cursor: pointer;
     pointer-events: auto;
 
+    font-size: 0.95em;
     text-align: center;
     line-height: 1.3;
+
+    white-space: nowrap;
+    overflow-wrap: normal;
 
     transition: color 0.2s ease;
 }
@@ -1488,7 +1421,7 @@ body.dark-mode #networkContent .networkPerson:hover span {
         margin: 0 auto;
 
         column-gap: clamp(12px, 4vw, 24px);
-        row-gap: 8px;
+        row-gap: 40px;
     }
 
     #networkContent .networkCore .networkPerson {
@@ -1501,9 +1434,10 @@ body.dark-mode #networkContent .networkPerson:hover span {
     }
 
     #networkContent .networkCore .networkName,
-    #networkContent .networkCore .networkPerson span {
-        font-size: 0.95em;
-    }
+#networkContent .networkCore .networkPerson span {
+    font-size: 0.85em !important;
+    white-space: nowrap;
+}
 
 }
 
@@ -1563,15 +1497,680 @@ body.dark-mode #networkContent .networkPerson:hover span {
     }
 
 }
+/* ÍCONE DE INVERSÃO DE CORES */
+
+#themeToggle {
+    font-size: 1.3em;
+}
+
+/* =====================================================
+   AVISO — ORIENTAÇÃO VERTICAL
+===================================================== */
+
+#orientationWarning {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 30px;
+
+    background: var(--page-bg);
+    color: var(--page-fg);
+
+    font-family: MyFont, sans-serif;
+    font-weight: 370;
+    font-size: calc(15px * var(--font-scale));
+    line-height: 1.4;
+    text-align: center;
+}
+
+/* CELULARES NA HORIZONTAL */
+
+@media (orientation: landscape) and
+(max-height: 600px) and
+(max-width: 950px) and
+(pointer: coarse) {
+
+    #orientationWarning {
+        display: flex;
+    }
+
+}
+
+
+/* =====================================================
+   REALIZAÇÕES — ROLAGEM VERTICAL LIVRE
+===================================================== */
+
+#contentWindow.realization {
+    display: block;
+    width: 100vw;
+    max-height: 78vh;
+    overflow: hidden;
+}
+
+#contentWindow.realization #contentText {
+    width: calc(100% - 60px);
+margin: 0 auto;
+    max-height: 78vh;
+    padding: 0 max(0px, calc((100vw - 60px - 850px) / 2));
+    overflow-x: hidden;
+    overflow-y: auto;
+    white-space: normal;
+    user-select: text;
+    -webkit-user-select: text;
+    font-size: inherit;
+}
+
+.realizationPage {
+    width: 100%;
+    max-width: 850px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 38px;
+}
+
+.realizationBlock {
+    width: 100%;
+    min-width: 0;
+}
+
+.realizationPresentation h1 {
+    margin: 0 0 14px;
+    font-size: 1.3em;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.realizationPresentation h1 strong {
+    font-weight: 700;
+}
+
+.realizationPresentation h1 .realizationYear {
+    font-size: 0.75em;
+    font-weight: 400;
+}
+
+.realizationPresentation .realizationDescription {
+    max-width: 100%;
+}
+
+.realizationTextItem {
+    margin-bottom: 28px;
+}
+
+.realizationTextItem:last-child {
+    margin-bottom: 0;
+}
+
+.realizationMeta {
+    margin-top: 10px;
+    font-size: 0.88em;
+    line-height: 1.4;
+}
+
+.realizationMetaTitle {
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.realizationMetaDescription,
+.realizationMetaCredit,
+.realizationMetaSource {
+    margin-top: 4px;
+}
+
+.realizationMetaLabel {
+    font-weight: 500;
+}
+
+.realizationMediaItem {
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+.realizationMediaItem:last-child {
+    margin-bottom: 0;
+}
+
+.realizationVideo,
+.realizationVideoFrame {
+    display: block;
+    width: 100%;
+    max-height: 68vh;
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+    border: 0;
+}
+
+.realizationAudio {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+}
+
+.realizationEmbedFrame {
+    display: block;
+    width: 100%;
+    border: 0;
+    background: transparent;
+}
+
+.realizationEmbedFrame.audioEmbed {
+    max-width: 760px;
+    height: 166px;
+}
+
+.realizationEmbedFrame.deezerEmbed {
+    height: 90px;
+}
+
+.realizationEmbedFrame.spotifyEmbed {
+    height: 152px;
+}
+
+.realizationEmbedFrame.instagramEmbed {
+    width: min(100%, 540px);
+    height: 650px;
+    margin: 0 auto;
+}
+
+.realizationEmbedFrame.textEmbed {
+    width: 100%;
+    height: 70vh;
+    min-height: 420px;
+}
+
+.realizationGallery {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+}
+
+.realizationGalleryTrack {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 4px 2px 12px;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--panel-border) transparent;
+}
+
+.realizationGalleryTrack::-webkit-scrollbar {
+    height: 5px;
+}
+
+.realizationGalleryTrack::-webkit-scrollbar-thumb {
+    background: var(--panel-border);
+    border-radius: 5px;
+}
+
+.realizationGalleryItem {
+    flex: 0 0 auto;
+    max-width: 82%;
+    margin: 0;
+    scroll-snap-align: start;
+}
+
+.realizationGalleryItem img {
+    display: block;
+    width: auto;
+    height: 52vh;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.realizationGalleryArrow {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 44px;
+    padding: 0;
+    transform: translateY(-50%);
+    border: 1px solid var(--panel-border);
+    border-radius: 2px;
+    background: var(--panel-bg);
+    color: var(--page-fg);
+    font: inherit;
+    font-size: 27px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.88;
+    transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.realizationGalleryArrow:hover {
+    color: var(--page-hover);
+    opacity: 1;
+}
+
+.realizationGalleryArrow.previous {
+    left: 5px;
+}
+
+.realizationGalleryArrow.next {
+    right: 5px;
+}
+
+.realizationGalleryArrow[hidden] {
+    display: none;
+}
+
+.realizationEmpty {
+    text-align: center;
+    opacity: 0.7;
+}
+
+@media (max-width: 600px) {
+    #contentWindow.realization {
+        max-height: 65vh;
+    }
+
+    #contentWindow.realization #contentText {
+        max-height: 65vh;
+        padding: 25px 0;
+        width: 100%;
+margin: 0;
+    }
+
+    .realizationPage {
+        gap: 28px;
+    }
+
+    .realizationGalleryItem img {
+        height: 36vh;
+        max-width: 82vw;
+    }
+
+    .realizationGalleryArrow {
+        width: 30px;
+        height: 40px;
+        font-size: 24px;
+    }
+
+    .realizationEmbedFrame.instagramEmbed {
+        height: 600px;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 600px) and (max-width: 950px) {
+    #contentWindow.realization,
+    #contentWindow.realization #contentText {
+        max-height: 70dvh;
+    }
+
+    #contentWindow.realization #contentText {
+        padding: 14px 0;
+    }
+
+    .realizationGalleryItem img {
+        height: 52dvh;
+    }
+}
+
+/* =====================================================
+   REALIZAÇÕES — LIMITE INFERIOR DA JANELA
+===================================================== */
+
+@media (min-width: 601px) {
+
+    #contentWindow.realization {
+        max-height: 65vh;
+    }
+
+    #contentWindow.realization #contentText {
+        max-height: 65vh;
+    }
+
+}
+/* =====================================================
+   LARGURA GLOBAL — TODAS AS JANELAS DE CONTEÚDO
+===================================================== */
+
+/* DESKTOP */
+
+#contentWindow,
+#contentWindow.network,
+#contentWindow.realization {
+    box-sizing: border-box;
+    width: min(850px, calc(100vw - 60px));
+    max-width: 850px;
+}
+#contentWindow.realizationCatalog {
+    width: min(1500px, calc(100vw - 60px));
+    max-width: 1500px;
+}
+
+
+/* MOBILE E CELULARES NA HORIZONTAL */
+
+@media (max-width: 600px),
+(orientation: landscape) and
+(max-height: 600px) and
+(max-width: 950px) {
+
+    #contentWindow,
+    #contentWindow.network,
+    #contentWindow.realization {
+        width: min(850px, calc(100vw - 40px));
+        max-width: 850px;
+    }
+
+}
+
+
+/* =====================================================
+   CONTEÚDO INTERNO — SEM MARGENS LATERAIS ADICIONAIS
+===================================================== */
+
+/* SOBRE */
+
+#contentWindow.plain #contentText {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+
+/* REALIZAÇÕES */
+
+#contentWindow.realization #contentText {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+
+/* REDE — TÍTULO FIXO */
+
+#networkFixedHeader {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+
+/* REDE — ÁREAS DE CONTEÚDO */
+
+#networkContent .networkStop {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#networkContent .networkCore {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#networkContent .networkCore .networkPeople {
+    width: 100%;
+    max-width: 100%;
+}
+/* =====================================================
+   BARRA EXTERNA — REALIZAÇÕES
+===================================================== */
+
+#realizationScrollbar {
+    position: fixed;
+    top: 0;
+    right: 30px;
+    width: 3px;
+    height: 0;
+    z-index: 50;
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition:
+        opacity 0.3s ease,
+        visibility 0.3s ease;
+}
+
+#realizationScrollbar.visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+#realizationScrollbarThumb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 24px;
+
+    background: var(--page-hover);
+    border-radius: 3px;
+
+    cursor: grab;
+}
+
+#realizationScrollbar.dragging
+#realizationScrollbarThumb {
+    cursor: grabbing;
+}
+
+/* Oculta a barra nativa somente nas Realizações */
+
+#contentWindow.realization #contentText {
+    scrollbar-width: none;
+}
+
+#contentWindow.realization #contentText::-webkit-scrollbar {
+    display: none;
+}
+
+/* Margem lateral das telas estreitas */
+
+@media (
+    max-width: 600px
+),
+(
+    orientation: landscape
+) and (
+    max-height: 600px
+) and (
+    max-width: 950px
+) {
+    #realizationScrollbar {
+        right: 20px;
+    }
+}
+/* =====================================================
+   SOBRE — SEM BARRA DE ROLAGEM
+===================================================== */
+
+#contentWindow:not(.realization):not(.realizationCatalog):not(.network) #contentText {
+    overflow-y: hidden !important;
+    scrollbar-width: none !important;
+}
+
+#contentWindow:not(.realization):not(.network) #contentText::-webkit-scrollbar {
+    display: none !important;
+}
+/* =====================================================
+   REALIZAÇÕES — SEM BARRA EXTERNA NO LAYOUT MOBILE
+===================================================== */
+
+@media (max-width: 600px),
+(orientation: landscape) and (max-height: 600px) and (max-width: 950px) {
+
+    #realizationScrollbar {
+        display: none !important;
+    }
+
+    #contentWindow.realization #contentText {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    #contentWindow.realization #contentText::-webkit-scrollbar {
+        display: none;
+    }
+
+}
+
+
+/* =====================================================
+   REALIZAÇÕES — CATÁLOGO EM GRADE
+===================================================== */
+
+#contentWindow.realizationCatalog {
+    top: 56%;
+    height: 60dvh;
+    max-height: 60dvh;
+    overflow: hidden;
+}
+
+#contentWindow.realizationCatalog #contentText {
+    display: block;
+    position: relative;
+    box-sizing: border-box;
+
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
+
+    margin: 0;
+    padding: 0 0 20px;
+
+    overflow-x: hidden;
+    overflow-y: hidden;
+
+    scrollbar-width: none;
+}
+
+#contentWindow.realizationCatalog #contentText::-webkit-scrollbar {
+    display: none;
+}
+
+.realizationCatalogGrid {
+    display: grid;
+    align-content: start;
+
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+
+    width: 100%;
+    max-width: 1500px;
+
+    margin: 0 auto;
+    gap: 14px;
+}
+
+.realizationCatalogItem {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    background: var(--panel-border);
+    color: var(--page-fg);
+    font: inherit;
+    cursor: pointer;
+    text-align: left;
+}
+
+.realizationCatalogItem img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+/* ZOOM — APENAS DESKTOP */
+
+@media (min-width: 601px) and (hover: hover) and (pointer: fine) {
+    .realizationCatalogItem:hover img {
+        transform: scale(1.03);
+    }
+}
+
+.realizationCatalogItem:focus-visible {
+    outline: 1px solid var(--page-hover);
+    outline-offset: 3px;
+}
+
+.realizationCatalogEmpty {
+    width: 100%;
+    text-align: center;
+    opacity: 0.7;
+}
+/* =====================================================
+   REALIZAÇÕES — GRADE MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+    #contentWindow.realizationCatalog {
+        top: 56%;
+        height: 60vh;
+        max-height: 60vh;
+    }
+
+    #contentWindow.realizationCatalog #contentText {
+        height: 100%;
+        max-height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    #contentWindow.realizationCatalog #contentText::-webkit-scrollbar {
+        display: none;
+    }
+
+    .realizationCatalogGrid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) !important;
+        align-content: start;
+        width: 60% !important;
+        max-width: none;
+        margin: 0 auto;
+        gap: 12px;
+    }
+
+    .realizationCatalogItem {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+    }
+
+}
 </style>
 </head>
 
 <body class="intro-active">
 
-<div id="pullIndicator">Puxe para atualizar</div>
-
 <div id="background">
     <canvas id="canvas"></canvas>
+</div>
+
+<!-- AVISO DE ORIENTAÇÃO -->
+<div id="orientationWarning">
+    <span id="orientationMessage"></span>
 </div>
 
 <!-- CENA DE ABERTURA -->
@@ -1611,24 +2210,6 @@ body.dark-mode #networkContent .networkPerson:hover span {
         Realizações
     </div>
 
-    <div id="realizationsDropdown">
-        <div class="realizationItem" data-realization="1">Realização 1</div>
-        <div class="realizationItem" data-realization="2">Realização 2</div>
-        <div class="realizationItem" data-realization="3">Realização 3</div>
-        <div class="realizationItem" data-realization="4">Realização 4</div>
-        <div class="realizationItem" data-realization="5">Realização 5</div>
-        <div class="realizationItem" data-realization="6">Realização 6</div>
-        <div class="realizationItem" data-realization="7">Realização 7</div>
-        <div class="realizationItem" data-realization="8">Realização 8</div>
-        <div class="realizationItem" data-realization="9">Realização 9</div>
-        <div class="realizationItem" data-realization="10">Realização 10</div>
-        <div class="realizationItem" data-realization="11">Realização 11</div>
-        <div class="realizationItem" data-realization="12">Realização 12</div>
-        <div class="realizationItem" data-realization="13">Realização 13</div>
-        <div class="realizationItem" data-realization="14">Realização 14</div>
-        <div class="realizationItem" data-realization="15">Realização 15</div>
-    </div>
-
 </nav>
 
 <!-- JANELA DE CONTEÚDO -->
@@ -1659,8 +2240,21 @@ body.dark-mode #networkContent .networkPerson:hover span {
     </svg>
 </button>
 
-    <div id="contentText"></div>
+       <div id="contentText"></div>
 
+</div>
+
+<!-- BARRA EXTERNA DE ROLAGEM DAS REALIZAÇÕES -->
+
+<div
+    id="realizationScrollbar"
+    role="scrollbar"
+    aria-label="Rolagem das realizações"
+    aria-controls="contentText"
+    aria-orientation="vertical"
+    tabindex="0"
+>
+    <div id="realizationScrollbarThumb"></div>
 </div>
 
 <!-- CONTROLES -->
@@ -2141,7 +2735,7 @@ void main() {
         0.5333333,
         0.5333333,
         0.5333333,
-        0.4
+        0.3
     );
 
 }`;
@@ -2577,11 +3171,10 @@ const menuItems =
 const realizationsToggle =
     document.getElementById("realizationsToggle");
 
-const realizationsDropdown =
-    document.getElementById("realizationsDropdown");
 
-const realizationItems =
-    document.querySelectorAll(".realizationItem");
+let realizationCatalog = [];
+let realizationCatalogPromise = null;
+let activeRealizationSlug = "";
 
 
 /* =====================================================
@@ -2596,7 +3189,15 @@ const translations = {
         realizacoes: "Realizações",
         realization: "Realização",
         error: "Não foi possível carregar o conteúdo.",
-        back: "Voltar"
+        back: "Voltar",
+        orientation: "RETORNE À ORIENTAÇÃO VERTICAL",
+        credit: "Crédito",
+        source: "Fonte",
+        embeddedContent: "Conteúdo incorporado",
+        embedError: "Não foi possível carregar esta incorporação. Verifique o endereço e as permissões de exibição.",
+        emptyRealization: "Esta realização ainda não possui materiais publicados.",
+        previousImage: "Imagem anterior",
+        nextImage: "Próxima imagem"
     },
 
     en: {
@@ -2605,7 +3206,15 @@ const translations = {
         realizacoes: "Works",
         realization: "Work",
         error: "Could not load the content.",
-        back: "Back"
+        back: "Back",
+        orientation: "RETURN TO PORTRAIT ORIENTATION",
+        credit: "Credit",
+        source: "Source",
+        embeddedContent: "Embedded content",
+        embedError: "This embed could not be loaded. Check the address and its display permissions.",
+        emptyRealization: "This work has no published materials yet.",
+        previousImage: "Previous image",
+        nextImage: "Next image"
     },
 
     es: {
@@ -2614,7 +3223,15 @@ const translations = {
         realizacoes: "Proyectos",
         realization: "Proyecto",
         error: "No fue possível carregar o conteúdo.",
-        back: "Volver"
+        back: "Volver",
+        orientation: "VUELVA A LA ORIENTACIÓN VERTICAL",
+        credit: "Crédito",
+        source: "Fuente",
+        embeddedContent: "Contenido incorporado",
+        embedError: "No se pudo cargar esta inserción. Compruebe la dirección y los permisos de visualización.",
+        emptyRealization: "Este proyecto todavía no tiene materiales publicados.",
+        previousImage: "Imagen anterior",
+        nextImage: "Siguiente imagen"
     }
 
 };
@@ -2703,6 +3320,24 @@ function updateFontSize() {
             resizeNetworkStops();
         });
     }
+    if (
+    contentWindow.dataset.section === "sobre" &&
+    contentWindow.classList.contains("open") &&
+    !contentWindow.classList.contains("loading")
+) {
+    requestAnimationFrame(() => {
+        requestAnimationFrame(fitAboutContent);
+    });
+}
+    if (
+    contentWindow.dataset.section === "sobre" &&
+    contentWindow.classList.contains("open") &&
+    !contentWindow.classList.contains("loading")
+) {
+    requestAnimationFrame(() => {
+        requestAnimationFrame(fitPlainTextToHeight);
+    });
+}
 
 }
 
@@ -2717,7 +3352,7 @@ fontIncrease.addEventListener("click", () => {
 
     fontScale = Math.round((fontScale + 0.1) * 10) / 10;
     updateFontSize();
-
+requestAnimationFrame(updateRealizationScrollbar);
 });
 
 
@@ -2768,7 +3403,8 @@ themeToggle.addEventListener("click", () => {
 function updateLanguageInterface() {
 
     const t = translations[currentLanguage];
-
+    document.getElementById("orientationMessage").textContent =
+        t.orientation;
     document.documentElement.lang =
         currentLanguage === "pt" ? "pt-BR" : currentLanguage;
 
@@ -2782,14 +3418,7 @@ function updateLanguageInterface() {
 
     realizationsToggle.textContent = t.realizacoes;
 
-    realizationItems.forEach(item => {
-
-        const number = item.dataset.realization;
-
-        item.textContent =
-            t.realization + " " + number;
-
-    });
+    renderRealizationMenu();
 
     document.querySelectorAll(
         "[data-language]"
@@ -3316,6 +3945,54 @@ function fitNetworkPartnerships() {
     partners.style.gap = Math.max(2, 7 * low) + "px";
 }
 
+/* =====================================================
+   REDE — AJUSTE DOS NOMES PARA UMA ÚNICA LINHA
+===================================================== */
+
+function fitNetworkNames() {
+
+    const names = networkViewport.querySelectorAll(
+        "#networkContent .networkCore .networkPerson span"
+    );
+
+    names.forEach(name => {
+
+        /* Tamanho padrão */
+        name.style.fontSize = "0.95em";
+
+        const fits = () => {
+            return name.scrollWidth <= name.clientWidth + 1;
+        };
+
+        if (fits()) return;
+
+        /* Reduz somente o nome que não couber */
+        let low = 0.45;
+        let high = 0.95;
+
+        name.style.fontSize = low + "em";
+
+        if (!fits()) return;
+
+        for (let i = 0; i < 12; i++) {
+
+            const middle = (low + high) / 2;
+
+            name.style.fontSize = middle + "em";
+
+            if (fits()) {
+                low = middle;
+            } else {
+                high = middle;
+            }
+
+        }
+
+        name.style.fontSize = low.toFixed(3) + "em";
+
+    });
+
+}
 
 function resizeNetworkStops() {
 
@@ -3347,7 +4024,8 @@ function resizeNetworkStops() {
     });
 
     fitNetworkPartnerships();
-    applyNetworkPosition(false);
+fitNetworkNames();
+applyNetworkPosition(false);
 }
 
 
@@ -3766,11 +4444,14 @@ function closeContent(callback) {
             "visible",
             "plain",
             "realization",
+            "realizationCatalog",
             "network",
             "loading"
         );
 
         contentWindow.dataset.section = "";
+        contentWindow.dataset.realizationSlug = "";
+        activeRealizationSlug = "";
         contentText.textContent = "";
 
         networkStops = [];
@@ -3792,11 +4473,14 @@ function closeContent(callback) {
             "open",
             "plain",
             "realization",
+            "realizationCatalog",
             "network",
             "loading"
         );
 
         contentWindow.dataset.section = "";
+        contentWindow.dataset.realizationSlug = "";
+        activeRealizationSlug = "";
 
         contentText.textContent = "";
         contentText.scrollTop = 0;
@@ -3862,7 +4546,9 @@ function changeLanguage(language) {
     const section = contentWindow.dataset.section || "";
     const previousNetworkIndex = networkCurrentIndex;
 
-    if (section === "sobre" || section === "rede") {
+    /* SOBRE — RECARREGA O TEXTO NO NOVO IDIOMA */
+
+    if (section === "sobre") {
 
         const requestId = ++contentRequestId;
 
@@ -3875,23 +4561,32 @@ function changeLanguage(language) {
         ).finally(() => {
 
             if (requestId === contentRequestId) {
-                contentWindow.classList.remove("loading");
 
-                if (section === "rede") {
-    initializeNetworkNavigation(previousNetworkIndex);
+    contentWindow.classList.remove("loading");
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(fitPlainTextToHeight);
+    });
+
 }
-
-            }
 
         });
 
-    } else if (section.startsWith("realizacao-")) {
+    }
 
-        const number = section.replace("realizacao-", "");
+    /* REDE — NÃO RECARREGA O HTML NEM AS FOTOGRAFIAS */
 
-        contentText.textContent =
-            translations[currentLanguage].realization +
-            " " + number + ".";
+    else if (section === "rede") {
+
+        updateNetworkHeader();
+
+    }
+
+    /* REALIZAÇÕES */
+
+    else if (section.startsWith("realizacao-")) {
+
+        renderActiveRealization(false);
 
     }
 
@@ -3926,7 +4621,6 @@ updateLogoTitle();
 updateFontSize();
 updateTheme();
 
-
 /* =====================================================
    LOAD TEXT
 ===================================================== */
@@ -3947,7 +4641,20 @@ async function loadText(path, target, requestId) {
             return;
         }
 
-        target.innerHTML = text.trim();
+        /* Limpa o conteúdo anterior */
+        target.replaceChildren();
+
+        /* Arquivos TXT: cria parágrafos automaticamente */
+        if (/\.txt(?:[?#]|$)/i.test(path)) {
+
+            appendParagraphs(target, text);
+
+        } else {
+
+            /* Outros arquivos: preserva a interpretação HTML */
+            target.innerHTML = text.trim();
+
+        }
 
         target.scrollTop = 0;
 
@@ -3972,7 +4679,176 @@ async function loadText(path, target, requestId) {
     }
 
 }
+/* =====================================================
+   TIPOGRAFIA — AJUSTE VERTICAL DO TEXTO SOBRE
+===================================================== */
 
+function fitPlainTextToHeight() {
+
+    if (
+        contentWindow.dataset.section !== "sobre" ||
+        !contentWindow.classList.contains("plain") ||
+        contentWindow.classList.contains("network") ||
+        !contentWindow.classList.contains("open") ||
+        contentWindow.classList.contains("loading")
+    ) {
+        return;
+    }
+
+    const property = "--content-fit-scale";
+
+    /* Sempre começa pelo tamanho natural da fonte. */
+    contentWindow.style.setProperty(property, "1");
+
+    const fits = () => {
+        return (
+            contentText.scrollHeight <=
+            contentText.clientHeight + 1
+        );
+    };
+
+    if (!contentText.clientHeight || fits()) {
+        return;
+    }
+
+    /* Só reduz se o texto ultrapassar a altura disponível. */
+    let low = 0.8;
+    let high = 1;
+
+    contentWindow.style.setProperty(
+        property,
+        String(low)
+    );
+
+    /* Se nem na escala mínima couber, mantém essa escala
+       e deixa a rolagem disponível. */
+    if (!fits()) {
+        return;
+    }
+
+    /* Encontra a maior fonte que permite acomodar o texto. */
+    for (let i = 0; i < 12; i++) {
+
+        const middle = (low + high) / 2;
+
+        contentWindow.style.setProperty(
+            property,
+            String(middle)
+        );
+
+        if (fits()) {
+            low = middle;
+        } else {
+            high = middle;
+        }
+
+    }
+
+    contentWindow.style.setProperty(
+        property,
+        low.toFixed(3)
+    );
+
+}
+
+
+/* RECALCULA QUANDO A JANELA MUDA DE DIMENSÃO */
+
+let plainFitResizeTimer = null;
+
+window.addEventListener("resize", () => {
+
+    if (
+        contentWindow.dataset.section !== "sobre" ||
+        !contentWindow.classList.contains("open") ||
+        contentWindow.classList.contains("loading")
+    ) {
+        return;
+    }
+
+    clearTimeout(plainFitResizeTimer);
+
+    plainFitResizeTimer = setTimeout(() => {
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(fitPlainTextToHeight);
+        });
+
+    }, 100);
+
+});
+/* =====================================================
+   SOBRE — AJUSTE DA FONTE À ALTURA DISPONÍVEL
+===================================================== */
+
+function fitAboutContent() {
+
+    if (
+        contentWindow.dataset.section !== "sobre" ||
+        !contentWindow.classList.contains("open") ||
+        contentWindow.classList.contains("loading")
+    ) {
+        return;
+    }
+
+    const property = "--content-fit-scale";
+
+    /* Começa pelo tamanho solicitado em A+ / A− */
+    contentWindow.style.setProperty(property, "1");
+
+    const fits = () => {
+        return contentText.scrollHeight <=
+            contentText.clientHeight + 1;
+    };
+
+    if (!contentText.clientHeight || fits()) {
+        return;
+    }
+
+    /* Reduz somente se o texto não couber */
+    let low = 0.35;
+    let high = 1;
+
+    contentWindow.style.setProperty(
+        property,
+        String(low)
+    );
+
+    if (!fits()) return;
+
+    for (let i = 0; i < 14; i++) {
+
+        const middle = (low + high) / 2;
+
+        contentWindow.style.setProperty(
+            property,
+            String(middle)
+        );
+
+        if (fits()) {
+            low = middle;
+        } else {
+            high = middle;
+        }
+
+    }
+
+    contentWindow.style.setProperty(
+        property,
+        low.toFixed(3)
+    );
+
+}
+
+window.addEventListener("resize", () => {
+
+    if (contentWindow.dataset.section !== "sobre") return;
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(fitAboutContent);
+    });
+
+});
 
 /* =====================================================
    ENTRADA VISUAL DO CONTEÚDO
@@ -4000,7 +4876,7 @@ function openPlainContent(section, path) {
 
         const requestId = ++contentRequestId;
 
-        contentWindow.classList.remove("realization");
+        contentWindow.classList.remove("realization", "realizationCatalog");
 
         contentWindow.classList.add("plain");
 
@@ -4029,13 +4905,21 @@ function openPlainContent(section, path) {
 
                 if (requestId === contentRequestId) {
 
-                    contentWindow.classList.remove("loading");
+    contentWindow.classList.remove("loading");
 
-                    if (section === "rede") {
-                        initializeNetworkNavigation();
-                    }
+    if (section === "rede") {
 
-                }
+        initializeNetworkNavigation();
+
+    } else if (section === "sobre") {
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(fitAboutContent);
+        });
+
+    }
+
+}
 
             });
 
@@ -4045,34 +4929,868 @@ function openPlainContent(section, path) {
 
 
 /* =====================================================
-   OPEN REALIZATION
+   REALIZAÇÕES — CATÁLOGO E APRESENTAÇÃO
 ===================================================== */
 
-function openRealization(number) {
+function localizedValue(values) {
 
-    prepareContent(() => {
+    if (!values) return "";
 
-        contentRequestId++;
+    return values[currentLanguage] ||
+        values.pt ||
+        values.en ||
+        values.es ||
+        "";
+
+}
+
+
+
+function getRealizationTitle(realization) {
+
+    return (
+        realization.menu_title ||
+        realization.slug.replace(/^\d+-/, "")
+    ).replace(/\s*\((\d{4}(?:[-_]\d{2,4})?)\)/g, " [$1]");
+
+}
+
+
+function getRealizationYear(realization) {
+
+    return (
+        realization.year ||
+        (realization.slug.match(/\((\d{4})\)$/) || [])[1] ||
+        ""
+    );
+
+}
+
+
+function isMobileRealizations() {
+    return window.matchMedia("(max-width: 600px)").matches;
+}
+
+
+/* GRADE DO CATÁLOGO — MAIOR MINIATURA POSSÍVEL */
+
+function fitDesktopRealizationGrid(grid, itemCount) {
+
+    if (!grid || isMobileRealizations() || !itemCount) return;
+
+    const maxWidth = Math.min(1500, window.innerWidth - 80);
+    const maxHeight = window.innerHeight * 0.60 - 20;
+    const gap = 14;
+
+    let bestColumns = 1;
+    let bestTileSize = 0;
+
+    // Testa todas as distribuições possíveis
+    for (let columns = 1; columns <= itemCount; columns++) {
+
+        const rows = Math.ceil(itemCount / columns);
+
+        const tileByWidth =
+            (maxWidth - gap * (columns - 1)) / columns;
+
+        const tileByHeight =
+            (maxHeight - gap * (rows - 1)) / rows;
+
+        const tileSize = Math.min(
+            tileByWidth,
+            tileByHeight
+        );
+
+        // Sempre escolhe a organização com as maiores miniaturas
+        if (tileSize > bestTileSize) {
+            bestTileSize = tileSize;
+            bestColumns = columns;
+        }
+    }
+
+    const gridWidth =
+        bestTileSize * bestColumns +
+        gap * (bestColumns - 1);
+
+    grid.style.gridTemplateColumns =
+        `repeat(${bestColumns}, minmax(0, 1fr))`;
+
+    grid.style.width = `${gridWidth}px`;
+}
+
+window.addEventListener("resize", () => {
+    const grid = contentWindow.querySelector(".realizationCatalogGrid");
+    if (grid) fitDesktopRealizationGrid(grid, grid.children.length);
+});
+
+function renderRealizationMenu() {
+
+    if (contentWindow.dataset.section !== "realizacoes") return;
+
+    const grid = document.createElement("div");
+    grid.className = "realizationCatalogGrid";
+
+    const items = [...realizationCatalog].reverse();
+
+    if (!items.length) {
+
+        const empty = document.createElement("p");
+        empty.className = "realizationCatalogEmpty";
+        empty.textContent = "Nenhuma realização encontrada.";
+
+        contentText.replaceChildren(empty);
+        return;
+
+    }
+
+    items.forEach(realization => {
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "realizationCatalogItem";
+        button.dataset.realization = realization.slug;
+        button.setAttribute("aria-label", getRealizationTitle(realization));
+
+        if (realization.preview_image) {
+
+            const image = document.createElement("img");
+            image.src = realization.preview_image;
+            image.alt = getRealizationTitle(realization);
+            image.loading = "lazy";
+
+            button.appendChild(image);
+
+        }
+
+        button.addEventListener("click", () => {
+    openRealization(realization.slug);
+});
+
+        grid.appendChild(button);
+
+    });
+
+    contentText.replaceChildren(grid);
+    contentText.scrollTop = 0;
+    fitDesktopRealizationGrid(grid, items.length);
+
+}
+
+/* ABRIR A GRADE */
+
+function openRealizationCatalog() {
+
+    prepareContent(async () => {
+
+        await loadRealizationCatalog();
 
         contentWindow.classList.remove(
             "plain",
             "network",
+            "realization",
             "loading"
         );
 
-        contentWindow.classList.add("realization");
-        contentWindow.classList.add("open");
+        contentWindow.classList.add(
+            "realizationCatalog",
+            "open"
+        );
 
-        contentWindow.dataset.section =
-            "realizacao-" + number;
+        contentWindow.dataset.section = "realizacoes";
+        contentWindow.dataset.realizationSlug = "";
+        contentWindow.style.removeProperty("--content-fit-scale");
 
         contentText.scrollTop = 0;
 
-        contentText.textContent =
-            translations[currentLanguage].realization +
-            " " + number + ".";
+        renderRealizationMenu();
+        revealContent();
+
+    });
+
+}
+
+
+async function loadRealizationCatalog() {
+
+    if (realizationCatalogPromise) return realizationCatalogPromise;
+
+    realizationCatalogPromise = fetch(
+        "ativos/realizacoes/catalogo.json",
+        { cache: "no-store" }
+    )
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Catálogo de realizações não encontrado.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            realizationCatalog = Array.isArray(data.realizations)
+                ? data.realizations
+                : [];
+            renderRealizationMenu();
+            return realizationCatalog;
+        })
+        .catch(error => {
+            console.warn(error);
+            realizationCatalog = [];
+            renderRealizationMenu();
+            return [];
+        });
+
+    return realizationCatalogPromise;
+
+}
+
+
+/* =====================================================
+   FORMATAÇÃO DE PARÁGRAFOS
+===================================================== */
+
+function appendParagraphs(container, text) {
+
+    if (!text) return;
+
+    const normalizedText = String(text)
+        .replace(/\\n/g, "\n")
+        .replace(/\r\n?/g, "\n")
+        .trim();
+
+    if (!normalizedText) return;
+
+    /* Preserva conteúdos que já possuem marcação HTML */
+    if (/<\/?[a-z][^>]*>/i.test(normalizedText)) {
+        container.innerHTML = normalizedText;
+        return;
+    }
+
+    /* Cada quebra de linha separa um parágrafo */
+    normalizedText
+        .split(/\n+/)
+        .map(paragraph => paragraph.trim())
+        .filter(Boolean)
+        .forEach(paragraph => {
+
+            const p = document.createElement("p");
+
+            p.textContent = paragraph;
+
+            container.appendChild(p);
+
+        });
+
+}
+
+
+function appendMetadata(container, metadata) {
+
+    const data = localizedValue(metadata);
+    if (!data || typeof data !== "object") return;
+
+    const meta = document.createElement("div");
+    meta.className = "realizationMeta";
+
+    if (data.title) {
+        const title = document.createElement("div");
+        title.className = "realizationMetaTitle";
+        title.textContent = data.title;
+        meta.appendChild(title);
+    }
+
+    if (data.description) {
+        const description = document.createElement("div");
+        description.className = "realizationMetaDescription";
+        description.textContent = data.description;
+        meta.appendChild(description);
+    }
+
+    if (data.credit) {
+        const credit = document.createElement("div");
+        credit.className = "realizationMetaCredit";
+        const label = document.createElement("span");
+        label.className = "realizationMetaLabel";
+        label.textContent = translations[currentLanguage].credit + ": ";
+        credit.append(label, document.createTextNode(data.credit));
+        meta.appendChild(credit);
+    }
+
+    if (data.source) {
+        const source = document.createElement("div");
+        source.className = "realizationMetaSource";
+        const label = document.createElement("span");
+        label.className = "realizationMetaLabel";
+        label.textContent = translations[currentLanguage].source + ": ";
+        source.append(label, document.createTextNode(data.source));
+        meta.appendChild(source);
+    }
+
+    if (meta.childNodes.length) container.appendChild(meta);
+
+}
+
+
+function normalizeEmbedUrl(rawUrl, mediaType) {
+
+    try {
+        const url = new URL(String(rawUrl).trim());
+        if (!["https:", "http:"].includes(url.protocol)) return null;
+
+        const host = url.hostname.toLowerCase().replace(/^www\./, "");
+        const parts = url.pathname.split("/").filter(Boolean);
+
+        if (mediaType === "text") {
+            return url.protocol === "https:" ? url.href : null;
+        }
+
+        if (mediaType === "video" && (host === "youtube.com" || host === "m.youtube.com" || host === "youtu.be" || host === "youtube-nocookie.com")) {
+            let id = "";
+            if (host === "youtu.be") id = parts[0] || "";
+            else if (url.searchParams.get("v")) id = url.searchParams.get("v");
+            else if (["embed", "shorts", "live"].includes(parts[0])) id = parts[1] || "";
+            if (!id && host === "youtube-nocookie.com" && parts[0] === "embed") id = parts[1] || "";
+            return id ? "https://www.youtube.com/embed/" + encodeURIComponent(id) : null;
+        }
+
+        if (mediaType === "video" && (host === "vimeo.com" || host === "player.vimeo.com")) {
+            const id = host === "player.vimeo.com" ? parts[1] : parts[0];
+            return id && /^\d+$/.test(id) ? "https://player.vimeo.com/video/" + id : null;
+        }
+
+        if (mediaType === "audio" && (host === "open.spotify.com" || host === "spotify.com")) {
+            if (parts[0] === "embed") return url.href;
+            const index = parts.findIndex(part => ["track", "album", "playlist", "episode", "show"].includes(part));
+            if (index >= 0 && parts[index + 1]) {
+                return "https://open.spotify.com/embed/" + parts[index] + "/" + encodeURIComponent(parts[index + 1]);
+            }
+            return null;
+        }
+
+        if (mediaType === "audio" && (host === "deezer.com" || host === "widget.deezer.com")) {
+            if (host === "widget.deezer.com" && url.pathname.includes("/widget/")) return url.href;
+            const index = parts.findIndex(part => ["track", "album", "playlist", "episode"].includes(part));
+            if (index >= 0 && parts[index + 1]) {
+                return "https://widget.deezer.com/widget/dark/" + parts[index] + "/" + encodeURIComponent(parts[index + 1]);
+            }
+            return null;
+        }
+
+        if (mediaType === "audio" && (host === "soundcloud.com" || host === "w.soundcloud.com")) {
+            if (host === "w.soundcloud.com" && url.pathname.includes("/player")) return url.href;
+            return "https://w.soundcloud.com/player/?url=" + encodeURIComponent(url.href) + "&auto_play=false&hide_related=true&show_comments=true";
+        }
+
+        if (mediaType === "instagram" && (host === "instagram.com" || host === "instagr.am")) {
+            const kindIndex = parts.findIndex(part => ["p", "reel", "tv"].includes(part));
+            if (kindIndex >= 0 && parts[kindIndex + 1]) {
+                return "https://www.instagram.com/" + parts[kindIndex] + "/" + encodeURIComponent(parts[kindIndex + 1]) + "/embed/";
+            }
+            return null;
+        }
+
+    } catch (error) {
+        console.warn("Endereço de incorporação inválido:", rawUrl);
+    }
+
+    return null;
+
+}
+
+
+function createEmbed(item, mediaType) {
+
+    const src = normalizeEmbedUrl(item.embed_url, mediaType);
+    if (!src) {
+        const warning = document.createElement("p");
+        warning.className = "realizationEmpty";
+        warning.textContent = translations[currentLanguage].embedError;
+        return warning;
+    }
+
+    const frame = document.createElement("iframe");
+    frame.src = src;
+    frame.loading = "lazy";
+    frame.allowFullscreen = true;
+    frame.referrerPolicy = "strict-origin-when-cross-origin";
+    frame.title = localizedValue(item.metadata)?.title || translations[currentLanguage].embeddedContent;
+
+    if (mediaType === "text") {
+        frame.className = "realizationEmbedFrame textEmbed";
+        frame.setAttribute("title", localizedValue(item.metadata)?.title || translations[currentLanguage].embeddedContent);
+    } else if (mediaType === "instagram") {
+        frame.className = "realizationEmbedFrame instagramEmbed";
+        frame.setAttribute("allow", "autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share");
+    } else if (mediaType === "audio") {
+        frame.className = "realizationEmbedFrame audioEmbed";
+        if (src.includes("deezer.com/widget/")) frame.classList.add("deezerEmbed");
+        if (src.includes("spotify.com/embed/")) frame.classList.add("spotifyEmbed");
+        frame.setAttribute("allow", "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture");
+    } else {
+        frame.className = "realizationVideoFrame";
+        frame.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
+    }
+
+    return frame;
+
+}
+
+
+function createMediaItem(item, mediaType) {
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "realizationMediaItem";
+
+    if (item.kind === "embed") {
+        wrapper.appendChild(createEmbed(item, mediaType));
+    } else if (mediaType === "video") {
+        const video = document.createElement("video");
+        video.className = "realizationVideo";
+        video.controls = true;
+        video.preload = "metadata";
+        video.playsInline = true;
+        const source = document.createElement("source");
+        source.src = item.path;
+        source.type = item.mime || "video/mp4";
+        video.appendChild(source);
+        wrapper.appendChild(video);
+    } else if (mediaType === "audio") {
+        const audio = document.createElement("audio");
+        audio.className = "realizationAudio";
+        audio.controls = true;
+        audio.preload = "metadata";
+        const source = document.createElement("source");
+        source.src = item.path;
+        source.type = item.mime || "audio/mpeg";
+        audio.appendChild(source);
+        wrapper.appendChild(audio);
+    }
+
+    appendMetadata(wrapper, item.metadata);
+    return wrapper;
+
+}
+
+
+function updateGalleryArrows(track, previous, next) {
+
+    previous.hidden = track.scrollLeft <= 2;
+    next.hidden = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
+
+}
+
+
+function createGallery(items) {
+
+    const gallery = document.createElement("div");
+    gallery.className = "realizationGallery";
+
+    const previous = document.createElement("button");
+    previous.type = "button";
+    previous.className = "realizationGalleryArrow previous";
+    previous.textContent = "‹";
+    previous.setAttribute("aria-label", translations[currentLanguage].previousImage);
+
+    const next = document.createElement("button");
+    next.type = "button";
+    next.className = "realizationGalleryArrow next";
+    next.textContent = "›";
+    next.setAttribute("aria-label", translations[currentLanguage].nextImage);
+
+    const track = document.createElement("div");
+    track.className = "realizationGalleryTrack";
+
+    items.forEach(item => {
+        const figure = document.createElement("figure");
+        figure.className = "realizationGalleryItem";
+        const image = document.createElement("img");
+        image.src = item.path;
+        image.loading = "lazy";
+        const meta = localizedValue(item.metadata) || {};
+        image.alt = meta.title || meta.description || "";
+        figure.appendChild(image);
+        appendMetadata(figure, item.metadata);
+        track.appendChild(figure);
+    });
+
+    previous.addEventListener("click", () => {
+        track.scrollBy({ left: -track.clientWidth * 0.8, behavior: "smooth" });
+    });
+    next.addEventListener("click", () => {
+        track.scrollBy({ left: track.clientWidth * 0.8, behavior: "smooth" });
+    });
+    track.addEventListener("scroll", () => updateGalleryArrows(track, previous, next));
+    window.addEventListener("resize", () => updateGalleryArrows(track, previous, next));
+    track.addEventListener("load", () => updateGalleryArrows(track, previous, next), true);
+
+    gallery.append(previous, track, next);
+    requestAnimationFrame(() => updateGalleryArrows(track, previous, next));
+    return gallery;
+
+}
+
+
+function renderActiveRealization(resetScroll = true) {
+
+    const realization = realizationCatalog.find(item => item.slug === activeRealizationSlug);
+    if (!realization) return;
+
+    const previousScroll = contentText.scrollTop;
+    const page = document.createElement("div");
+    page.className = "realizationPage";
+
+    const sections = Array.isArray(realization.sections) ? realization.sections : [];
+
+    sections.forEach(section => {
+
+        if (section.type === "presentation") {
+            const data = localizedValue(section.content) || {};
+            const block = document.createElement("section");
+            block.className = "realizationBlock realizationPresentation";
+            if (data.title) {
+    const title = document.createElement("h1");
+
+    const match = String(data.title).match(
+        /^(.*?)(?:\s*[\(\[](\d{4}(?:[-_]\d{2,4})?)[\)\]])$/
+    );
+
+    if (match) {
+        const name = document.createElement("strong");
+        name.textContent = match[1].trim();
+
+        const year = document.createElement("span");
+        year.className = "realizationYear";
+        year.textContent = ` [${match[2]}]`;
+
+        title.append(name, year);
+    } else {
+        title.textContent = data.title;
+    }
+
+    block.appendChild(title);
+}
+            if (data.description) {
+                const description = document.createElement("div");
+                description.className = "realizationDescription";
+                appendParagraphs(description, data.description);
+                block.appendChild(description);
+            }
+            page.appendChild(block);
+            return;
+        }
+
+        if (section.type === "credits") {
+            const text = localizedValue(section.content);
+            if (!text) return;
+            const block = document.createElement("section");
+            block.className = "realizationBlock realizationCredits";
+            appendParagraphs(block, text);
+            page.appendChild(block);
+            return;
+        }
+
+        const items = Array.isArray(section.items) ? section.items : [];
+        if (!items.length) return;
+
+        const block = document.createElement("section");
+        block.className = "realizationBlock realizationSection realization-" + section.type;
+
+        if (section.type === "gallery") {
+            block.appendChild(createGallery(items));
+        } else if (section.type === "video" || section.type === "audio" || section.type === "instagram") {
+            items.forEach(item => block.appendChild(createMediaItem(item, section.type)));
+        } else if (section.type === "text") {
+            items.forEach(item => {
+                if (item.kind === "embed") {
+                    const embedItem = document.createElement("div");
+                    embedItem.className = "realizationMediaItem";
+                    embedItem.appendChild(createEmbed(item, "text"));
+                    appendMetadata(embedItem, item.metadata);
+                    block.appendChild(embedItem);
+                    return;
+                }
+
+                const text = localizedValue(item.content);
+                if (!text) return;
+                const textItem = document.createElement("article");
+                textItem.className = "realizationTextItem";
+                appendParagraphs(textItem, text);
+                appendMetadata(textItem, item.metadata);
+                block.appendChild(textItem);
+            });
+        }
+
+        if (block.childNodes.length) page.appendChild(block);
+
+    });
+
+    if (!page.childNodes.length) {
+        const empty = document.createElement("p");
+        empty.className = "realizationEmpty";
+        empty.textContent = translations[currentLanguage].emptyRealization;
+        page.appendChild(empty);
+    }
+
+    contentText.replaceChildren(page);
+    contentText.scrollTop = resetScroll ? 0 : previousScroll;
+    requestAnimationFrame(updateRealizationScrollbar);
+
+}
+
+/* =====================================================
+   BARRA EXTERNA — REALIZAÇÕES
+===================================================== */
+
+const realizationScrollbar =
+    document.getElementById("realizationScrollbar");
+
+const realizationScrollbarThumb =
+    document.getElementById("realizationScrollbarThumb");
+
+let realizationScrollbarDragging = false;
+
+
+function updateRealizationScrollbar() {
+
+    const isActive =
+        contentWindow.classList.contains("open") &&
+        contentWindow.classList.contains("realization");
+
+    if (!isActive) {
+        realizationScrollbar.classList.remove("visible");
+        return;
+    }
+
+    const viewportHeight = contentText.clientHeight;
+    const contentHeight = contentText.scrollHeight;
+
+    if (
+        !viewportHeight ||
+        contentHeight <= viewportHeight + 1
+    ) {
+        realizationScrollbar.classList.remove("visible");
+        return;
+    }
+
+    const rect = contentText.getBoundingClientRect();
+
+    realizationScrollbar.style.top = rect.top + "px";
+    realizationScrollbar.style.height = rect.height + "px";
+
+    const ratio = viewportHeight / contentHeight;
+
+    const thumbHeight = Math.max(
+        24,
+        rect.height * ratio
+    );
+
+    realizationScrollbarThumb.style.height =
+        Math.min(thumbHeight, rect.height) + "px";
+
+    const maxThumbTop =
+        rect.height - Math.min(thumbHeight, rect.height);
+
+    const maxScroll =
+        contentHeight - viewportHeight;
+
+    const thumbTop =
+        maxScroll > 0
+            ? (contentText.scrollTop / maxScroll) * maxThumbTop
+            : 0;
+
+    realizationScrollbarThumb.style.top =
+        thumbTop + "px";
+
+    const percentage = Math.round(
+        (contentText.scrollTop / maxScroll) * 1000
+    );
+
+    realizationScrollbar.setAttribute("aria-valuemin", "0");
+    realizationScrollbar.setAttribute("aria-valuemax", "1000");
+    realizationScrollbar.setAttribute(
+        "aria-valuenow",
+        String(percentage)
+    );
+
+    realizationScrollbar.classList.add("visible");
+
+}
+
+
+/* SINCRONIZA A BARRA COM A ROLAGEM */
+
+contentText.addEventListener(
+    "scroll",
+    updateRealizationScrollbar
+);
+
+
+/* POSICIONA A ROLAGEM A PARTIR DO CLIQUE OU ARRASTE */
+
+function scrollRealizationFromPointer(clientY) {
+
+    const rect = realizationScrollbar.getBoundingClientRect();
+
+    const thumbHeight =
+        realizationScrollbarThumb.offsetHeight;
+
+    const maxThumbTop =
+        rect.height - thumbHeight;
+
+    const maxScroll =
+        contentText.scrollHeight - contentText.clientHeight;
+
+    if (maxThumbTop <= 0 || maxScroll <= 0) return;
+
+    const thumbTop = Math.max(
+        0,
+        Math.min(
+            maxThumbTop,
+            clientY - rect.top - thumbHeight / 2
+        )
+    );
+
+    contentText.scrollTop =
+        (thumbTop / maxThumbTop) * maxScroll;
+
+    updateRealizationScrollbar();
+
+}
+
+
+/* CLIQUE E INÍCIO DO ARRASTE */
+
+realizationScrollbar.addEventListener("pointerdown", event => {
+
+    if (!contentWindow.classList.contains("realization")) return;
+
+    event.preventDefault();
+
+    realizationScrollbarDragging = true;
+
+    realizationScrollbar.classList.add("dragging");
+
+    realizationScrollbar.setPointerCapture(event.pointerId);
+
+    scrollRealizationFromPointer(event.clientY);
+
+});
+
+
+/* MOVIMENTO DO INDICADOR */
+
+realizationScrollbar.addEventListener("pointermove", event => {
+
+    if (!realizationScrollbarDragging) return;
+
+    scrollRealizationFromPointer(event.clientY);
+
+});
+
+
+/* FINALIZA O ARRASTE */
+
+function finishRealizationScrollbarDrag() {
+
+    realizationScrollbarDragging = false;
+
+    realizationScrollbar.classList.remove("dragging");
+
+}
+
+realizationScrollbar.addEventListener(
+    "pointerup",
+    finishRealizationScrollbarDrag
+);
+
+realizationScrollbar.addEventListener(
+    "pointercancel",
+    finishRealizationScrollbarDrag
+);
+
+realizationScrollbar.addEventListener(
+    "lostpointercapture",
+    finishRealizationScrollbarDrag
+);
+
+
+/* CONTROLE PELO TECLADO */
+
+realizationScrollbar.addEventListener("keydown", event => {
+
+    if (!contentWindow.classList.contains("realization")) return;
+
+    const step = contentText.clientHeight * 0.15;
+
+    if (event.key === "ArrowDown") {
+        event.preventDefault();
+        contentText.scrollTop += step;
+    }
+
+    if (event.key === "ArrowUp") {
+        event.preventDefault();
+        contentText.scrollTop -= step;
+    }
+
+    if (event.key === "PageDown") {
+        event.preventDefault();
+        contentText.scrollTop += contentText.clientHeight;
+    }
+
+    if (event.key === "PageUp") {
+        event.preventDefault();
+        contentText.scrollTop -= contentText.clientHeight;
+    }
+
+    if (event.key === "Home") {
+        event.preventDefault();
+        contentText.scrollTop = 0;
+    }
+
+    if (event.key === "End") {
+        event.preventDefault();
+        contentText.scrollTop = contentText.scrollHeight;
+    }
+
+});
+
+
+/* ATUALIZAÇÃO APÓS REDIMENSIONAMENTO */
+
+window.addEventListener("resize", () => {
+
+    requestAnimationFrame(updateRealizationScrollbar);
+
+});
+
+
+/* ATUALIZAÇÃO APÓS CARREGAMENTO DE MÍDIA */
+
+contentText.addEventListener(
+    "load",
+    updateRealizationScrollbar,
+    true
+);
+/* =====================================================
+   OPEN REALIZATION — ROLAGEM LIVRE
+===================================================== */
+
+function openRealization(slug) {
+
+    prepareContent(() => {
+
+        contentRequestId++;
+        activeRealizationSlug = slug;
+
+        contentWindow.classList.remove("plain", "network", "realizationCatalog");
+        contentWindow.classList.add("realization", "loading", "open");
+        contentWindow.dataset.section = "realizacao-" + slug;
+        contentWindow.dataset.realizationSlug = slug;
+
+        contentText.replaceChildren();
+        contentText.scrollTop = 0;
 
         revealContent();
+        renderActiveRealization(true);
+        contentWindow.classList.remove("loading");
 
     });
 
@@ -4086,8 +5804,6 @@ function openRealization(number) {
 headerImage.addEventListener("click", () => {
 
     ++contentTransitionId;
-
-    realizationsDropdown.classList.remove("open");
 
     closeContent(() => {
         startHomeAnimation();
@@ -4106,8 +5822,6 @@ menuItems.forEach(item => {
 
         const section = item.dataset.content;
 
-        realizationsDropdown.classList.remove("open");
-
         openPlainContent(
             section,
             getContentPath(section)
@@ -4119,63 +5833,23 @@ menuItems.forEach(item => {
 
 
 /* =====================================================
-   REALIZATIONS DROPDOWN
+   REALIZAÇÕES — ABERTURA DO CATÁLOGO
 ===================================================== */
 
 realizationsToggle.addEventListener("click", () => {
 
-    const shouldOpen =
-        !realizationsDropdown.classList.contains("open");
+    if (
+        contentWindow.classList.contains("open") &&
+        contentWindow.dataset.section === "realizacoes"
+    ) {
+        closeContent(() => {
+            startHomeAnimation();
+        });
 
-    realizationsDropdown.classList.toggle(
-        "open",
-        shouldOpen
-    );
+        return;
+    }
 
-});
-
-
-/* =====================================================
-   REALIZATION WINDOWS
-===================================================== */
-
-realizationItems.forEach(item => {
-
-    item.addEventListener("click", () => {
-
-        const number = item.dataset.realization;
-
-        realizationsDropdown.classList.remove("open");
-
-        openRealization(number);
-
-    });
-
-});
-
-
-/* =====================================================
-   CLOSE WHEN CLICKING OUTSIDE
-===================================================== */
-
-document.addEventListener("pointerdown", event => {
-
-    const isContentOpen =
-        contentWindow.classList.contains("open");
-
-    if (!isContentOpen) return;
-
-    if (contentWindow.contains(event.target)) return;
-
-    if (event.target.closest("#siteControls")) return;
-
-    if (event.target.closest("#header")) return;
-
-    if (event.target.closest("#mainMenu")) return;
-
-    closeContent(() => {
-        startHomeAnimation();
-    });
+    openRealizationCatalog();
 
 });
 
@@ -4199,7 +5873,6 @@ document.addEventListener("keydown", event => {
 
         }
 
-        realizationsDropdown.classList.remove("open");
 
     }
 
@@ -4207,113 +5880,12 @@ document.addEventListener("keydown", event => {
 
 
 /* =====================================================
-   PULL TO REFRESH — MOBILE
-===================================================== */
-
-if (window.matchMedia("(max-width: 600px)").matches) {
-
-    const pullIndicator =
-        document.getElementById("pullIndicator");
-
-    let touchStartY = 0;
-    let pullDistance = 0;
-    let pulling = false;
-
-    const pullThreshold = 90;
-    const pullMaximum = 120;
-
-
-    document.addEventListener("touchstart", event => {
-
-    if (isNetworkActive()) return;
-
-    if (event.touches.length !== 1) return;
-
-        if (
-            event.target.closest(
-                "#mainMenu, #contentWindow, #emailContact, #siteControls, a, button"
-            )
-        ) {
-            return;
-        }
-
-        touchStartY = event.touches[0].clientY;
-        pullDistance = 0;
-        pulling = true;
-
-    }, { passive: true });
-
-
-    document.addEventListener("touchmove", event => {
-
-        if (!pulling) return;
-
-        const currentY = event.touches[0].clientY;
-        const distance = currentY - touchStartY;
-
-        if (distance > 0) {
-
-            pullDistance = Math.min(distance, pullMaximum);
-
-            if (pullDistance > 10) {
-
-                event.preventDefault();
-
-                pullIndicator.classList.add("visible");
-
-                pullIndicator.style.top =
-                    (12 + pullDistance * 0.45) + "px";
-
-                pullIndicator.textContent =
-                    pullDistance >= pullThreshold
-                    ? "Solte para atualizar"
-                    : "Puxe para atualizar";
-            }
-        }
-
-    }, { passive: false });
-
-
-    document.addEventListener("touchend", () => {
-
-        if (!pulling) return;
-
-        if (pullDistance >= pullThreshold) {
-
-            pullIndicator.textContent = "Atualizando...";
-
-            window.location.reload();
-
-        } else {
-
-            pullIndicator.classList.remove("visible");
-            pullIndicator.style.top = "12px";
-        }
-
-        pulling = false;
-        pullDistance = 0;
-
-    });
-
-
-    document.addEventListener("touchcancel", () => {
-
-        pulling = false;
-        pullDistance = 0;
-
-        pullIndicator.classList.remove("visible");
-        pullIndicator.style.top = "12px";
-
-    });
-
-}
-
-
-/* =====================================================
    INICIALIZAÇÃO
 ===================================================== */
 
+loadRealizationCatalog();
 runOpeningScene();
+
 
 </script>
 
