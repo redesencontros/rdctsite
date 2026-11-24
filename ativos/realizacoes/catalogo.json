@@ -47,12 +47,6 @@
               "kind": "embed",
               "embed_url": "https://www.youtube.com/embed/2jjTL72Z-xo?si=XGyxaZYD5-KucDPK\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen",
               "metadata": {}
-            },
-            {
-              "order": 3,
-              "kind": "embed",
-              "embed_url": "https://www.youtube.com/embed/vVIoJULVpDw?si=A01YfW1R0dzcLNyC\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen",
-              "metadata": {}
             }
           ]
         },
