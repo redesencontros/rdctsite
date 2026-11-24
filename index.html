@@ -5158,29 +5158,29 @@ function appendParagraphs(container, text) {
 
     if (!normalizedText) return;
 
-    /* Preserva conteúdos que já possuem marcação HTML */
-    if (/<\/?[a-z][^>]*>/i.test(normalizedText)) {
+    /* Se já existem parágrafos HTML, preserva a estrutura */
+    if (/<p[\s>]/i.test(normalizedText)) {
         container.innerHTML = normalizedText;
         return;
     }
 
-    /* Cada quebra de linha separa um parágrafo */
+    /* Separa os blocos por linhas em branco */
     normalizedText
-        .split(/\n+/)
+        .split(/\n\s*\n/)
         .map(paragraph => paragraph.trim())
         .filter(Boolean)
         .forEach(paragraph => {
 
             const p = document.createElement("p");
 
-            p.textContent = paragraph;
+            /* Preserva marcações como <strong> */
+            p.innerHTML = paragraph.replace(/\n/g, "<br>");
 
             container.appendChild(p);
 
         });
 
 }
-
 
 function appendMetadata(container, metadata) {
 
