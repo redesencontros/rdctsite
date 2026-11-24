@@ -4609,8 +4609,7 @@ function changeLanguage(language) {
     /* REALIZAÇÕES */
 
     else if (section.startsWith("realizacao-")) {
-
-        renderActiveRealization(false);
+    updateActiveRealizationLanguage();
 
     }
 
@@ -4968,6 +4967,33 @@ function localizedValue(values) {
 
 }
 
+function registerLanguageUpdater(element, updater) {
+    element._languageUpdater = updater;
+    updater();
+    return element;
+}
+
+function updateActiveRealizationLanguage() {
+
+    if (!contentWindow.classList.contains("realization")) return;
+
+    const elements = contentText.querySelectorAll("*");
+
+    elements.forEach(element => {
+
+        if (!element.isConnected) return;
+
+        if (typeof element._languageUpdater === "function") {
+            element._languageUpdater();
+        }
+
+    });
+
+    requestAnimationFrame(() => {
+        updateRealizationScrollbar();
+    });
+
+}
 
 
 function getRealizationTitle(realization) {
@@ -5214,41 +5240,55 @@ function appendMetadata(container, metadata) {
     const meta = document.createElement("div");
     meta.className = "realizationMeta";
 
-    if (data.title) {
-        const title = document.createElement("div");
-        title.className = "realizationMetaTitle";
-        title.textContent = data.title;
-        meta.appendChild(title);
-    }
+    registerLanguageUpdater(meta, () => {
 
-    if (data.description) {
-        const description = document.createElement("div");
-        description.className = "realizationMetaDescription";
-        description.textContent = data.description;
-        meta.appendChild(description);
-    }
+        const currentData = localizedValue(metadata) || {};
 
-    if (data.credit) {
-        const credit = document.createElement("div");
-        credit.className = "realizationMetaCredit";
-        const label = document.createElement("span");
-        label.className = "realizationMetaLabel";
-        label.textContent = translations[currentLanguage].credit + ": ";
-        credit.append(label, document.createTextNode(data.credit));
-        meta.appendChild(credit);
-    }
+        meta.replaceChildren();
 
-    if (data.source) {
-        const source = document.createElement("div");
-        source.className = "realizationMetaSource";
-        const label = document.createElement("span");
-        label.className = "realizationMetaLabel";
-        label.textContent = translations[currentLanguage].source + ": ";
-        source.append(label, document.createTextNode(data.source));
-        meta.appendChild(source);
-    }
+        if (currentData.title) {
+            const title = document.createElement("div");
+            title.className = "realizationMetaTitle";
+            title.textContent = currentData.title;
+            meta.appendChild(title);
+        }
 
-    if (meta.childNodes.length) container.appendChild(meta);
+        if (currentData.description) {
+            const description = document.createElement("div");
+            description.className = "realizationMetaDescription";
+            description.textContent = currentData.description;
+            meta.appendChild(description);
+        }
+
+        if (currentData.credit) {
+            const credit = document.createElement("div");
+            credit.className = "realizationMetaCredit";
+
+            const label = document.createElement("span");
+            label.className = "realizationMetaLabel";
+            label.textContent = translations[currentLanguage].credit + ": ";
+
+            credit.append(label, document.createTextNode(currentData.credit));
+            meta.appendChild(credit);
+        }
+
+        if (currentData.source) {
+            const source = document.createElement("div");
+            source.className = "realizationMetaSource";
+
+            const label = document.createElement("span");
+            label.className = "realizationMetaLabel";
+            label.textContent = translations[currentLanguage].source + ": ";
+
+            source.append(label, document.createTextNode(currentData.source));
+            meta.appendChild(source);
+        }
+
+    });
+
+    if (meta.childNodes.length) {
+        container.appendChild(meta);
+    }
 
 }
 
@@ -5323,35 +5363,76 @@ function normalizeEmbedUrl(rawUrl, mediaType) {
 function createEmbed(item, mediaType) {
 
     const src = normalizeEmbedUrl(item.embed_url, mediaType);
+
     if (!src) {
+
         const warning = document.createElement("p");
         warning.className = "realizationEmpty";
-        warning.textContent = translations[currentLanguage].embedError;
+
+        registerLanguageUpdater(warning, () => {
+            warning.textContent = translations[currentLanguage].embedError;
+        });
+
         return warning;
     }
 
     const frame = document.createElement("iframe");
+
     frame.src = src;
     frame.loading = "lazy";
     frame.allowFullscreen = true;
     frame.referrerPolicy = "strict-origin-when-cross-origin";
-    frame.title = localizedValue(item.metadata)?.title || translations[currentLanguage].embeddedContent;
 
     if (mediaType === "text") {
+
         frame.className = "realizationEmbedFrame textEmbed";
-        frame.setAttribute("title", localizedValue(item.metadata)?.title || translations[currentLanguage].embeddedContent);
+
     } else if (mediaType === "instagram") {
+
         frame.className = "realizationEmbedFrame instagramEmbed";
-        frame.setAttribute("allow", "autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share");
+        frame.setAttribute(
+            "allow",
+            "autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+        );
+
     } else if (mediaType === "audio") {
+
         frame.className = "realizationEmbedFrame audioEmbed";
-        if (src.includes("deezer.com/widget/")) frame.classList.add("deezerEmbed");
-        if (src.includes("spotify.com/embed/")) frame.classList.add("spotifyEmbed");
-        frame.setAttribute("allow", "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture");
+
+        if (src.includes("deezer.com/widget/")) {
+            frame.classList.add("deezerEmbed");
+        }
+
+        if (src.includes("spotify.com/embed/")) {
+            frame.classList.add("spotifyEmbed");
+        }
+
+        frame.setAttribute(
+            "allow",
+            "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        );
+
     } else {
+
         frame.className = "realizationVideoFrame";
-        frame.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
+
+        frame.setAttribute(
+            "allow",
+            "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        );
+
     }
+
+    registerLanguageUpdater(frame, () => {
+
+        const title =
+            localizedValue(item.metadata)?.title ||
+            translations[currentLanguage].embeddedContent;
+
+        frame.title = title;
+        frame.setAttribute("title", title);
+
+    });
 
     return frame;
 
@@ -5411,14 +5492,22 @@ function createGallery(items) {
     previous.type = "button";
     previous.className = "realizationGalleryArrow previous";
     previous.textContent = "‹";
-    previous.setAttribute("aria-label", translations[currentLanguage].previousImage);
-
+registerLanguageUpdater(previous, () => {
+    previous.setAttribute(
+        "aria-label",
+        translations[currentLanguage].previousImage
+    );
+});
     const next = document.createElement("button");
     next.type = "button";
     next.className = "realizationGalleryArrow next";
     next.textContent = "›";
-    next.setAttribute("aria-label", translations[currentLanguage].nextImage);
-
+registerLanguageUpdater(next, () => {
+    next.setAttribute(
+        "aria-label",
+        translations[currentLanguage].nextImage
+    );
+});
     const track = document.createElement("div");
     track.className = "realizationGalleryTrack";
 
@@ -5429,8 +5518,13 @@ function createGallery(items) {
         image.src = item.path;
         image.loading = "lazy";
         const meta = localizedValue(item.metadata) || {};
-        image.alt = meta.title || meta.description || "";
-        figure.appendChild(image);
+registerLanguageUpdater(image, () => {
+
+    const currentMeta = localizedValue(item.metadata) || {};
+
+    image.alt = currentMeta.title || currentMeta.description || "";
+
+});        figure.appendChild(image);
         appendMetadata(figure, item.metadata);
         track.appendChild(figure);
     });
@@ -5454,107 +5548,217 @@ function createGallery(items) {
 
 function renderActiveRealization(resetScroll = true) {
 
-    const realization = realizationCatalog.find(item => item.slug === activeRealizationSlug);
+    const realization = realizationCatalog.find(
+        item => item.slug === activeRealizationSlug
+    );
+
     if (!realization) return;
 
     const previousScroll = contentText.scrollTop;
+
     const page = document.createElement("div");
     page.className = "realizationPage";
 
-    const sections = Array.isArray(realization.sections) ? realization.sections : [];
+    const sections = Array.isArray(realization.sections)
+        ? realization.sections
+        : [];
 
     sections.forEach(section => {
 
         if (section.type === "presentation") {
+
             const data = localizedValue(section.content) || {};
+
             const block = document.createElement("section");
             block.className = "realizationBlock realizationPresentation";
+
             if (data.title) {
-    const title = document.createElement("h1");
 
-    const match = String(data.title).match(
-        /^(.*?)(?:\s*[\(\[](\d{4}(?:[-_]\d{2,4})?)[\)\]])$/
-    );
+                const title = document.createElement("h1");
 
-    if (match) {
-        const name = document.createElement("strong");
-        name.textContent = match[1].trim();
+                registerLanguageUpdater(title, () => {
 
-        const year = document.createElement("span");
-        year.className = "realizationYear";
-        year.textContent = ` [${match[2]}]`;
+                    const currentData = localizedValue(section.content) || {};
+                    const currentTitle = currentData.title || "";
 
-        title.append(name, year);
-    } else {
-        title.textContent = data.title;
-    }
+                    title.replaceChildren();
 
-    block.appendChild(title);
-}
+                    const match = String(currentTitle).match(
+                        /^(.*?)(?:\s*[\(\[](\d{4}(?:[-_]\d{2,4})?)[\)\]])$/
+                    );
+
+                    if (match) {
+
+                        const name = document.createElement("strong");
+                        name.textContent = match[1].trim();
+
+                        const year = document.createElement("span");
+                        year.className = "realizationYear";
+                        year.textContent = ` [${match[2]}]`;
+
+                        title.append(name, year);
+
+                    } else {
+
+                        title.textContent = currentTitle;
+
+                    }
+
+                });
+
+                block.appendChild(title);
+
+            }
+
             if (data.description) {
+
                 const description = document.createElement("div");
                 description.className = "realizationDescription";
-                appendParagraphs(description, data.description);
+
+                registerLanguageUpdater(description, () => {
+
+                    description.replaceChildren();
+
+                    const currentData = localizedValue(section.content) || {};
+
+                    appendParagraphs(
+                        description,
+                        currentData.description
+                    );
+
+                });
+
                 block.appendChild(description);
+
             }
+
             page.appendChild(block);
             return;
+
         }
 
         if (section.type === "credits") {
+
             const text = localizedValue(section.content);
             if (!text) return;
+
             const block = document.createElement("section");
             block.className = "realizationBlock realizationCredits";
-            appendParagraphs(block, text);
+
+            registerLanguageUpdater(block, () => {
+
+                block.replaceChildren();
+
+                appendParagraphs(
+                    block,
+                    localizedValue(section.content)
+                );
+
+            });
+
             page.appendChild(block);
             return;
+
         }
 
-        const items = Array.isArray(section.items) ? section.items : [];
+        const items = Array.isArray(section.items)
+            ? section.items
+            : [];
+
         if (!items.length) return;
 
         const block = document.createElement("section");
-        block.className = "realizationBlock realizationSection realization-" + section.type;
+
+        block.className =
+            "realizationBlock realizationSection realization-" +
+            section.type;
 
         if (section.type === "gallery") {
+
             block.appendChild(createGallery(items));
-        } else if (section.type === "video" || section.type === "audio" || section.type === "instagram") {
-            items.forEach(item => block.appendChild(createMediaItem(item, section.type)));
-        } else if (section.type === "text") {
+
+        } else if (
+            section.type === "video" ||
+            section.type === "audio" ||
+            section.type === "instagram"
+        ) {
+
             items.forEach(item => {
+                block.appendChild(createMediaItem(item, section.type));
+            });
+
+        } else if (section.type === "text") {
+
+            items.forEach(item => {
+
                 if (item.kind === "embed") {
+
                     const embedItem = document.createElement("div");
                     embedItem.className = "realizationMediaItem";
+
                     embedItem.appendChild(createEmbed(item, "text"));
+
                     appendMetadata(embedItem, item.metadata);
+
                     block.appendChild(embedItem);
                     return;
+
                 }
 
                 const text = localizedValue(item.content);
                 if (!text) return;
+
                 const textItem = document.createElement("article");
                 textItem.className = "realizationTextItem";
-                appendParagraphs(textItem, text);
+
+                registerLanguageUpdater(textItem, () => {
+
+                    Array.from(textItem.children).forEach(child => {
+
+                        if (!child.classList.contains("realizationMeta")) {
+                            child.remove();
+                        }
+
+                    });
+
+                    appendParagraphs(
+                        textItem,
+                        localizedValue(item.content)
+                    );
+
+                });
+
                 appendMetadata(textItem, item.metadata);
+
                 block.appendChild(textItem);
+
             });
+
         }
 
-        if (block.childNodes.length) page.appendChild(block);
+        if (block.childNodes.length) {
+            page.appendChild(block);
+        }
 
     });
 
     if (!page.childNodes.length) {
+
         const empty = document.createElement("p");
         empty.className = "realizationEmpty";
-        empty.textContent = translations[currentLanguage].emptyRealization;
+
+        registerLanguageUpdater(empty, () => {
+            empty.textContent = translations[currentLanguage].emptyRealization;
+        });
+
         page.appendChild(empty);
+
     }
 
     contentText.replaceChildren(page);
+
     contentText.scrollTop = resetScroll ? 0 : previousScroll;
+
     requestAnimationFrame(updateRealizationScrollbar);
 
 }
