@@ -66,6 +66,456 @@
         }
       ],
       "preview_image": "ativos/imagens/miniaturas/conversasdedanca.jpg"
+    },
+    {
+      "slug": "02-bimot_danse caotica [2020]",
+      "order": 2,
+      "menu_title": "bimot_danse caotica [2020]",
+      "year": "",
+      "titles": {
+        "pt": "bimot_danse caotica [2020]",
+        "en": "bimot_danse caotica [2020]",
+        "es": "bimot_danse caotica [2020]"
+      },
+      "sections": [
+        {
+          "slug": "01-apresentacao",
+          "order": 1,
+          "type": "presentation",
+          "content": {
+            "pt": {
+              "title": "bimot_danse caotica [2020]",
+              "description": "Coletânea de videopoemas criada a partir dos panfletos anárquicos de Hakim Bey, em “Caos: Terrorismo poético & outros crimes exemplares”."
+            },
+            "en": {
+              "title": "bimot_danse caotica [2020]",
+              "description": "A collection of video poems created from Hakim Bey’s anarchist pamphlets in “Chaos: The Broadsheets of Ontological Anarchism”."
+            },
+            "es": {
+              "title": "bimot_danse caotica [2020]",
+              "description": "Colección de videopoemas creados a partir de los panfletos anárquicos de Hakim Bey, en \"Caos: Los pasquines del anarquismo ontológico\"."
+            }
+          }
+        },
+        {
+          "slug": "02-video",
+          "order": 2,
+          "type": "video",
+          "items": [
+            {
+              "order": 1,
+              "kind": "embed",
+              "embed_url": "https://www.youtube.com/embed/JL_654jMNIg?si=9uwbZU8WzG0yJlL2\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen",
+              "metadata": {}
+            }
+          ]
+        },
+        {
+          "slug": "03-creditos",
+          "order": 3,
+          "type": "credits",
+          "content": {
+            "pt": "<strong>Uma criação de</strong> BERNARDO STUMPF (a partir dos panfletos de HAKIM BEY) \n\n<strong>Colaboração</strong> DANIEL FIGUEIREDO, GUTO MENEZES, MARIANA ROCHA \n\n<strong>Masterização de áudio</strong> VALDERVAL DE OLIVEIRA FILHO (NHUNDIAQUARA AUDIO CRIATIVO) \n\n<strong>Participações piratas</strong> ADRIANA ARAÚJO, ALINE SCARPONI, ANA PAULA ARAÚJO, ANA PAULA PADRÃO, ANGELA MERKEL, AUGUSTO NUNES, BARACK OBAMA, BERNIE SANDERS, BORIS JOHNSON, CELSO FREITAS, CLÁUDIA CRUZ, DAVID HAMILTON & MODELOS, DONALD TRUMP, EDUARDO OINEGUE, EMMANUEL MACRON, JOE BIDEN, JUSTIN TRUDEAU, KIM JONG-UN, NARENDRA MODI, RACHEL SHEHERAZADE, RECEP TAYYIP ERDOGAN, SHINZO ABE, VLADIMIR PUTIN, WILLIAM BONNER, XI JINPING \n\n<strong>Samples</strong> ASMR MUKBANG SOCIAL KOREAN EATING SHOW (YOUTUBE), STEPHA RANGA - GONE GIRL, WILL KENNEDY - PHRASING IN 5/4 TIME (YOUTUBE) \n\n<strong>Agradecimentos</strong> BENJAMIN JÚNIOR, CÂNDIDA MONTE, FÁBIA REGINA, JACIARA ROCHA, JULIANA YURK, LEONARDO BACOLLO, LUIS BOURGES, RENATA ZUNINO, THIAGO DE SOUZA, WELLINGTON GUITTI \n\n<strong>Agradecimento especial</strong> JOSIÉLI SPENASSATTO (pela companhia e paciência valiosas) \n\n<strong>Realização</strong> rdct \n\n<strong>Exibições e prêmios</strong> FESTIVAL 60SECONDSDANCE 2018 (FIN/DIN/NOR), CHOREOSCOPE 2018 (ESP), GUIAR FESTIVAL INTERNACIONAL DE SCREENDANCE 2018 (BRA), BOLSA FUNARTE DE RESIDÊNCIAS ARTÍSTICAS NAS ESTAÇÕES CIDADANIA-CULTURA 2019 (BRA), FESTIVAL CURTA CAMPOS DO JORDÃO 2019 (BRA), FESTIVAL CORPOS CRÍTICOS 2 (BRA), 2º FESTIVAL INTERNACIONAL DE VIDEOARTE SPMAV, PROGRAMA CULTURA PRESENTE NAS REDES (SECEC/RJ), PROGRAMA DE PREMIAÇÃO DE IDEIAS CULTURAIS (IMC PETRÓPOLIS/RJ), EDITAL FCC DIGITAL 2 (FCC/PR), EDITAL FCC DIGITAL MÚSICA INDEPENDENTE (FCC/PR), EDITAL ALDIR BLANC DE FOMENTO (FCC/PR), PROGRAMA CULTURA NAS REDES (SEEC/PR), FESTIVAL INTERNACIONAL LIVRE DE ARTE E CULTURA / FRUTA PRETA, MOSTRA TRELA 2021 (BRA), ARTRESIST 2021 (BRA/ALE), 9º FESTIVAL DE CINEMA \"CURTA PINHAIS\" (BRA), VII CINECAOS 2022 (BRA), SESC RJ PULSAR 2022 (BRA), FESTIVAL NACIONAL DE CINEMA INDEPENDENTE - FENACIN 2022 (BRA), INTERNATIONAL MULTIMEDIAL ART FESTIVAL - IMAF 2022 (SER), MOSTRA DE VIDEODANÇA SESC SOROCABA (BRA), FEX - FESTIVAL EXPERIMENTAL DE CINEMA 2023 (BRA) / \"Melhor vídeo de bolso\", MOSTRA ARTE.ON 2024 (BRA)"
+          }
+        }
+      ],
+      "preview_image": "ativos/imagens/miniaturas/bimotdansecaotica.jpg"
+    },
+    {
+      "slug": "03-Dança e Imagem Sonora [2020]",
+      "order": 3,
+      "menu_title": "Dança e Imagem Sonora [2020]",
+      "year": "",
+      "titles": {
+        "pt": "Dança e Imagem Sonora [2020]",
+        "en": "Dance and Sound Image [2020]",
+        "es": "Danza e Imagen Sonora [2020]"
+      },
+      "sections": [
+        {
+          "slug": "01-apresentacao",
+          "order": 1,
+          "type": "presentation",
+          "content": {
+            "pt": {
+              "title": "Dança e Imagem Sonora [2020]",
+              "description": "Coletânea de contações fonográficas e audiovisuais que cruza histórias de pessoas e suas danças, em territórios do Rio de Janeiro."
+            },
+            "en": {
+              "title": "Dance and Sound Image [2020]",
+              "description": "A collection of phonographic and audiovisual storytelling that intertwines stories of people and their dances across territories of Rio de Janeiro."
+            },
+            "es": {
+              "title": "Danza e Imagen Sonora [2020]",
+              "description": "Colección de narraciones fonográficas y audiovisuales que entrelaza historias de personas y sus danzas en territorios de Río de Janeiro."
+            }
+          }
+        }
+      ],
+      "preview_image": "ativos/imagens/miniaturas/dancaeimagemsonora.jpg"
+    },
+    {
+      "slug": "04-Conversas no Morro [2021]",
+      "order": 4,
+      "menu_title": "Conversas no Morro [2021]",
+      "year": "",
+      "titles": {
+        "pt": "X []",
+        "en": "X []",
+        "es": "X []"
+      },
+      "sections": [
+        {
+          "slug": "01-apresentacao",
+          "order": 1,
+          "type": "presentation",
+          "content": {
+            "pt": {
+              "title": "X []",
+              "description": "X"
+            },
+            "en": {
+              "title": "X []",
+              "description": "X"
+            },
+            "es": {
+              "title": "X []",
+              "description": "X"
+            }
+          }
+        }
+      ],
+      "preview_image": "ativos/imagens/miniaturas/conversasnomorro.jpg"
+    },
+    {
+      "slug": "05-besouro [2021]",
+      "order": 5,
+      "menu_title": "besouro [2021]",
+      "year": "",
+      "titles": {
+        "pt": "X []",
+        "en": "X []",
+        "es": "X []"
+      },
+      "sections": [
+        {
+          "slug": "01-apresentacao",
+          "order": 1,
+          "type": "presentation",
+          "content": {
+            "pt": {
+              "title": "X []",
+              "description": "X"
+            },
+            "en": {
+              "title": "X []",
+              "description": "X"
+            },
+            "es": {
+              "title": "X []",
+              "description": "X"
+            }
+          }
+        }
+      ],
+      "preview_image": "ativos/imagens/miniaturas/besouro.jpg"
+    },
+    {
+      "slug": "06-DANÇA [2022]",
+      "order": 6,
+      "menu_title": "DANÇA [2022]",
+      "year": "",
+      "titles": {
+        "pt": "X []",
+        "en": "X []",
+        "es": "X []"
+      },
+      "sections": [
+        {
+          "slug": "01-apresentacao",
+          "order": 1,
+          "type": "presentation",
+          "content": {
+            "pt": {
+              "title": "X []",
+              "description": "X"
+            },
+            "en": {
+              "title": "X []",
+              "description": "X"
+            },
+            "es": {
+              "title": "X []",
+              "description": "X"
+            }
+          }
+        }
+      ],
+      "preview_image": "ativos/imagens/miniaturas/danca.jpg"
+    },
+    {
+      "slug": "07-Ludovico Trembola & O Famoso Bloco Canibal [2022]",
+      "order": 7,
+      "menu_title": "Ludovico Trembola & O Famoso Bloco Canibal [2022]",
+      "year": "",
+      "titles": {
+        "pt": "X []",
+        "en": "X []",
+        "es": "X []"
+      },
+      "sections": [
+        {
+          "slug": "01-apresentacao",
+          "order": 1,
+          "type": "presentation",
+          "content": {
+            "pt": {
+              "title": "X []",
+              "description": "X"
+            },
+            "en": {
+              "title": "X []",
+              "description": "X"
+            },
+            "es": {
+              "title": "X []",
+              "description": "X"
+            }
+          }
+        }
+      ],
+      "preview_image": "ativos/imagens/miniaturas/ludovicotrembolaofamosoblococanibal.jpg"
+    },
+    {
+      "slug": "08-ruço [2022]",
+      "order": 8,
+      "menu_title": "ruço [2022]",
+      "year": "",
+      "titles": {
+        "pt": "X []",
+        "en": "X []",
+        "es": "X []"
+      },
+      "sections": [
+        {
+          "slug": "01-apresentacao",
+          "order": 1,
+          "type": "presentation",
+          "content": {
+            "pt": {
+              "title": "X []",
+              "description": "X"
+            },
+            "en": {
+              "title": "X []",
+              "description": "X"
+            },
+            "es": {
+              "title": "X []",
+              "description": "X"
+            }
+          }
+        }
+      ],
+      "preview_image": "ativos/imagens/miniaturas/ruco.jpg"
+    },
+    {
+      "slug": "09-jóga [2022]",
+      "order": 9,
+      "menu_title": "jóga [2022]",
+      "year": "",
+      "titles": {
+        "pt": "X []",
+        "en": "X []",
+        "es": "X []"
+      },
+      "sections": [
+        {
+          "slug": "01-apresentacao",
+          "order": 1,
+          "type": "presentation",
+          "content": {
+            "pt": {
+              "title": "X []",
+              "description": "X"
+            },
+            "en": {
+              "title": "X []",
+              "description": "X"
+            },
+            "es": {
+              "title": "X []",
+              "description": "X"
+            }
+          }
+        }
+      ],
+      "preview_image": "ativos/imagens/miniaturas/joga.jpg"
+    },
+    {
+      "slug": "10-COMEMORATA [2023]",
+      "order": 10,
+      "menu_title": "COMEMORATA [2023]",
+      "year": "",
+      "titles": {
+        "pt": "X []",
+        "en": "X []",
+        "es": "X []"
+      },
+      "sections": [
+        {
+          "slug": "01-apresentacao",
+          "order": 1,
+          "type": "presentation",
+          "content": {
+            "pt": {
+              "title": "X []",
+              "description": "X"
+            },
+            "en": {
+              "title": "X []",
+              "description": "X"
+            },
+            "es": {
+              "title": "X []",
+              "description": "X"
+            }
+          }
+        }
+      ],
+      "preview_image": "ativos/imagens/miniaturas/comemorata.jpg"
+    },
+    {
+      "slug": "11-caraminhola [2024]",
+      "order": 11,
+      "menu_title": "caraminhola [2024]",
+      "year": "",
+      "titles": {
+        "pt": "X []",
+        "en": "X []",
+        "es": "X []"
+      },
+      "sections": [
+        {
+          "slug": "01-apresentacao",
+          "order": 1,
+          "type": "presentation",
+          "content": {
+            "pt": {
+              "title": "X []",
+              "description": "X"
+            },
+            "en": {
+              "title": "X []",
+              "description": "X"
+            },
+            "es": {
+              "title": "X []",
+              "description": "X"
+            }
+          }
+        }
+      ],
+      "preview_image": "ativos/imagens/miniaturas/caraminhola.jpg"
+    },
+    {
+      "slug": "12-Fio de lume [2024]",
+      "order": 12,
+      "menu_title": "Fio de lume [2024]",
+      "year": "",
+      "titles": {
+        "pt": "X []",
+        "en": "X []",
+        "es": "X []"
+      },
+      "sections": [
+        {
+          "slug": "01-apresentacao",
+          "order": 1,
+          "type": "presentation",
+          "content": {
+            "pt": {
+              "title": "X []",
+              "description": "X"
+            },
+            "en": {
+              "title": "X []",
+              "description": "X"
+            },
+            "es": {
+              "title": "X []",
+              "description": "X"
+            }
+          }
+        }
+      ],
+      "preview_image": "ativos/imagens/miniaturas/fiodelume.jpg"
+    },
+    {
+      "slug": "13-Quintal de nós [2025]",
+      "order": 13,
+      "menu_title": "Quintal de nós [2025]",
+      "year": "",
+      "titles": {
+        "pt": "X []",
+        "en": "X []",
+        "es": "X []"
+      },
+      "sections": [
+        {
+          "slug": "01-apresentacao",
+          "order": 1,
+          "type": "presentation",
+          "content": {
+            "pt": {
+              "title": "X []",
+              "description": "X"
+            },
+            "en": {
+              "title": "X []",
+              "description": "X"
+            },
+            "es": {
+              "title": "X []",
+              "description": "X"
+            }
+          }
+        }
+      ],
+      "preview_image": "ativos/imagens/miniaturas/quintaldenos.jpg"
+    },
+    {
+      "slug": "14-re.mostra [2025]",
+      "order": 14,
+      "menu_title": "re.mostra [2025]",
+      "year": "",
+      "titles": {
+        "pt": "X []",
+        "en": "X []",
+        "es": "X []"
+      },
+      "sections": [
+        {
+          "slug": "01-apresentacao",
+          "order": 1,
+          "type": "presentation",
+          "content": {
+            "pt": {
+              "title": "X []",
+              "description": "X"
+            },
+            "en": {
+              "title": "X []",
+              "description": "X"
+            },
+            "es": {
+              "title": "X []",
+              "description": "X"
+            }
+          }
+        }
+      ],
+      "preview_image": "ativos/imagens/miniaturas/remostra.jpg"
     }
   ]
 }
