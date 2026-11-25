@@ -248,6 +248,38 @@
       "preview_image": "ativos/imagens/miniaturas/danca.jpg"
     },
     {
+      "slug": "07-Ludovico Trembola [2022]",
+      "order": 7,
+      "menu_title": "Ludovico Trembola [2022]",
+      "year": "",
+      "titles": {
+        "pt": "X []",
+        "en": "X []",
+        "es": "X []"
+      },
+      "sections": [
+        {
+          "slug": "01-apresentacao",
+          "order": 1,
+          "type": "presentation",
+          "content": {
+            "pt": {
+              "title": "X []",
+              "description": "X"
+            },
+            "en": {
+              "title": "X []",
+              "description": "X"
+            },
+            "es": {
+              "title": "X []",
+              "description": "X"
+            }
+          }
+        }
+      ]
+    },
+    {
       "slug": "08-ruço [2022]",
       "order": 8,
       "menu_title": "ruço [2022]",
