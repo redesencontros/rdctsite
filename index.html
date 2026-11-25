@@ -2177,6 +2177,126 @@ margin: 0;
     }
 
 }
+
+/* =====================================================
+   REALIZAÇÕES — DROPDOWN DE TÍTULOS
+===================================================== */
+
+#realizationsDropdown {
+    display: none;
+}
+
+@media (min-width: 601px) {
+
+    #realizationsDropdown {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        width: 250px;
+        max-width: calc(100vw - 70px);
+        max-height: 70vh;
+
+        margin: 5px 0 0 15px;
+        padding: 0;
+        gap: 4px;
+
+        overflow-x: hidden;
+        overflow-y: auto;
+        scrollbar-width: none;
+
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+
+        transition:
+            opacity 0.6s ease,
+            visibility 0s linear 0.6s;
+    }
+
+    #realizationsDropdown.open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+
+        transition:
+            opacity 0.6s ease,
+            visibility 0s;
+    }
+
+}
+
+.realizationDropdownItem {
+    appearance: none;
+    display: block;
+
+    width: 100%;
+    padding: 0;
+
+    border: 0;
+    background: transparent;
+
+    color: var(--page-fg);
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: 1.35;
+
+    text-align: left;
+    white-space: normal;
+    overflow-wrap: anywhere;
+
+    cursor: pointer;
+
+    transition: color 0.2s ease;
+}
+
+.realizationDropdownItem:hover {
+    color: var(--page-hover);
+}
+
+.realizationDropdownItem[aria-current="true"] {
+    color: var(--page-hover);
+}
+
+.realizationDropdownItem:focus-visible {
+    outline: 1px solid var(--page-hover);
+    outline-offset: 3px;
+}
+
+
+/* =====================================================
+   REALIZAÇÕES — LIMITADOR LATERAL DESKTOP
+===================================================== */
+
+@media (min-width: 601px) {
+
+    body.realizations-dropdown-open #contentWindow.realization {
+
+        /*
+           O dropdown ocupa até 295px a partir
+           da margem esquerda do menu.
+
+           A janela começa depois desse limite.
+        */
+
+        left: calc(
+            320px + (100vw - 320px) / 2
+        );
+
+        width: min(
+            850px,
+            calc(100vw - 360px)
+        );
+
+        max-width: none;
+
+        transform: translate(-50%, 0);
+
+    }
+
+}
+
 </style>
 </head>
 
@@ -5016,6 +5136,74 @@ function getRealizationYear(realization) {
 
 }
 
+/* =====================================================
+   REALIZAÇÕES — DROPDOWN DE TÍTULOS
+===================================================== */
+
+function renderRealizationsDropdown() {
+
+    let dropdown = document.getElementById("realizationsDropdown");
+
+    if (!dropdown) {
+
+        dropdown = document.createElement("div");
+        dropdown.id = "realizationsDropdown";
+
+        realizationsToggle.insertAdjacentElement(
+            "afterend",
+            dropdown
+        );
+
+    }
+
+    dropdown.replaceChildren();
+
+    const items = [...realizationCatalog].reverse();
+
+    items.forEach(realization => {
+
+        const button = document.createElement("button");
+
+        button.type = "button";
+        button.className = "realizationDropdownItem";
+        button.dataset.realization = realization.slug;
+        button.textContent = getRealizationTitle(realization);
+
+        if (realization.slug === activeRealizationSlug) {
+            button.setAttribute("aria-current", "true");
+        }
+
+        button.addEventListener("click", () => {
+            openRealization(realization.slug);
+        });
+
+        dropdown.appendChild(button);
+
+    });
+
+    return dropdown;
+
+}
+
+
+function setRealizationsDropdown(open) {
+
+    const dropdown = renderRealizationsDropdown();
+
+    dropdown.classList.toggle("open", open);
+
+    document.body.classList.toggle(
+        "realizations-dropdown-open",
+        open
+    );
+
+    realizationsToggle.setAttribute(
+        "aria-expanded",
+        String(open)
+    );
+
+}
+
 
 function isMobileRealizations() {
     return window.matchMedia("(max-width: 600px)").matches;
@@ -5126,13 +5314,135 @@ function renderRealizationMenu() {
 
 }
 
+/* =====================================================
+   VOLTAR À GALERIA DE MINIATURAS
+===================================================== */
+
+/* =====================================================
+   REALIZAÇÕES — TRANSIÇÃO ENTRE PÁGINA E GALERIA
+===================================================== */
+
+let realizationTransitionTimer = null;
+
+
+function transitionRealizationView(callback) {
+
+    const transitionId = ++contentTransitionId;
+
+    if (realizationTransitionTimer !== null) {
+        clearTimeout(realizationTransitionTimer);
+        realizationTransitionTimer = null;
+    }
+
+    /* Inicia o fade-out da janela atual */
+    contentWindow.classList.remove("visible");
+
+    realizationTransitionTimer = setTimeout(() => {
+
+        if (transitionId !== contentTransitionId) return;
+
+        realizationTransitionTimer = null;
+
+        callback();
+
+    }, 600);
+
+}
+
+
+/* =====================================================
+   VOLTAR À GALERIA DE MINIATURAS
+===================================================== */
+
+function showRealizationCatalog() {
+
+    /* CELULAR: preserva a navegação sem dropdown */
+
+    if (isMobileRealizations()) {
+
+        setRealizationsDropdown(false);
+
+        activeRealizationSlug = "";
+
+        contentWindow.classList.remove(
+            "plain",
+            "network",
+            "realization",
+            "loading"
+        );
+
+        contentWindow.classList.add(
+            "realizationCatalog",
+            "open",
+            "visible"
+        );
+
+        contentWindow.dataset.section = "realizacoes";
+        contentWindow.dataset.realizationSlug = "";
+
+        contentWindow.style.removeProperty("--content-fit-scale");
+
+        contentText.scrollTop = 0;
+
+        renderRealizationMenu();
+
+        requestAnimationFrame(updateRealizationScrollbar);
+
+        return;
+    }
+
+    /* DESKTOP: fade-out da realização e do dropdown */
+
+    const dropdown = document.getElementById("realizationsDropdown");
+
+    if (dropdown) {
+        dropdown.classList.remove("open");
+    }
+
+    transitionRealizationView(() => {
+
+        setRealizationsDropdown(false);
+
+        activeRealizationSlug = "";
+
+        contentWindow.classList.remove(
+            "plain",
+            "network",
+            "realization",
+            "loading"
+        );
+
+        contentWindow.classList.add(
+            "realizationCatalog",
+            "open"
+        );
+
+        contentWindow.dataset.section = "realizacoes";
+        contentWindow.dataset.realizationSlug = "";
+
+        contentWindow.style.removeProperty("--content-fit-scale");
+
+        contentText.scrollTop = 0;
+
+        renderRealizationMenu();
+
+        revealContent();
+
+        requestAnimationFrame(updateRealizationScrollbar);
+
+    });
+
+}
+
 /* ABRIR A GRADE */
 
 function openRealizationCatalog() {
 
+    setRealizationsDropdown(false);
     prepareContent(async () => {
 
         await loadRealizationCatalog();
+        renderRealizationsDropdown();
 
         contentWindow.classList.remove(
             "plain",
@@ -5998,27 +6308,104 @@ contentText.addEventListener(
     true
 );
 /* =====================================================
-   OPEN REALIZATION — ROLAGEM LIVRE
+   OPEN REALIZATION — TROCA ANIMADA DE CONTEÚDO
 ===================================================== */
 
 function openRealization(slug) {
 
-    prepareContent(() => {
+    const realization = realizationCatalog.find(
+        item => item.slug === slug
+    );
 
+    if (!realization) return;
+
+    /* =================================================
+       CELULAR — SEM DROPDOWN
+    ================================================= */
+
+    if (isMobileRealizations()) {
+
+        ++contentTransitionId;
         contentRequestId++;
+
+        finishNetworkTransition();
+
+        setRealizationsDropdown(false);
+
         activeRealizationSlug = slug;
 
-        contentWindow.classList.remove("plain", "network", "realizationCatalog");
-        contentWindow.classList.add("realization", "loading", "open");
+        contentWindow.classList.remove(
+            "plain",
+            "network",
+            "realizationCatalog",
+            "loading"
+        );
+
+        contentWindow.classList.add(
+            "realization",
+            "open",
+            "visible"
+        );
+
         contentWindow.dataset.section = "realizacao-" + slug;
         contentWindow.dataset.realizationSlug = slug;
+
+        contentWindow.style.removeProperty("--content-fit-scale");
 
         contentText.replaceChildren();
         contentText.scrollTop = 0;
 
-        revealContent();
         renderActiveRealization(true);
+
         contentWindow.classList.remove("loading");
+
+        requestAnimationFrame(updateRealizationScrollbar);
+
+        return;
+    }
+
+    /* =================================================
+       DESKTOP — FADE-OUT ANTES DA TROCA
+    ================================================= */
+
+    contentRequestId++;
+
+    finishNetworkTransition();
+
+    transitionRealizationView(() => {
+
+        activeRealizationSlug = slug;
+
+        contentWindow.classList.remove(
+            "plain",
+            "network",
+            "realizationCatalog",
+            "loading"
+        );
+
+        contentWindow.classList.add(
+            "realization",
+            "open"
+        );
+
+        contentWindow.dataset.section = "realizacao-" + slug;
+        contentWindow.dataset.realizationSlug = slug;
+
+        contentWindow.style.removeProperty("--content-fit-scale");
+
+        contentText.replaceChildren();
+        contentText.scrollTop = 0;
+
+        /* Mantém o dropdown aberto no desktop */
+        setRealizationsDropdown(true);
+
+        renderActiveRealization(true);
+
+        contentWindow.classList.remove("loading");
+
+        revealContent();
+
+        requestAnimationFrame(updateRealizationScrollbar);
 
     });
 
@@ -6061,21 +6448,84 @@ menuItems.forEach(item => {
 
 
 /* =====================================================
-   REALIZAÇÕES — ABERTURA DO CATÁLOGO
+   REALIZAÇÕES — ALTERNÂNCIA ENTRE GALERIA E DROPDOWN
 ===================================================== */
 
 realizationsToggle.addEventListener("click", () => {
 
-    if (
+    const isMobile = isMobileRealizations();
+
+    const dropdown = document.getElementById("realizationsDropdown");
+
+    const dropdownIsOpen =
+        dropdown && dropdown.classList.contains("open");
+
+    const realizationIsOpen =
         contentWindow.classList.contains("open") &&
-        contentWindow.dataset.section === "realizacoes"
-    ) {
-        closeContent(() => {
-            startHomeAnimation();
-        });
+        contentWindow.classList.contains("realization");
+
+    const catalogIsOpen =
+        contentWindow.classList.contains("open") &&
+        contentWindow.classList.contains("realizationCatalog");
+
+
+    /* =================================================
+       CELULAR — GALERIA E PÁGINA, SEM DROPDOWN
+    ================================================= */
+
+    if (isMobile) {
+
+        if (realizationIsOpen) {
+            showRealizationCatalog();
+            return;
+        }
+
+        if (catalogIsOpen) {
+            return;
+        }
+
+        openRealizationCatalog();
 
         return;
     }
+
+
+    /* =================================================
+       DESKTOP — DROPDOWN ABERTO
+    ================================================= */
+
+    if (dropdownIsOpen) {
+
+        showRealizationCatalog();
+
+        return;
+    }
+
+
+    /* =================================================
+       DESKTOP — REALIZAÇÃO ABERTA
+    ================================================= */
+
+    if (realizationIsOpen) {
+
+        setRealizationsDropdown(true);
+
+        return;
+    }
+
+
+    /* =================================================
+       DESKTOP — GALERIA JÁ ABERTA
+    ================================================= */
+
+    if (catalogIsOpen) {
+        return;
+    }
+
+
+    /* =================================================
+       DESKTOP — NENHUM CONTEÚDO ABERTO
+    ================================================= */
 
     openRealizationCatalog();
 
