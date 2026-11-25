@@ -5356,52 +5356,15 @@ function transitionRealizationView(callback) {
 
 function showRealizationCatalog() {
 
-    /* CELULAR: preserva a navegação sem dropdown */
+    /* Fecha o dropdown somente no desktop */
 
-    if (isMobileRealizations()) {
-
+    if (!isMobileRealizations()) {
         setRealizationsDropdown(false);
-
-        activeRealizationSlug = "";
-
-        contentWindow.classList.remove(
-            "plain",
-            "network",
-            "realization",
-            "loading"
-        );
-
-        contentWindow.classList.add(
-            "realizationCatalog",
-            "open",
-            "visible"
-        );
-
-        contentWindow.dataset.section = "realizacoes";
-        contentWindow.dataset.realizationSlug = "";
-
-        contentWindow.style.removeProperty("--content-fit-scale");
-
-        contentText.scrollTop = 0;
-
-        renderRealizationMenu();
-
-        requestAnimationFrame(updateRealizationScrollbar);
-
-        return;
     }
 
-    /* DESKTOP: fade-out da realização e do dropdown */
-
-    const dropdown = document.getElementById("realizationsDropdown");
-
-    if (dropdown) {
-        dropdown.classList.remove("open");
-    }
+    /* Fade-out antes de substituir o conteúdo */
 
     transitionRealizationView(() => {
-
-        setRealizationsDropdown(false);
 
         activeRealizationSlug = "";
 
@@ -5426,6 +5389,7 @@ function showRealizationCatalog() {
 
         renderRealizationMenu();
 
+        /* Fade-in padrão do site */
         revealContent();
 
         requestAnimationFrame(updateRealizationScrollbar);
@@ -6319,58 +6283,11 @@ function openRealization(slug) {
 
     if (!realization) return;
 
-    /* =================================================
-       CELULAR — SEM DROPDOWN
-    ================================================= */
-
-    if (isMobileRealizations()) {
-
-        ++contentTransitionId;
-        contentRequestId++;
-
-        finishNetworkTransition();
-
-        setRealizationsDropdown(false);
-
-        activeRealizationSlug = slug;
-
-        contentWindow.classList.remove(
-            "plain",
-            "network",
-            "realizationCatalog",
-            "loading"
-        );
-
-        contentWindow.classList.add(
-            "realization",
-            "open",
-            "visible"
-        );
-
-        contentWindow.dataset.section = "realizacao-" + slug;
-        contentWindow.dataset.realizationSlug = slug;
-
-        contentWindow.style.removeProperty("--content-fit-scale");
-
-        contentText.replaceChildren();
-        contentText.scrollTop = 0;
-
-        renderActiveRealization(true);
-
-        contentWindow.classList.remove("loading");
-
-        requestAnimationFrame(updateRealizationScrollbar);
-
-        return;
-    }
-
-    /* =================================================
-       DESKTOP — FADE-OUT ANTES DA TROCA
-    ================================================= */
-
     contentRequestId++;
 
     finishNetworkTransition();
+
+    /* Fade-out antes de trocar a realização */
 
     transitionRealizationView(() => {
 
@@ -6396,13 +6313,19 @@ function openRealization(slug) {
         contentText.replaceChildren();
         contentText.scrollTop = 0;
 
-        /* Mantém o dropdown aberto no desktop */
-        setRealizationsDropdown(true);
+        /* Dropdown somente no desktop */
+
+        if (isMobileRealizations()) {
+            setRealizationsDropdown(false);
+        } else {
+            setRealizationsDropdown(true);
+        }
 
         renderActiveRealization(true);
 
         contentWindow.classList.remove("loading");
 
+        /* Fade-in padrão do site */
         revealContent();
 
         requestAnimationFrame(updateRealizationScrollbar);
