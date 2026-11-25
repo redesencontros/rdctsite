@@ -201,10 +201,27 @@ body.intro-active #emailContact {
 }
 
 #homeWord {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
+    min-height: 150px;
     text-align: center;
     overflow-wrap: anywhere;
+}
+
+#homeWord img {
+    display: block;
+    flex: 0 0 150px;
+    width: 150px;
+    height: 150px;
+    min-width: 150px;
+    min-height: 150px;
+    max-width: none;
+    max-height: none;
+    object-fit: cover;
+    object-position: center;
+    margin: 0 auto;
 }
 
 /* =====================================================
@@ -1943,108 +1960,17 @@ margin: 0;
     max-width: 100%;
 }
 /* =====================================================
-   BARRA EXTERNA — REALIZAÇÕES
+   REALIZAÇÕES — ROLAGEM SEM BARRA VISÍVEL
 ===================================================== */
 
-#realizationScrollbar {
-    position: fixed;
-    top: 0;
-    right: 30px;
-    width: 3px;
-    height: 0;
-    z-index: 50;
-
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-
-    transition:
-        opacity 0.3s ease,
-        visibility 0.3s ease;
-}
-
-#realizationScrollbar.visible {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-}
-
-#realizationScrollbarThumb {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    min-height: 24px;
-
-    background: var(--page-hover);
-    border-radius: 3px;
-
-    cursor: grab;
-}
-
-#realizationScrollbar.dragging
-#realizationScrollbarThumb {
-    cursor: grabbing;
-}
-
-/* Oculta a barra nativa somente nas Realizações */
-
 #contentWindow.realization #contentText {
+    overflow-y: auto;
     scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 #contentWindow.realization #contentText::-webkit-scrollbar {
     display: none;
-}
-
-/* Margem lateral das telas estreitas */
-
-@media (
-    max-width: 600px
-),
-(
-    orientation: landscape
-) and (
-    max-height: 600px
-) and (
-    max-width: 950px
-) {
-    #realizationScrollbar {
-        right: 20px;
-    }
-}
-/* =====================================================
-   SOBRE — SEM BARRA DE ROLAGEM
-===================================================== */
-
-#contentWindow:not(.realization):not(.realizationCatalog):not(.network) #contentText {
-    overflow-y: hidden !important;
-    scrollbar-width: none !important;
-}
-
-#contentWindow:not(.realization):not(.network) #contentText::-webkit-scrollbar {
-    display: none !important;
-}
-/* =====================================================
-   REALIZAÇÕES — SEM BARRA EXTERNA NO LAYOUT MOBILE
-===================================================== */
-
-@media (max-width: 600px),
-(orientation: landscape) and (max-height: 600px) and (max-width: 950px) {
-
-    #realizationScrollbar {
-        display: none !important;
-    }
-
-    #contentWindow.realization #contentText {
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-    }
-
-    #contentWindow.realization #contentText::-webkit-scrollbar {
-        display: none;
-    }
-
 }
 
 
@@ -2186,9 +2112,14 @@ margin: 0;
     display: none;
 }
 
+
 @media (min-width: 601px) {
 
     #realizationsDropdown {
+        position: absolute;
+        top: calc(100% + 5px);
+        left: 15px;
+
         display: flex;
         flex-direction: column;
         align-items: flex-start;
@@ -2197,13 +2128,18 @@ margin: 0;
         max-width: calc(100vw - 70px);
         max-height: 70vh;
 
-        margin: 5px 0 0 15px;
+        margin: 0;
         padding: 0;
         gap: 4px;
 
-        overflow-x: hidden;
-        overflow-y: auto;
-        scrollbar-width: none;
+        /* FONTE INDEPENDENTE DO RESTANTE DO SITE */
+        font-size: min(
+            calc(var(--site-font-size) * var(--font-scale)),
+            var(--site-font-size)
+        );
+
+        /* SEM ROLAGEM */
+        overflow: hidden;
 
         opacity: 0;
         visibility: hidden;
@@ -2226,10 +2162,12 @@ margin: 0;
 
 }
 
+
 .realizationDropdownItem {
     appearance: none;
     display: block;
 
+    flex: 0 0 auto;
     width: 100%;
     padding: 0;
 
@@ -2243,8 +2181,11 @@ margin: 0;
     line-height: 1.35;
 
     text-align: left;
-    white-space: normal;
-    overflow-wrap: anywhere;
+
+    /* NUNCA QUEBRAR O TÍTULO */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     cursor: pointer;
 
@@ -2382,19 +2323,6 @@ margin: 0;
 
 </div>
 
-<!-- BARRA EXTERNA DE ROLAGEM DAS REALIZAÇÕES -->
-
-<div
-    id="realizationScrollbar"
-    role="scrollbar"
-    aria-label="Rolagem das realizações"
-    aria-controls="contentText"
-    aria-orientation="vertical"
-    tabindex="0"
->
-    <div id="realizationScrollbarThumb"></div>
-</div>
-
 <!-- CONTROLES -->
 
 <div id="siteControls">
@@ -2519,7 +2447,9 @@ const homeWords = {
     ]
 
 };
-
+function getHomeWords() {
+    return homeWords[currentLanguage] || homeWords.pt;
+}
 
 /* =====================================================
    CENA DE ABERTURA
@@ -2578,7 +2508,7 @@ openingLogo.addEventListener("animationend", event => {
 
 
 /* =====================================================
-   HOME — CONTROLE DA ANIMAÇÃO DE PALAVRAS
+   HOME — SORTEIO MISTO DE PALAVRAS E IMAGENS
 ===================================================== */
 
 const homeAnimation =
@@ -2591,29 +2521,73 @@ const HOME_INITIAL_DELAY = 2000;
 const HOME_FADE_DURATION = 600;
 const HOME_VISIBLE_DURATION = 2000;
 
+const HOME_IMAGES_MANIFEST =
+    "ativos/imagens/sorteio/manifest.json";
+
 let homeTimeout = null;
 let homeExitTimeout = null;
 let homeExitCallbacks = [];
 
 let homeDeck = [];
-let lastHomeWordIndex = null;
-let currentHomeWordIndex = null;
+let lastHomeItemKey = null;
+let currentHomeItem = null;
 let homeAnimationActive = false;
 
 
-function getHomeWords() {
-    return homeWords[currentLanguage] || homeWords.pt;
+/* CARREGA AUTOMATICAMENTE A LISTA DE IMAGENS */
+
+const homeImagesReady = fetch(HOME_IMAGES_MANIFEST)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Manifesto de imagens não encontrado.");
+        }
+
+        return response.json();
+    })
+    .then(data => {
+        if (!Array.isArray(data.images)) {
+            return [];
+        }
+
+        return data.images
+            .filter(path => typeof path === "string")
+            .map(path => ({
+                type: "image",
+                src: path,
+                key: "image:" + path
+            }));
+    })
+    .catch(error => {
+        console.warn(
+            "Não foi possível carregar as imagens da home:",
+            error
+        );
+
+        return [];
+    });
+
+
+/* CRIA A LISTA COMPLETA DE ITENS */
+
+async function getHomeItems() {
+
+    const images = await homeImagesReady;
+
+    const words = homeWords.pt.map((word, index) => ({
+        type: "word",
+        index,
+        key: "word:" + index
+    }));
+
+    return [...words, ...images];
 }
 
 
-function shuffleHomeDeck() {
+/* EMBARALHA O BARALHO */
 
-    const wordCount = homeWords.pt.length;
+function shuffleHomeDeck(items) {
 
-    const deck = Array.from(
-        { length: wordCount },
-        (_, index) => index
-    );
+    const deck = [...items];
 
     for (let i = deck.length - 1; i > 0; i--) {
 
@@ -2623,9 +2597,11 @@ function shuffleHomeDeck() {
 
     }
 
+    /* Evita repetir o último item do ciclo anterior */
+
     if (
         deck.length > 1 &&
-        deck[0] === lastHomeWordIndex
+        deck[0].key === lastHomeItemKey
     ) {
 
         const swapIndex =
@@ -2640,35 +2616,98 @@ function shuffleHomeDeck() {
 }
 
 
-function createHomeDeck() {
-    homeDeck = shuffleHomeDeck();
+/* CRIA UM NOVO CICLO */
+
+async function createHomeDeck() {
+
+    const items = await getHomeItems();
+
+    homeDeck = shuffleHomeDeck(items);
+
 }
 
 
-function showRandomHomeWord() {
+/* EXIBE UMA PALAVRA OU IMAGEM */
+
+function renderHomeItem(item) {
+
+    if (!item) return;
+
+    currentHomeItem = item;
+
+    homeWord.replaceChildren();
+
+    if (item.type === "word") {
+
+        const words = getHomeWords();
+
+        homeWord.textContent =
+            words[item.index] || words[0];
+
+        return;
+    }
+
+    if (item.type === "image") {
+
+        const image = document.createElement("img");
+
+        image.src = item.src;
+        image.alt = "";
+        image.draggable = false;
+
+        homeWord.appendChild(image);
+
+    }
+
+}
+
+
+/* ATUALIZA A PALAVRA QUANDO O IDIOMA MUDA */
+
+function updateCurrentHomeItemLanguage() {
+
+    if (
+        currentHomeItem &&
+        currentHomeItem.type === "word"
+    ) {
+        renderHomeItem(currentHomeItem);
+    }
+
+}
+
+
+/* SORTEIA O PRÓXIMO ITEM */
+
+async function showRandomHomeWord() {
 
     if (homeDeck.length === 0) {
-        createHomeDeck();
+        await createHomeDeck();
     }
 
     if (homeDeck.length === 0) return;
 
-    const index = homeDeck.shift();
+    const item = homeDeck.shift();
 
-    currentHomeWordIndex = index;
-    lastHomeWordIndex = index;
+    lastHomeItemKey = item.key;
 
-    const words = getHomeWords();
+    renderHomeItem(item);
 
-    homeWord.textContent = words[index];
 }
 
 
-function runHomeWordCycle() {
+/* CICLO DE EXIBIÇÃO */
+
+async function runHomeWordCycle() {
 
     if (!homeAnimationActive) return;
 
-    showRandomHomeWord();
+    await homeImagesReady;
+
+    if (!homeAnimationActive) return;
+
+    await showRandomHomeWord();
+
+    if (!homeAnimationActive) return;
 
     homeAnimation.classList.remove("hidden");
 
@@ -2697,8 +2736,11 @@ function runHomeWordCycle() {
         }, HOME_FADE_DURATION);
 
     }, HOME_FADE_DURATION + HOME_VISIBLE_DURATION);
+
 }
 
+
+/* INICIA A ANIMAÇÃO */
 
 function startHomeAnimation() {
 
@@ -2718,8 +2760,11 @@ function startHomeAnimation() {
         runHomeWordCycle();
 
     }, HOME_INITIAL_DELAY);
+
 }
 
+
+/* FINALIZA A ANIMAÇÃO COM FADE */
 
 function finishHomeAnimation(callback) {
 
@@ -2762,8 +2807,11 @@ function finishHomeAnimation(callback) {
         callbacks.forEach(fn => fn());
 
     }
+
 }
 
+
+/* INTERROMPE A ANIMAÇÃO */
 
 function stopHomeAnimation() {
 
@@ -2783,6 +2831,7 @@ function stopHomeAnimation() {
 
     homeAnimation.classList.remove("visible");
     homeAnimation.classList.add("hidden");
+
 }
 
 
@@ -3496,7 +3545,6 @@ fontIncrease.addEventListener("click", () => {
 
     fontScale = Math.round((fontScale + 0.1) * 10) / 10;
     updateFontSize();
-requestAnimationFrame(updateRealizationScrollbar);
 });
 
 
@@ -5109,11 +5157,7 @@ function updateActiveRealizationLanguage() {
 
     });
 
-    requestAnimationFrame(() => {
-        updateRealizationScrollbar();
-    });
-
-}
+    }
 
 
 function getRealizationTitle(realization) {
@@ -5354,17 +5398,42 @@ function transitionRealizationView(callback) {
    VOLTAR À GALERIA DE MINIATURAS
 ===================================================== */
 
+
 function showRealizationCatalog() {
 
-    /* Fecha o dropdown somente no desktop */
+    const desktop = !isMobileRealizations();
 
-    if (!isMobileRealizations()) {
-        setRealizationsDropdown(false);
+    /* Inicia o fade-out do dropdown,
+       mas mantém o posicionamento da janela */
+
+    if (desktop) {
+
+        const dropdown = document.getElementById(
+            "realizationsDropdown"
+        );
+
+        if (dropdown) {
+            dropdown.classList.remove("open");
+        }
+
+        realizationsToggle.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
     }
 
-    /* Fade-out antes de substituir o conteúdo */
+    /* Fade-out simultâneo da janela e do dropdown */
 
     transitionRealizationView(() => {
+
+        /* Só agora remove a classe que desloca a janela */
+
+        if (desktop) {
+            document.body.classList.remove(
+                "realizations-dropdown-open"
+            );
+        }
 
         activeRealizationSlug = "";
 
@@ -5383,7 +5452,9 @@ function showRealizationCatalog() {
         contentWindow.dataset.section = "realizacoes";
         contentWindow.dataset.realizationSlug = "";
 
-        contentWindow.style.removeProperty("--content-fit-scale");
+        contentWindow.style.removeProperty(
+            "--content-fit-scale"
+        );
 
         contentText.scrollTop = 0;
 
@@ -5392,9 +5463,7 @@ function showRealizationCatalog() {
         /* Fade-in padrão do site */
         revealContent();
 
-        requestAnimationFrame(updateRealizationScrollbar);
-
-    });
+        });
 
 }
 
@@ -6033,244 +6102,8 @@ function renderActiveRealization(resetScroll = true) {
 
     contentText.scrollTop = resetScroll ? 0 : previousScroll;
 
-    requestAnimationFrame(updateRealizationScrollbar);
-
 }
 
-/* =====================================================
-   BARRA EXTERNA — REALIZAÇÕES
-===================================================== */
-
-const realizationScrollbar =
-    document.getElementById("realizationScrollbar");
-
-const realizationScrollbarThumb =
-    document.getElementById("realizationScrollbarThumb");
-
-let realizationScrollbarDragging = false;
-
-
-function updateRealizationScrollbar() {
-
-    const isActive =
-        contentWindow.classList.contains("open") &&
-        contentWindow.classList.contains("realization");
-
-    if (!isActive) {
-        realizationScrollbar.classList.remove("visible");
-        return;
-    }
-
-    const viewportHeight = contentText.clientHeight;
-    const contentHeight = contentText.scrollHeight;
-
-    if (
-        !viewportHeight ||
-        contentHeight <= viewportHeight + 1
-    ) {
-        realizationScrollbar.classList.remove("visible");
-        return;
-    }
-
-    const rect = contentText.getBoundingClientRect();
-
-    realizationScrollbar.style.top = rect.top + "px";
-    realizationScrollbar.style.height = rect.height + "px";
-
-    const ratio = viewportHeight / contentHeight;
-
-    const thumbHeight = Math.max(
-        24,
-        rect.height * ratio
-    );
-
-    realizationScrollbarThumb.style.height =
-        Math.min(thumbHeight, rect.height) + "px";
-
-    const maxThumbTop =
-        rect.height - Math.min(thumbHeight, rect.height);
-
-    const maxScroll =
-        contentHeight - viewportHeight;
-
-    const thumbTop =
-        maxScroll > 0
-            ? (contentText.scrollTop / maxScroll) * maxThumbTop
-            : 0;
-
-    realizationScrollbarThumb.style.top =
-        thumbTop + "px";
-
-    const percentage = Math.round(
-        (contentText.scrollTop / maxScroll) * 1000
-    );
-
-    realizationScrollbar.setAttribute("aria-valuemin", "0");
-    realizationScrollbar.setAttribute("aria-valuemax", "1000");
-    realizationScrollbar.setAttribute(
-        "aria-valuenow",
-        String(percentage)
-    );
-
-    realizationScrollbar.classList.add("visible");
-
-}
-
-
-/* SINCRONIZA A BARRA COM A ROLAGEM */
-
-contentText.addEventListener(
-    "scroll",
-    updateRealizationScrollbar
-);
-
-
-/* POSICIONA A ROLAGEM A PARTIR DO CLIQUE OU ARRASTE */
-
-function scrollRealizationFromPointer(clientY) {
-
-    const rect = realizationScrollbar.getBoundingClientRect();
-
-    const thumbHeight =
-        realizationScrollbarThumb.offsetHeight;
-
-    const maxThumbTop =
-        rect.height - thumbHeight;
-
-    const maxScroll =
-        contentText.scrollHeight - contentText.clientHeight;
-
-    if (maxThumbTop <= 0 || maxScroll <= 0) return;
-
-    const thumbTop = Math.max(
-        0,
-        Math.min(
-            maxThumbTop,
-            clientY - rect.top - thumbHeight / 2
-        )
-    );
-
-    contentText.scrollTop =
-        (thumbTop / maxThumbTop) * maxScroll;
-
-    updateRealizationScrollbar();
-
-}
-
-
-/* CLIQUE E INÍCIO DO ARRASTE */
-
-realizationScrollbar.addEventListener("pointerdown", event => {
-
-    if (!contentWindow.classList.contains("realization")) return;
-
-    event.preventDefault();
-
-    realizationScrollbarDragging = true;
-
-    realizationScrollbar.classList.add("dragging");
-
-    realizationScrollbar.setPointerCapture(event.pointerId);
-
-    scrollRealizationFromPointer(event.clientY);
-
-});
-
-
-/* MOVIMENTO DO INDICADOR */
-
-realizationScrollbar.addEventListener("pointermove", event => {
-
-    if (!realizationScrollbarDragging) return;
-
-    scrollRealizationFromPointer(event.clientY);
-
-});
-
-
-/* FINALIZA O ARRASTE */
-
-function finishRealizationScrollbarDrag() {
-
-    realizationScrollbarDragging = false;
-
-    realizationScrollbar.classList.remove("dragging");
-
-}
-
-realizationScrollbar.addEventListener(
-    "pointerup",
-    finishRealizationScrollbarDrag
-);
-
-realizationScrollbar.addEventListener(
-    "pointercancel",
-    finishRealizationScrollbarDrag
-);
-
-realizationScrollbar.addEventListener(
-    "lostpointercapture",
-    finishRealizationScrollbarDrag
-);
-
-
-/* CONTROLE PELO TECLADO */
-
-realizationScrollbar.addEventListener("keydown", event => {
-
-    if (!contentWindow.classList.contains("realization")) return;
-
-    const step = contentText.clientHeight * 0.15;
-
-    if (event.key === "ArrowDown") {
-        event.preventDefault();
-        contentText.scrollTop += step;
-    }
-
-    if (event.key === "ArrowUp") {
-        event.preventDefault();
-        contentText.scrollTop -= step;
-    }
-
-    if (event.key === "PageDown") {
-        event.preventDefault();
-        contentText.scrollTop += contentText.clientHeight;
-    }
-
-    if (event.key === "PageUp") {
-        event.preventDefault();
-        contentText.scrollTop -= contentText.clientHeight;
-    }
-
-    if (event.key === "Home") {
-        event.preventDefault();
-        contentText.scrollTop = 0;
-    }
-
-    if (event.key === "End") {
-        event.preventDefault();
-        contentText.scrollTop = contentText.scrollHeight;
-    }
-
-});
-
-
-/* ATUALIZAÇÃO APÓS REDIMENSIONAMENTO */
-
-window.addEventListener("resize", () => {
-
-    requestAnimationFrame(updateRealizationScrollbar);
-
-});
-
-
-/* ATUALIZAÇÃO APÓS CARREGAMENTO DE MÍDIA */
-
-contentText.addEventListener(
-    "load",
-    updateRealizationScrollbar,
-    true
-);
 /* =====================================================
    OPEN REALIZATION — TROCA ANIMADA DE CONTEÚDO
 ===================================================== */
@@ -6328,9 +6161,7 @@ function openRealization(slug) {
         /* Fade-in padrão do site */
         revealContent();
 
-        requestAnimationFrame(updateRealizationScrollbar);
-
-    });
+        });
 
 }
 
