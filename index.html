@@ -205,25 +205,51 @@ body.intro-active #emailContact {
     align-items: center;
     justify-content: center;
     width: 100%;
-    min-height: 200px;
+    min-height: 150px;
     text-align: center;
     overflow-wrap: anywhere;
 }
 
 #homeWord img {
     display: block;
-    flex: 0 0 200px;
-    width: 200px;
-    height: 200px;
-    min-width: 200px;
-    min-height: 200px;
+    flex: 0 0 150px;
+    width: 150px;
+    height: 150px;
+    min-width: 150px;
+    min-height: 150px;
     max-width: none;
     max-height: none;
     object-fit: cover;
     object-position: center;
     margin: 0 auto;
 }
+/* =====================================================
+   HOME — ZOOM SUAVE DURANTE TODO O CICLO
+===================================================== */
 
+#homeWord {
+    transform-origin: center center;
+}
+
+#homeWord.zooming {
+    animation: homeWordZoom 3.2s linear forwards;
+}
+
+@keyframes homeWordZoom {
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(1.05);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #homeWord.zooming {
+        animation-duration: 0.01ms;
+    }
+}
 /* =====================================================
    LOGO DO CABEÇALHO
 ===================================================== */
@@ -2716,8 +2742,9 @@ async function runHomeWordCycle() {
         if (!homeAnimationActive) return;
 
         requestAnimationFrame(() => {
-            homeAnimation.classList.add("visible");
-        });
+    homeWord.classList.add("zooming");
+    homeAnimation.classList.add("visible");
+});
 
     });
 
@@ -2729,11 +2756,13 @@ async function runHomeWordCycle() {
 
         homeTimeout = setTimeout(() => {
 
-            if (!homeAnimationActive) return;
+    homeWord.classList.remove("zooming");
 
-            runHomeWordCycle();
+    if (!homeAnimationActive) return;
 
-        }, HOME_FADE_DURATION);
+    runHomeWordCycle();
+
+}, HOME_FADE_DURATION);
 
     }, HOME_FADE_DURATION + HOME_VISIBLE_DURATION);
 
